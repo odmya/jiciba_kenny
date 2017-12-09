@@ -20,6 +20,12 @@ Route::any('/wechat', 'WeChatController@serve');
 
 
 //wechat
+
+//ciba
+Route::get('/ciba', 'PaChongController@ciba')->name('ciba');
+Route::get('/crawl/{word}', 'PaChongController@crawl')->name('crawl');
+
+//endciba
 Route::get('/', 'StaticPagesController@home')->name('home');
 Route::get('/help', 'StaticPagesController@help')->name('help');
 Route::get('/about', 'StaticPagesController@about')->name('about');
