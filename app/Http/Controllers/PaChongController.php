@@ -12,35 +12,42 @@ use App\Models\LevelBase;
 use App\Models\LevelBaseWord;
 use App\Models\WordSpeech;
 use App\Models\WordExplain;
+use App\Jobs\crawl;
+set_time_limit(0);
 class PaChongController extends Controller
 {
     //
-    public function crawl($word,$version="iciba01"){
+    public function crawl($words="test",$version="iciba02"){
 
-      $query_word = trim($word);
-      $query_word = strtolower($query_word);
+     $query_word = trim($words);
+     $query_word = strtolower($query_word);
+    //$query_word = $words;
       $crawl_version = $version;
 
 
 
 
       $word = Word::where('word', $query_word)->first();
+    //  $words = new Word;
+    //  $word = $words->where('word', $query_word)->first();
+
+    //  echo $query_word;
+
       if($word==false){
+
         $word = Word::create([
             'word' => $query_word,
           //  'level_star'=>$level_star
       //      'version' => $crawl_version,
         ]);
 
-      }
 
-      if($word->version !=$crawl_version){
-        $word->version = $crawl_version;
-        $word->save();
       }else{
-
-      //  die("end");
+      //  $word = Word::where('word', $query_word)->get();
       }
+
+      $word->version = $version;
+
 
 
       $url = "http://www.iciba.com/".$query_word;
@@ -56,7 +63,7 @@ class PaChongController extends Controller
       $level_star = str_replace("'","",$result);
       if($level_star){
         $word->level_star = $level_star;
-        $word->save();
+        //$word->save();
       }
 
 
@@ -111,13 +118,25 @@ class PaChongController extends Controller
           foreach ($yinbiao as $key => $value) {
             $tmp_yinbiao = $word->word_voice()->where("symbol",$value)->first();
             if($tmp_yinbiao == false){
-              $local_path ="voice/word/".$query_word."_".$key.".mp3";
-              $path_tmp = str_replace(array("sound('","')"),"",$fayingpath[$key]);
-              $voice_path = file_get_contents($path_tmp);
-              file_put_contents($local_path,$voice_path);
+              //$local_path ="voice/word/".$query_word."_".$key.".mp3";
+              $local_path =$query_word."_".$key.".mp3";
+              if(is_array($fayingpath)){
+                $path_tmp = str_replace(array("sound('","')"),"",$fayingpath[$key]);
+              }else{
+                $path_tmp = str_replace(array("sound('","')"),"",$fayingpath);
+              }
+              if($path_tmp!=false){
+                $voice_path = file_get_contents($path_tmp);
+                $sign=file_put_contents($local_path,$voice_path);
+              }
 
 
-              $word->word_voice()->create(['word_id' => $word->id,'symbol' => $value, 'path'=>$local_path]);
+              if(isset($sign)&&$sign!=false){
+                $word->word_voice()->create(['word_id' => $word->id,'symbol' => $value, 'path'=>$local_path]);
+              }
+
+
+
             }else{
               //$word->word_voice()->symbol = $value;
             //  $word->word_voice()->save();
@@ -129,13 +148,16 @@ class PaChongController extends Controller
 
           $tmp_yinbiao = $word->word_voice()->where("symbol",$yinbiao)->first();
           if($tmp_yinbiao == false){
-            $local_path ="voice/word/".$query_word.".mp3";
+            //$local_path ="voice/word/".$query_word.".mp3";
+            $local_path = $query_word.".mp3";
             $path_tmp = str_replace(array("sound('","')"),"",$fayingpath);
             $voice_path = file_get_contents($path_tmp);
-            file_put_contents($local_path,$voice_path);
+            $sign=file_put_contents($local_path,$voice_path);
 
+            if($sign!=false){
+              $word->word_voice()->create(['word_id' => $word->id,'symbol' => $yinbiao, 'path'=>$local_path]);
+            }
 
-            $word->word_voice()->create(['word_id' => $word->id,'symbol' => $yinbiao, 'path'=>$local_path]);
           }
 
         }
@@ -183,7 +205,7 @@ class PaChongController extends Controller
       $selector = "//ul[contains(@class,'base-list')]//span";
 
       // 提取结果
-      $tmp_list=array("n.", "pron.","adj.", "adv.","vt.& vi.","int.",'vt.&amp; vi.', "v.","vi.", "vt.", "num.","art.", "prep.","conj.", "interj.");
+      $tmp_list=array("n.", "pron.","adj.", "adv.","vt.& vi.","int.","abbr.",'vt.&amp; vi.', "v.","vi.", "vt.", "num.","art.", "prep.","conj.", "interj.");
       foreach ($tmp_list as $key => $value) {
         $word_speech = WordSpeech::where('cixing', $value)->first();
         if($word_speech == false){
@@ -228,7 +250,10 @@ class PaChongController extends Controller
 
       }
 
-      return true;
+
+      $word->save();
+
+      //return true;
       /*
       die('test');
       // 抽取单词变形
@@ -276,6 +301,46 @@ class PaChongController extends Controller
 
 
     }
+
+    public function cibadb(){
+      $word_list = file_get_contents("words2.txt");
+
+      $word_list=array_unique(explode(",",preg_replace("/\n+/",",",$word_list)));
+
+      foreach ($word_list as $key => $value) {
+        # code...
+        $word = Word::where('word', $value)->first();
+        if($word==false){
+          $value = trim($value);
+          $query_word = strtolower($value);
+          $word = Word::create([
+              'word' => $value,
+            //  'level_star'=>$level_star
+        //      'version' => $crawl_version,
+          ]);
+
+        }
+
+      }
+
+    }
+    public function list(){
+
+      $word = Word::paginate(10);
+      $curentpage = $word->currentPage();
+      $nextpageurl = $word->nextPageUrl();
+      $itemes = $word->items();
+      foreach ($itemes as $key => $perwords) {
+        # code...
+      //  echo $perwords->word;
+        $this->crawl($perwords->word);
+        sleep(2);//睡眠
+      }
+      //return redirect('login');
+      //die();
+      return view('word.list', compact('word','nextpageurl'));
+
+    }
     public function ciba(){
 
       $configs = array(
@@ -314,8 +379,11 @@ $word_list=array_unique(explode(",",preg_replace("/\n+/",",",$word_list)));
 foreach ($word_list as $key => $value) {
   # code...
   $this->crawl($value);
-  echo $value."<br/>";
-  sleep(60);
+  sleep(50);//睡眠
+
+  //dispatch(new crawl($value));
+  //echo $value."<br/>";
+//  sleep(60);
 }
 
 

@@ -22,7 +22,12 @@ Route::any('/wechat', 'WeChatController@serve');
 //wechat
 
 //ciba
+Route::get('/query/{word}', 'WordController@query')->name('query');
+
 Route::get('/ciba', 'PaChongController@ciba')->name('ciba');
+
+Route::get('/ciba/list', 'PaChongController@list')->name('cibalist');
+Route::get('/cibadb', 'PaChongController@cibadb')->name('cibadb');
 Route::get('/crawl/{word}', 'PaChongController@crawl')->name('crawl');
 
 //endciba
