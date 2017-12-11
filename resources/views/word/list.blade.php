@@ -16,7 +16,7 @@
   function jumpurl(){
     location='{{$nextpageurl}}';
   }
-  setTimeout('jumpurl()',3000);
+  setTimeout('jumpurl()',2000);
   </script>
 </div>
 </div>
