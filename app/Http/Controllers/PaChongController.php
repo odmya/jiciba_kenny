@@ -118,8 +118,7 @@ class PaChongController extends Controller
           foreach ($yinbiao as $key => $value) {
             $tmp_yinbiao = $word->word_voice()->where("symbol",$value)->first();
             if($tmp_yinbiao == false){
-              //$local_path ="voice/word/".$query_word."_".$key.".mp3";
-              $local_path =$query_word."_".$key.".mp3";
+              $local_path ="voice/word/".$query_word."_".$key.".mp3";
               if(is_array($fayingpath)){
                 $path_tmp = str_replace(array("sound('","')"),"",$fayingpath[$key]);
               }else{
@@ -148,8 +147,7 @@ class PaChongController extends Controller
 
           $tmp_yinbiao = $word->word_voice()->where("symbol",$yinbiao)->first();
           if($tmp_yinbiao == false){
-            //$local_path ="voice/word/".$query_word.".mp3";
-            $local_path = $query_word.".mp3";
+            $local_path ="voice/word/".$query_word.".mp3";
             $path_tmp = str_replace(array("sound('","')"),"",$fayingpath);
             $voice_path = file_get_contents($path_tmp);
             $sign=file_put_contents($local_path,$voice_path);
