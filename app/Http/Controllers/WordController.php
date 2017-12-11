@@ -323,7 +323,7 @@ if(count($word_obj->word_explain()->get())==false){
       $tmp_array =array();
       foreach ($voices as $voice) {
         $tmp_array['symbol'] = $voice->symbol;
-        $url = 'http://sample.app/voice/word/'.str_replace('voice/word/',"",$voice->path);
+        $url = 'https://www.jciba.cn/'.str_replace('voice/word/',"",$voice->path);
 
         $tmp_array['path'] = $url;
         $voice_array[]=$tmp_array;
