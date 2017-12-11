@@ -331,8 +331,14 @@ class PaChongController extends Controller
       foreach ($itemes as $key => $perwords) {
         # code...
       //  echo $perwords->word;
+      $tmp = 0;
         while($this->crawl($perwords->word)!=true){
-          sleep(2);//睡眠
+
+          sleep(5);//睡眠
+          $tmp = $tmp+1;
+          if($tmp>=3){
+            break;
+          }
         }
 
       }
