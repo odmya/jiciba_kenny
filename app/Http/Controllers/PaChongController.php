@@ -250,7 +250,7 @@ class PaChongController extends Controller
 
 
       $word->save();
-
+      return true;
       //return true;
       /*
       die('test');
@@ -331,8 +331,10 @@ class PaChongController extends Controller
       foreach ($itemes as $key => $perwords) {
         # code...
       //  echo $perwords->word;
-        $this->crawl($perwords->word);
-        sleep(2);//睡眠
+        while($this->crawl($perwords->word)!=true){
+          sleep(2);//睡眠
+        }
+
       }
       //return redirect('login');
       //die();
