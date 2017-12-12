@@ -14,6 +14,12 @@ use App\Models\LevelBaseWord;
 use App\Models\WordSpeech;
 use App\Models\WordExplain;
 use App\Models\WordVoice;
+
+use Google\Cloud\Translate\TranslateClient;
+use Google\Cloud\Speech\SpeechClient;
+
+putenv('GOOGLE_APPLICATION_CREDENTIALS='.public_path().'/google-95003-2d37e7203dfa2017-11-12.json');
+
 //use App\Http\Controllers\PaChongController;
 
 class WordController extends Controller
@@ -299,6 +305,73 @@ class WordController extends Controller
       print_r($result);
       */
 
+
+    }
+
+    public function search(Request $request)
+    {
+      # code...
+      $query_word=$request->input('query');
+
+      $query_word = trim($query_word);
+      $query_word = strtolower($query_word);
+      $word_obj = Word::where('word', $query_word)->first();  //单词
+      if($word_obj !=false){
+        return redirect()->route('query', $query_word);
+      }else{
+
+        $projectId = 'speech@html5-gae.iam.gserviceaccount.com';
+
+        # Instantiates a client
+        $translate = new TranslateClient([
+          'projectId' => $projectId
+        ]);
+
+        # The text to translate
+        $text = $query_word;
+        # The target language
+        $target = 'zh-CN';
+
+        # Translates some text into Russian
+        $translation = $translate->translate($text, [
+          'target' => $target
+        ]);
+
+        echo 'Text: ' . $text . '
+        Translation: ' . $translation['text'];
+        # [END translate_quickstart]
+
+      }
+    }
+
+    public function googlespeech(){
+
+      $projectId = 'speech-test@erudite-imprint-186800.iam.gserviceaccount.com';
+
+      # Instantiates a client
+      $speech = new SpeechClient([
+          'projectId' => $projectId,
+          'languageCode' => 'en-US',
+      ]);
+
+
+      # The name of the audio file to transcribe
+      $fileName = public_path(). '/voice/juzi/audio.raw';
+
+      # The audio file's encoding and sample rate
+      $options = [
+          'encoding' => 'LINEAR16',
+          'sampleRateHertz' => 16000,
+      ];
+
+      # Detects speech in the audio file
+      $results = $speech->recognize(fopen($fileName, 'r'), $options);
+
+      foreach ($results as $result) {
+          echo 'Transcription: ' . $result->alternatives()[0]['transcript'] . PHP_EOL;
+      }
+
+    //  echo "test15555555555";
 
     }
 

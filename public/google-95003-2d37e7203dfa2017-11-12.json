@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "erudite-imprint-186800",
+  "private_key_id": "2d37e7203dfa24a4a38b2c79deb7f52e1c69bfa0",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDSKfNBNt7+BSAk\ndSNFnH3XphYCRt7YRPhiH5YD5zcrAXPNOp9oRVpEy0DtiMjVGim0aJXO83rON1BE\n+sJmtSEaWZ9A8KlB1HPxkxyuI/RBaayj+3dnYtzZ/f+0oadoRndlViSpVt8LWtSS\nnBc16HFtnKoGbVB9IHqnktRiBWkVZju93oAWoDFFptz5U5hHKMmgivg261gib2WY\n0QPuisE9MripNIghbPplHDIyCUxB+EjNOO2PreFR5j80DO7xhhHj8m4q+1cMz9sV\nW0uViPbuLF+JLlDkWBv1bw76XjGpXIpwT+ck8c+QMiHBIA5EUgapbU564/pbICr4\nS2ltdUjNAgMBAAECggEAH26mQtvrzIakOMerM5NU7+6XbpY+aI6iLnzGYUWQxvYT\n5X8tzbjHqC/VAWG6lcKwt5qHw1i/hn2X3AU8E4PmFEyQqLQFwIJ/p8MGoFXgx3LA\nXxMyV8xdtx3Jw3CE+u/FFisk1w3W1JosXlQJlaay5j+u30C0r84uggcQDCv+fDRV\neugAmP7rzCMF2kIdtDRzu0ObIgEiPJYCXmWz8m9T352X2KQ/MGJ2G9Pbft1QkA7p\nGkOiV2k0iCC797NKgdxMvbtEbql75lzzFM+t7Tg5oze8F3adlMplmVtsLMYWdOr9\nkTEaJwmmKUdZtPqL9zLWcDvTLoQguvdhqhP1jVpF2QKBgQDp5sGYjg7XhMFbHV6S\nv9M2np3AUywc4jocv1TSXGnFp5hXuwpYI7mgdY1tnh2iqizxA+4/qE26Vzempn9l\nCwX97okh4iG4PeO9mm7ZABn1+IEQ7PXvr4ekw38Dmr0/LtzbzZjulxeJEnnwOopP\nOn2Ut5WMYhonViwQpp+irExx6QKBgQDmBRFO2wBlUM29h+/gm/ubTq2QwKTuWrRq\nAIJ/pXY+I/jSUIdJ6oAGBLAXnrtTrospKVcYdpQEY/0OyjRmV/YERirTlUQxPdyO\nk5DC7Lcctha4sGC0VB+jVYJwt+6+/LXZ0Qy+6+vIOf7ruU/m91FHKx5nCOg+vVyc\nFhfV16vNRQKBgQC/EPfuBYVMOi60nk4l9Dq18GYOuCJdydMMrqK8YC8q/ZeteqWd\nkDlPQRdxhurQeNDTZJGXQIWWBS75nCKOyK1xXAx7ODyxQyUpOeD4tGOAkSnlSJwx\n2iIkzmmP6TRUS5SwnMcjhxr7prMjML7Qr4fsFvc7wNt6bKL8SxA2EyczGQKBgQDj\nsHZ+kUimAcN27p3jv2PjS5GBrUBV9RGLsG99PWN7hY4jWbVh1K/fxTouV2DlJ+z2\n1MYzIAXLBtMTldMiz8VmW7K++I2lFLBDrgzo9vsXf6OkNGu1dWRQAS/6tgetpGe6\ncjXks5IVBFu0KR7P6VbaVPNmWKnUmQuYMkJr2m5k5QKBgE2RszJw6Vfd3QUv9Q6C\nvSgobDbTrU2iKqkCisWL02VKVGFzTODE+e7eFmPnMMWAzVOlNZn3q2zi28xnRT0f\nHIym/UrJEPWdqSPG3DzvGHzcrp3EQDJhCnWHgiL6+pLaSijqOzHFYS+H1cNC49TY\n+HckQ9xEdD63xSUvpiKwcDsw\n-----END PRIVATE KEY-----\n",
+  "client_email": "speech-test@erudite-imprint-186800.iam.gserviceaccount.com",
+  "client_id": "106566703512822819539",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/speech-test%40erudite-imprint-186800.iam.gserviceaccount.com"
+}

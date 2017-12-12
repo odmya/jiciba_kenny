@@ -14,7 +14,7 @@
 <div>
   <script>
   function jumpurl(){
-    location='{{$nextpageurl}}';
+    location='http://sample.app/ciba/list?page=1';
   }
   setTimeout('jumpurl()',3000);
   </script>

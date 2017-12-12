@@ -112,7 +112,7 @@ class PaChongController extends Controller
 
       $result = selector::select($html, $selector);
       $fayingpath= $result;
-
+      if($fayingpath!="sound('')"){
       if($yinbiao){
         if(is_array($yinbiao)){
           foreach ($yinbiao as $key => $value) {
@@ -131,7 +131,7 @@ class PaChongController extends Controller
 
 
               if(isset($sign)&&$sign!=false){
-                $word->word_voice()->create(['word_id' => $word->id,'symbol' => $value, 'path'=>$local_path]);
+                $word->word_voice()->create(['word_id' => $word->id,'symbol' => $value, 'path'=>$query_word."_".$key.".mp3"]);
               }
 
 
@@ -149,16 +149,18 @@ class PaChongController extends Controller
           if($tmp_yinbiao == false){
             $local_path ="voice/word/".$query_word.".mp3";
             $path_tmp = str_replace(array("sound('","')"),"",$fayingpath);
+
             $voice_path = file_get_contents($path_tmp);
             $sign=file_put_contents($local_path,$voice_path);
 
             if($sign!=false){
-              $word->word_voice()->create(['word_id' => $word->id,'symbol' => $yinbiao, 'path'=>$local_path]);
+              $word->word_voice()->create(['word_id' => $word->id,'symbol' => $yinbiao, 'path'=>$query_word.".mp3"]);
             }
 
           }
 
         }
+      }
       }
 
 
@@ -324,7 +326,7 @@ class PaChongController extends Controller
     }
     public function list(){
 
-      $word = Word::paginate(10);
+      $word = Word::whereNull('version')->paginate(20);
       $curentpage = $word->currentPage();
       $nextpageurl = $word->nextPageUrl();
       $itemes = $word->items();
@@ -332,14 +334,9 @@ class PaChongController extends Controller
         # code...
       //  echo $perwords->word;
       $tmp = 0;
-        while($this->crawl($perwords->word)!=true){
+        $this->crawl($perwords->word);
 
-          sleep(5);//睡眠
-          $tmp = $tmp+1;
-          if($tmp>=3){
-            break;
-          }
-        }
+        sleep(2);//睡眠
 
       }
       //return redirect('login');

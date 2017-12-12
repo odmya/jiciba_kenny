@@ -23,11 +23,14 @@ Route::any('/wechat', 'WeChatController@serve');
 
 //ciba
 Route::get('/query/{word}', 'WordController@query')->name('query');
+Route::get('/googlespeech', 'WordController@googlespeech')->name('googlespeech');
+Route::post('/search', 'WordController@search')->name('search');
+
 
 Route::get('/ciba', 'PaChongController@ciba')->name('ciba');
 
 Route::get('/ciba/list', 'PaChongController@list')->name('cibalist');
-Route::get('/cibadb', 'PaChongController@cibadb')->name('cibadb');
+//Route::get('/cibadb', 'PaChongController@cibadb')->name('cibadb');
 Route::get('/crawl/{word}', 'PaChongController@crawl')->name('crawl');
 
 //endciba

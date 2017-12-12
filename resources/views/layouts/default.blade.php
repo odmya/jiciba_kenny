@@ -11,6 +11,22 @@
 
     <div class="container">
       <div class="col-md-offset-1 col-md-10">
+
+
+
+<form class="form-inline" method="post" action="{{ route('search') }}">
+  <div class="form-group">
+
+    <div class="input-group">
+
+      <input name="query" type="text" class="form-control" id="exampleInputAmount" placeholder="输入搜索的单词">
+      {{ csrf_field() }}
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">搜索</button>
+</form>
+
         @include('shared._messages')
         @yield('content')
         @include('layouts._footer')

@@ -2,6 +2,8 @@
   <div class="container">
     <div class="col-md-offset-1 col-md-10">
       <a href="/" id="logo">Sample App</a>
+
+
       <nav>
         <ul class="nav navbar-nav navbar-right">
           @if (Auth::check())
