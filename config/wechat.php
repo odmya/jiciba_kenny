@@ -97,12 +97,12 @@ return [
     /*
      * 小程序
      */
-    // 'mini_program' => [
-    //     'app_id'  => env('WECHAT_MINI_PROGRAM_APPID', ''),
-    //     'secret'  => env('WECHAT_MINI_PROGRAM_SECRET', ''),
-    //     'token'   => env('WECHAT_MINI_PROGRAM_TOKEN', ''),
-    //     'aes_key' => env('WECHAT_MINI_PROGRAM_AES_KEY', ''),
-    // ],
+    'mini_program' => [
+        'app_id'  => env('WECHAT_MINI_PROGRAM_APPID', 'wx329579d60620d7fb'),
+         'secret'  => env('WECHAT_MINI_PROGRAM_SECRET', '3de077fb0d899e2dc0800b8c74ec4ecc'),
+         'token'   => env('WECHAT_MINI_PROGRAM_TOKEN', 'jlkjdf123'),
+         'aes_key' => env('WECHAT_MINI_PROGRAM_AES_KEY', 'GKbPsMDopo0WqCTcZhDvw8qJQwG8R5NQxxRcCjPnBCJ'),
+     ],
 
     /*
      * 微信支付

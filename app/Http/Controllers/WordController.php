@@ -355,21 +355,23 @@ class WordController extends Controller
       ]);
 
 
+
       # The name of the audio file to transcribe
-      $fileName = public_path(). '/voice/juzi/audio.raw';
+      $fileName = public_path(). '/voice/juzi/wechat03.amr';
 
       # The audio file's encoding and sample rate
       $options = [
-          'encoding' => 'LINEAR16',
-          'sampleRateHertz' => 16000,
+          'encoding' => 'AMR',
+          'sampleRateHertz' => 8000,
       ];
 
       # Detects speech in the audio file
       $results = $speech->recognize(fopen($fileName, 'r'), $options);
-
+      $tmp ="";
       foreach ($results as $result) {
-          echo 'Transcription: ' . $result->alternatives()[0]['transcript'] . PHP_EOL;
+          $tmp .= 'google: ' . $result->alternatives()[0]['transcript'] ;
       }
+      echo $tmp ;
 
     //  echo "test15555555555";
 

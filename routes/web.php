@@ -17,6 +17,7 @@ Route::get('/', function () {
 */
 //wechat
 Route::any('/wechat', 'WeChatController@serve');
+Route::any('/weixinmini', 'WeChatController@weixinmini')->name('weixinmini');
 
 
 //wechat
