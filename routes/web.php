@@ -25,6 +25,8 @@ Route::any('/weixinmini', 'WeChatController@weixinmini')->name('weixinmini');
 //ciba
 Route::get('/query/{word}', 'WordController@query')->name('query');
 Route::get('/googlespeech', 'WordController@googlespeech')->name('googlespeech');
+Route::get('/baiduspeech', 'WordController@baiduspeech')->name('baiduspeech');
+
 Route::post('/search', 'WordController@search')->name('search');
 
 

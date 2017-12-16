@@ -16,6 +16,7 @@ class WeChatController extends Controller
     public function weixinmini(Request $request){
       $signature = $request->query('signature');
       $timestamp = $request->query('timestamp');
+      $echostr = $request->query('echostr');
       $nonce = $request->query('nonce');
       $token = 'jlkjdf123';
       $tmpArr = array($token, $timestamp, $nonce);
@@ -23,9 +24,9 @@ class WeChatController extends Controller
       $tmpStr = implode( $tmpArr );
       $tmpStr = sha1( $tmpStr );
       if( $tmpStr == $signature ){
-        return true;
+        echo  $echostr;
       }else{
-        return false;
+        echo  false;
       }
     }
 
@@ -42,15 +43,7 @@ class WeChatController extends Controller
         $app->server->push(function ($message) use ($app){
 
           switch ($message['MsgType']) {
-                case 'event':
-                    return '收到事件消息';
-                    break;
-                case 'text':
-                    return '收到文字消息';
-                    break;
-                case 'image':
-                    return '收到图片消息';
-                    break;
+
                 case 'voice':
                     $ToUserName = $message['ToUserName'];
                     $FromUserName = $message['FromUserName'];
@@ -58,6 +51,9 @@ class WeChatController extends Controller
                     $MsgId = $message['MsgId'];
                     $Format = $message['Format'];
                     $Media_Id = $message['MediaId'];
+
+
+
 
                   //  $Recognition = $message['Recognition'];
                   /*
@@ -97,21 +93,34 @@ class WeChatController extends Controller
 
                     //end google speech
                     */
-                    return 'Google 英文语音识别：';
+
+                    $stream = $app->media->get($Media_Id); //这里好像不行
+                    $save_path = public_path(). '/tmp/';
+                    $stream->save($save_path,md5($Media_Id).".amr");
+
+                    $fileName = public_path(). '/tmp/'.md5($Media_Id).".amr";
+
+
+
+                    $APP_ID=env('APP_ID') ;
+                    $API_KEY=env('API_KEY') ;
+                    $SECRET_KEY=env('SECRET_KEY');
+
+                  //  const API_KEY = 'QsfgtEHUUrujYOGrSin8UQgy';
+                    //const SECRET_KEY = 'bKyrt5qEUUlZvlTt0fch8pDFarTC5ZDt ';
+
+                    $client = new AipSpeech($APP_ID , $API_KEY, $SECRET_KEY);
+
+                      $test = $client->asr(file_get_contents($fileName), 'amr', 8000, array(
+                        'lan' => 'en',
+                    ));
+
+                    unlink($fileName);
+                    //echo $test['result'][0];
+
+                    return 'Google 英文语音识别：'.$test['result'][0];
                     break;
-                case 'video':
-                    return '收到视频消息';
-                    break;
-                case 'location':
-                    return '收到坐标消息';
-                    break;
-                case 'link':
-                    return '收到链接消息';
-                    break;
-                // ... 其它消息
-                default:
-                    return '收到其它消息';
-                    break;
+
             }
 
             return "欢迎关注佳和超市";

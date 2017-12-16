@@ -15,6 +15,8 @@ use App\Models\WordSpeech;
 use App\Models\WordExplain;
 use App\Models\WordVoice;
 
+use AipSpeech;
+
 use Google\Cloud\Translate\TranslateClient;
 use Google\Cloud\Speech\SpeechClient;
 
@@ -344,6 +346,27 @@ class WordController extends Controller
       }
     }
 
+    public function baiduspeech(){
+      $fileName = public_path(). '/voice/juzi/wechat01.amr';
+
+      //const APP_ID = '10540641';
+      $APP_ID=env('APP_ID') ;
+      $API_KEY=env('API_KEY') ;
+      $SECRET_KEY=env('SECRET_KEY');
+
+    //  const API_KEY = 'QsfgtEHUUrujYOGrSin8UQgy';
+      //const SECRET_KEY = 'bKyrt5qEUUlZvlTt0fch8pDFarTC5ZDt ';
+
+      $client = new AipSpeech($APP_ID , $API_KEY, $SECRET_KEY);
+
+        $test = $client->asr(file_get_contents($fileName), 'amr', 8000, array(
+          'lan' => 'en',
+      ));
+
+
+      echo $test['result'][0];
+    }
+
     public function googlespeech(){
 
       $projectId = 'speech-test@erudite-imprint-186800.iam.gserviceaccount.com';
@@ -357,13 +380,14 @@ class WordController extends Controller
 
 
       # The name of the audio file to transcribe
-      $fileName = public_path(). '/voice/juzi/wechat03.amr';
+      $fileName = public_path(). '/voice/juzi/wechat01.amr';
 
       # The audio file's encoding and sample rate
       $options = [
           'encoding' => 'AMR',
           'sampleRateHertz' => 8000,
       ];
+      /*
 
       # Detects speech in the audio file
       $results = $speech->recognize(fopen($fileName, 'r'), $options);
@@ -372,6 +396,36 @@ class WordController extends Controller
           $tmp .= 'google: ' . $result->alternatives()[0]['transcript'] ;
       }
       echo $tmp ;
+      */
+      $stturl = "https://speech.googleapis.com/v1beta1/speech:syncrecognize?key=AIzaSyAYmeL4hqlvmx0Q7IB-cLuQUlD2Q5Bskvk";
+  $upload = file_get_contents($fileName);
+  $upload = base64_encode($upload);
+
+  $data = array(
+      "config"    =>  array(
+          'encoding' => 'AMR',
+          'sampleRate' => 8000,
+      ),
+      "audio"     =>  array(
+          "content"       =>  $upload,
+      )
+  );
+
+  $data_string = json_encode($data);
+
+  $ch = curl_init($stturl);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+     'Content-Type: application/json',
+     'Content-Length: ' . strlen($data_string))
+  );
+
+  $result = curl_exec($ch);
+  $result_array = json_decode($result, true);
+
+echo $result_array['results'][0]['alternatives'][0]['transcript'];
 
     //  echo "test15555555555";
 
