@@ -31,6 +31,18 @@ class WeChatController extends Controller
       }
     }
 
+    public function course(){
+
+    }
+    public function jssdk(){
+
+      $app = app('wechat.official_account');
+  //  $test =  $app->jssdk->buildConfig(array $APIs, $debug = false, $beta = false, $json = true);
+
+
+    return view('wechat.course', compact('app'));
+    }
+
     /**
      * 处理微信的请求消息
      *
