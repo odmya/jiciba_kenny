@@ -7,6 +7,7 @@ use EasyWeChat\Kernel\Messages\Voice;
 use Google\Cloud\Translate\TranslateClient;
 use Google\Cloud\Speech\SpeechClient;
 use Illuminate\Http\Request;
+use AipSpeech;
 
 putenv('GOOGLE_APPLICATION_CREDENTIALS='.public_path().'/google-95003-2d37e7203dfa2017-11-12.json');
 
