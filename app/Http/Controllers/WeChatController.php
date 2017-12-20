@@ -9,6 +9,17 @@ use Google\Cloud\Speech\SpeechClient;
 use Illuminate\Http\Request;
 use AipSpeech;
 
+use App\Models\Course;
+use App\Models\Section;
+use App\Models\Chapter;
+use App\Models\Phrase;
+use App\Models\PhraseSection;
+
+use Redirect;
+use Auth;
+use Storage;
+
+
 putenv('GOOGLE_APPLICATION_CREDENTIALS='.public_path().'/google-95003-2d37e7203dfa2017-11-12.json');
 
 class WeChatController extends Controller
@@ -32,8 +43,170 @@ class WeChatController extends Controller
     }
 
     public function course(){
+      $courses = Course::all();
+
+      return view('wechat.courseindex',compact('courses'));
 
     }
+
+
+    public function act(Section $section){
+
+      $app = app('wechat.official_account');
+
+      switch ($section->type) {
+        case '0':
+        $phrasesections  = PhraseSection::where('section_id',$section->id)->orderBy('created_at', 'desc');
+        $return_blade ="wechat.act_read";
+          break;
+        case '1':
+        $phrasesections  = PhraseSection::where('section_id',$section->id)->orderBy('created_at')->paginate(1);
+        $return_blade ="wechat.act_speech";
+          break;
+        case '2':
+        $phrasesections  = PhraseSection::where('section_id',$section->id)->orderBy('created_at', 'desc')->paginate(1);
+        $return_blade ="wechat.act_two";
+
+          break;
+      }
+      $chapter_id = $section->chapter_id;
+
+      $chapter = Chapter::find($chapter_id);
+      $course_id = $chapter->course_id;
+      $course  =Course::find($course_id);
+
+      $curentpage = $phrasesections->currentPage();
+      $nextpageurl = $phrasesections->nextPageUrl();
+
+      if($nextpageurl==false){
+
+        $nextpageurl = route('wechatsection',$chapter->id);
+
+      }
+      $itemes = $phrasesections->items();
+      $phrase_array =array();
+
+      foreach ($itemes as $key => $perwords) {
+
+        $phrase_array[$perwords->id]= array('phrase'=>Phrase::find($perwords->phrase_id),'section'=>Section::find($perwords->section_id));
+
+        # code...
+      //  echo $perwords->word;
+
+
+      }
+
+      return view($return_blade, compact('section','chapter','course','phrasesections','phrase_array','nextpageurl','app'));
+
+
+    }
+
+public function section(Chapter $chapter){
+
+  $course = Course::find($chapter->course_id);
+
+  $sections = Section::where('chapter_id',$chapter->id)->orderBy('created_at', 'desc')
+                     ->paginate(30);
+  return view('wechat.section', compact('sections','chapter','course'));
+
+}
+  public function chapter(Course $course){
+
+    $chapters = Chapter::where('course_id',$course->id)->orderBy('created_at', 'desc')
+                       ->paginate(30);
+
+    return view('wechat.chapter', compact('chapters','course'));
+
+  }
+
+    public function speechtotext(Request $request){
+      $fileName = public_path(). '/tmp/'.$request->query('filename');;
+
+      //const APP_ID = '10540641';
+      $APP_ID=env('APP_ID') ;
+      $API_KEY=env('API_KEY') ;
+      $SECRET_KEY=env('SECRET_KEY');
+
+    //  const API_KEY = 'QsfgtEHUUrujYOGrSin8UQgy';
+      //const SECRET_KEY = 'bKyrt5qEUUlZvlTt0fch8pDFarTC5ZDt ';
+
+      $client = new AipSpeech($APP_ID , $API_KEY, $SECRET_KEY);
+
+        $test = $client->asr(file_get_contents($fileName), 'amr', 8000, array(
+          'lan' => 'en',
+      ));
+
+
+      echo $test['result'][0];
+    }
+
+
+    public function getsource(Request $request){
+      $app = app('wechat.official_account');
+      $Media_Id = $request->query('Media_Id');
+      $stream = $app->media->get($Media_Id); //这里好像不行
+
+      $save_path = public_path(). '/tmp/';
+      $stream->save($save_path,md5($Media_Id).".amr");
+
+      $fileName = public_path(). '/tmp/'.md5($Media_Id).".amr";
+
+      $APP_ID=env('APP_ID') ;
+      $API_KEY=env('API_KEY') ;
+      $SECRET_KEY=env('SECRET_KEY');
+
+      $client = new AipSpeech($APP_ID , $API_KEY, $SECRET_KEY);
+
+        $test = $client->asr(file_get_contents($fileName), 'amr', 8000, array(
+          'lan' => 'en',
+      ));
+
+
+      return $test['result'][0];
+
+
+    }
+
+
+    public function getsourcetwo(Request $request){
+      $app = app('wechat.official_account');
+       $Media_Id = $request->query('Media_Id');
+
+
+       $save_path = public_path(). '/tmp/';
+
+       $fileName = public_path(). '/tmp/'.md5($Media_Id).".amr";
+
+       if(file_exists($fileName)==false){
+         $stream = $app->media->get($Media_Id); //这里好像不行
+          $stream->save($save_path,md5($Media_Id).".amr");
+       }
+
+
+ 	    $projectId = 'speech-test@erudite-imprint-186800.iam.gserviceaccount.com';
+
+                     # Instantiates a client
+                     $speech = new SpeechClient([
+                         'projectId' => $projectId,
+                         'languageCode' => 'en-US',
+                     ]);
+
+ 	   $options = [
+                         'encoding' => 'AMR',
+                         'sampleRateHertz' => 8000,
+                     ];
+
+                     # Detects speech in the audio file
+                     $results = $speech->recognize(fopen($fileName, 'r'), $options);
+                     $tmp ="";
+                     foreach ($results as $result) {
+                         $tmp .= $result->alternatives()[0]['transcript'] ;
+                     }
+                 return $tmp ;
+
+
+    }
+
     public function jssdk(){
 
       $app = app('wechat.official_account');
@@ -131,7 +304,7 @@ class WeChatController extends Controller
                     unlink($fileName);
                     //echo $test['result'][0];
 
-                    return 'Google 英文语音识别：'.$test['result'][0];
+                    return '你说的是：'.$test['result'][0];
                     break;
 
             }

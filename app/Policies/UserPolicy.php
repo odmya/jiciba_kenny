@@ -11,7 +11,13 @@ class UserPolicy
 
     public function update(User $currentUser, User $user)
     {
-        return $currentUser->id === $user->id;
+        return $currentUser->id === $user->id||$currentUser->is_admin;
+    }
+
+
+    public function access(User $currentUser, User $user)
+    {
+        return $currentUser->is_admin;
     }
 
 

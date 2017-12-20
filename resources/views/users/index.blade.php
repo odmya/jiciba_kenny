@@ -1,4 +1,4 @@
-@extends('layouts.default')
+@extends('admin.default')
 @section('title', '所有用户')
 
 @section('content')

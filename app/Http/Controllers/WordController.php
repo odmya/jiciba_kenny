@@ -346,6 +346,23 @@ class WordController extends Controller
       }
     }
 
+    public function index(){
+      //$word = Word::where("version",'iciba02')->paginate(20);
+      $word = Word::paginate(20);
+      $curentpage = $word->currentPage();
+      $nextpageurl = $word->nextPageUrl();
+      $itemes = $word->items();
+      //$WordSpeech =New WordSpeech;
+
+
+
+      //return redirect('login');
+      //die();
+      return view('word.index', compact('word','nextpageurl'));
+
+
+    }
+
     public function baiduspeech(){
       $fileName = public_path(). '/voice/juzi/wechat01.amr';
 
