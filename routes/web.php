@@ -24,6 +24,20 @@ Route::any('/wechat/section/{chapter}', 'WeChatController@section')->name('wecha
 
 Route::get('/wechat/act/{section}', 'WeChatController@act')->name('wechatact');
 
+//Route::get('/wechat/wechatoauth', 'WeChatController@wechatoauth')->name('wechatoauth');
+
+
+//oAuth 授权
+
+Route::group(['middleware' => ['web', 'wechat.oauth']], function () {
+    Route::get('/wechat/wechatoauth', ['as'=>'wechatoauth',function () {
+       $user = session('wechat.oauth_user'); // 拿到授权用户资料
+
+      //return redirect()->route('wechatoauth');
+    }]);
+});
+
+
 
 Route::any('/weixinmini', 'WeChatController@weixinmini')->name('weixinmini');
 Route::any('/jssdk', 'WeChatController@jssdk')->name('jssdk');
@@ -84,6 +98,7 @@ Route::get('/help', 'StaticPagesController@help')->name('help');
 Route::get('/about', 'StaticPagesController@about')->name('about');
 
 Route::get('signup', 'UsersController@create')->name('signup');
+
 
 Route::resource('users', 'UsersController');
 

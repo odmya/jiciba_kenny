@@ -14,6 +14,7 @@ use App\Models\Section;
 use App\Models\Chapter;
 use App\Models\Phrase;
 use App\Models\PhraseSection;
+use App\Models\User;
 
 use Redirect;
 use Auth;
@@ -24,6 +25,16 @@ putenv('GOOGLE_APPLICATION_CREDENTIALS='.public_path().'/google-95003-2d37e7203d
 
 class WeChatController extends Controller
 {
+
+  public function __construct()
+    {
+        $this->middleware('wechat', [
+            'except' => ['weixinmini', 'serve', 'getsource',  'getsourcetwo','wechatoauth']
+        ]);
+
+    }
+
+
 
     public function weixinmini(Request $request){
       $signature = $request->query('signature');
@@ -42,6 +53,32 @@ class WeChatController extends Controller
       }
     }
 
+    public function wechatoauth(){
+
+      $app = app('wechat.official_account');
+      $user = $app->oauth->user();
+
+      if(User::where('openid',$user->getId()->count())){
+        if ( Auth::attempt(['openid' => $user->getId()]) ){
+          return redirect(route('wechatcourse'));
+        }
+      }else{
+        User::create([
+            'name' => $user->getName(),
+            'email' => $user->getEmail(),
+            'nickname' => $user->getNickname(),
+            'openid' => $user->getId(),
+            'avatar' => $user->getAvatar(),
+
+            'password' => bcrypt($user->getId()),
+        ]);
+
+        return $app->oauth->redirect()->send();
+      }
+
+
+    }
+
     public function course(){
       $courses = Course::all();
 
@@ -56,15 +93,15 @@ class WeChatController extends Controller
 
       switch ($section->type) {
         case '0':
-        $phrasesections  = PhraseSection::where('section_id',$section->id)->orderBy('created_at', 'desc');
+        $phrasesections  = $section->phrase()->orderBy('created_at', 'desc');
         $return_blade ="wechat.act_read";
           break;
         case '1':
-        $phrasesections  = PhraseSection::where('section_id',$section->id)->orderBy('created_at')->paginate(1);
+        $phrasesections  = $section->phrase()->orderBy('created_at')->paginate(1);
         $return_blade ="wechat.act_speech";
           break;
         case '2':
-        $phrasesections  = PhraseSection::where('section_id',$section->id)->orderBy('created_at', 'desc')->paginate(1);
+        $phrasesections  = $section->phrase()->orderBy('created_at', 'desc')->paginate(1);
         $return_blade ="wechat.act_two";
 
           break;
@@ -86,15 +123,6 @@ class WeChatController extends Controller
       $itemes = $phrasesections->items();
       $phrase_array =array();
 
-      foreach ($itemes as $key => $perwords) {
-
-        $phrase_array[$perwords->id]= array('phrase'=>Phrase::find($perwords->phrase_id),'section'=>Section::find($perwords->section_id));
-
-        # code...
-      //  echo $perwords->word;
-
-
-      }
 
       return view($return_blade, compact('section','chapter','course','phrasesections','phrase_array','nextpageurl','app'));
 

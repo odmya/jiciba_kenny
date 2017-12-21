@@ -13,7 +13,7 @@ class CreatePhraseSectionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('phrase_sections', function (Blueprint $table) {
+        Schema::create('phrase_section', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('phrase_id')->unsigned()->index();
             $table->integer('section_id')->unsigned()->index();
@@ -33,6 +33,6 @@ class CreatePhraseSectionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('phrase_sections');
+        Schema::dropIfExists('phrase_section');
     }
 }

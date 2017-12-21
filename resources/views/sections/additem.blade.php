@@ -11,12 +11,12 @@
 
   <table class="table table-striped">
     <tr><td>模式({{$section->name}})</td><td>ID</td><td>短语</td><td>语音</td><td>操作</td></tr>
-    @foreach ($phrase_array as $id => $phrase)
+    @foreach ($phrasesections as $id => $phrase)
     <tr>
-      <td>{{ $phrase['section']->name}}</td>
-      <td>{{ $phrase['phrase']->id}}</td>
-      <td>{{ $phrase['phrase']->english}}</td>
-      <td>{{ $phrase['phrase']->default_url}}</td>
+      <td>{{ $section->name}}</td>
+      <td>{{$phrase->id}}</td>
+      <td>{{ $phrase->english}}</td>
+      <td>{{ $phrase->default_url}}</td>
 <td>
   {!! Form::open(array('url' => route('sectionadditemremove',$id),'method'=>'delete')) !!}
   {!! Form::submit('删除',array('class' => 'btn btn-info btn-danger')) !!}

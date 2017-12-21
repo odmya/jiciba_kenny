@@ -65,12 +65,14 @@ class SectionController extends Controller
         */
         $id = trim($request->id);
         $phrase =    Phrase::find($id);
-
+        $section = Section::find($request->section_id);
           if($phrase !=null){
-                PhraseSection::create(['phrase_id'=>$phrase->id,'section_id'=>$request->section_id]);
+                //PhraseSection::create(['phrase_id'=>$phrase->id,'section_id'=>$request->section_id]);
+                $section->phrase()->attach([$phrase->id]);
+
           }
 
-          $section = Section::find($request->section_id);
+
 
           $chapter_id = $section->chapter_id;
 
@@ -88,21 +90,13 @@ class SectionController extends Controller
         $chapter = Chapter::find($chapter_id);
         $course_id = $chapter->course_id;
         $course  =Course::find($course_id);
-        $phrasesections  = PhraseSection::where('section_id',$section->id)->orderBy('created_at', 'desc')->paginate(100);
+        $phrasesections  = $section->phrase()->orderBy('created_at', 'desc')->paginate(100);
 
         $curentpage = $phrasesections->currentPage();
         $nextpageurl = $phrasesections->nextPageUrl();
         $itemes = $phrasesections->items();
         $phrase_array =array();
-        foreach ($itemes as $key => $perwords) {
 
-          $phrase_array[$perwords->id]= array('phrase'=>Phrase::find($perwords->phrase_id),'section'=>Section::find($perwords->section_id));
-
-          # code...
-        //  echo $perwords->word;
-
-
-        }
 
 
         return view('sections.additem', compact('section','chapter','course','phrasesections','phrase_array'));
