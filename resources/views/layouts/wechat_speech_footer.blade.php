@@ -11,7 +11,24 @@
 
 
 
-          <div class="btn col-xs-12 "><a href="{{$nextpageurl}}">继续</a></div>
+
+           {!!Form::open(array('url' => $nextpageurl,'method'=> "get"))!!}
+
+
+           @foreach ($phrasesections as $id => $phrase)
+
+
+           {!! Form::hidden('page',$nextpage) !!}
+           {!! Form::hidden('phrase_id',$phrase->id) !!}
+
+           {!! Form::hidden('media_serverid',"",array("id"=>"media_serverid")) !!}
+
+           @endforeach
+
+
+                     <button type="submit" class="btn col-xs-12">添加</button>
+           {!! Form::close() !!}
+
 
         </div>
 

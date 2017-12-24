@@ -6,7 +6,7 @@
 
           <div class="col-xs-6"><a href="#">我的课程</a></div>
 
-          <div class="col-xs-6"><a href="#">我的账户</a></div>
+          <div class="col-xs-6"><a href="#">我的账户({{ session('wechat.oauth_user')->name}})</a></div>
 
         </div>
 

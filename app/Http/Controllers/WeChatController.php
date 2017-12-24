@@ -15,6 +15,8 @@ use App\Models\Chapter;
 use App\Models\Phrase;
 use App\Models\PhraseSection;
 use App\Models\User;
+use App\Models\Record;
+use App\Models\Userrecord;
 
 use Redirect;
 use Auth;
@@ -26,16 +28,9 @@ putenv('GOOGLE_APPLICATION_CREDENTIALS='.public_path().'/google-95003-2d37e7203d
 class WeChatController extends Controller
 {
 
-  public function __construct()
-    {
-        $this->middleware('wechat', [
-            'except' => ['weixinmini', 'serve', 'getsource',  'getsourcetwo','wechatoauth']
-        ]);
-
-    }
 
 
-
+//  这个是微信小程序验证
     public function weixinmini(Request $request){
       $signature = $request->query('signature');
       $timestamp = $request->query('timestamp');
@@ -53,31 +48,74 @@ class WeChatController extends Controller
       }
     }
 
+
+// web outh 微信登录验证后保存数据到本地服务器数据库中
     public function wechatoauth(){
 
-      $app = app('wechat.official_account');
-      $user = $app->oauth->user();
 
-      if(User::where('openid',$user->getId()->count())){
-        if ( Auth::attempt(['openid' => $user->getId()]) ){
+      $user = session('wechat.oauth_user');
+
+$openid =  $user->id;
+$email = $user->email;
+if($email==false){
+  $email = $openid."@jciba.cn";
+}
+
+$nickname = $user->nickname;
+$name = $user->name;
+$avatar = $user->avatar;
+
+$password = 'jciba20171221!@';
+
+      if(User::where('openid',$openid)->count()){
+
+
+        if ( Auth::attempt(['openid' => $openid,'password' => $password]) ){
+          $user_info = User::where('openid',$openid)->first();
+
+          if($user_info->nickname != $nickname){
+            $user_info->nickname = $nickname;
+            $user_info->save();
+          }
+
+          if($user_info->name != $name){
+            $user_info->name = $name;
+            $user_info->save();
+          }
+
+          if($user_info->avatar != $avatar){
+            $user_info->avatar = $avatar;
+            $user_info->save();
+          }
+          session(['wechatuser' => $openid]);
+
           return redirect(route('wechatcourse'));
+          //$oauth->redirect()->send();
         }
       }else{
-        User::create([
-            'name' => $user->getName(),
-            'email' => $user->getEmail(),
-            'nickname' => $user->getNickname(),
-            'openid' => $user->getId(),
-            'avatar' => $user->getAvatar(),
+        $data =[
+            'name' => $name,
+            'email' => $email,
+            'nickname' => $nickname,
+            'openid' => $openid,
+            'avatar' => $avatar,
 
-            'password' => bcrypt($user->getId()),
-        ]);
+            'password' => bcrypt('jciba20171221!@'),
+        ];
 
-        return $app->oauth->redirect()->send();
+        //dd($data);
+        User::create($data);
+        session(['wechatuser' => $openid]);
+
+//die("test2");
+        return redirect(route('wechatcourse'));
       }
 
 
     }
+
+
+// 显示所有课程
 
     public function course(){
       $courses = Course::all();
@@ -86,11 +124,18 @@ class WeChatController extends Controller
 
     }
 
+// 记录录音记录
+public function record($speech_unique, Request $request){
+  $record = Userrecord::where('speech_unique',trim($speech_unique));
+  dd($record);
+}
 
-    public function act(Section $section){
+    public function act(Section $section, Request $request){
+
+
 
       $app = app('wechat.official_account');
-
+      $user = session('wechat.oauth_user');
       switch ($section->type) {
         case '0':
         $phrasesections  = $section->phrase()->orderBy('created_at', 'desc');
@@ -99,6 +144,14 @@ class WeChatController extends Controller
         case '1':
         $phrasesections  = $section->phrase()->orderBy('created_at')->paginate(1);
         $return_blade ="wechat.act_speech";
+        if(isset($request->page)==false||$request->page == 1){
+          //session('speech_unique')= uniqid();
+          session(['speech_unique'=> uniqid()]);
+
+          //$tt= session('speech_unique');
+        //  $tt = uniqid();
+          //dd($tt);
+        }
           break;
         case '2':
         $phrasesections  = $section->phrase()->orderBy('created_at', 'desc')->paginate(1);
@@ -114,21 +167,84 @@ class WeChatController extends Controller
 
       $curentpage = $phrasesections->currentPage();
       $nextpageurl = $phrasesections->nextPageUrl();
+      $next_page = "";
 
-      if($nextpageurl==false){
 
-        $nextpageurl = route('wechatsection',$chapter->id);
 
-      }
       $itemes = $phrasesections->items();
       $phrase_array =array();
+$media_serverid ="";
+$media_path ="";
+
+if($request->media_serverid){
+  $media_serverid = $request->media_serverid;
+  $media_path =md5($media_serverid).".mp3";
+}
 
 
-      return view($return_blade, compact('section','chapter','course','phrasesections','phrase_array','nextpageurl','app'));
+      if($request->phrase_id){
+        if(session('speech_unique')){
+
+          $speech_unique= session('speech_unique');
+
+          $records = Record::where('speech_unique',$speech_unique)->where('phrase_id',$request->phrase_id)->count();
+
+
+          if($records==false){
+            Record::create([
+            'speech_unique' => $speech_unique,
+            'openid' => $user->id,
+            'phrase_id' => $request->phrase_id,
+            'section_id' => $section->id,
+            'chapter_id' => $section->chapter_id,
+            'course_id' => $course->id,
+            'media_serverid' => $media_serverid,
+            'media_path' => $media_path,
+        ]);
+          }
+        }
+
+      }
+
+
+      if($nextpageurl==false){
+        $speech_unique= session('speech_unique');
+        $nextpageurl = route('wechatsection',$chapter->id);
+          $nextpage = 100000;
+          if($request->page ==100000){
+            Userrecord::create([
+            'speech_unique' => $speech_unique,
+            'openid' => $user->id,
+            'push' => 0,
+            'section_id' => $section->id,
+            'chapter_id' => $section->chapter_id,
+            'course_id' => $course->id,
+            'media_serverid' => $media_serverid,
+            'media_path' => $media_path,
+        ]);
+
+        session()->forget('speech_unique');
+        session()->flush();
+        return redirect(route('wechatrecord'));
+
+          }
+
+      }else{
+
+        $tmp_query = parse_url($nextpageurl)['query'];
+
+        $nextpage = str_replace('page=','',$tmp_query);
+      }
+
+
+
+      return view($return_blade, compact('section','chapter','course','phrasesections','phrase_array','nextpageurl','app','nextpage'));
 
 
     }
 
+
+// 章节后面的 功能部分 显示没章节后面的功能
 public function section(Chapter $chapter){
 
   $course = Course::find($chapter->course_id);
@@ -138,6 +254,9 @@ public function section(Chapter $chapter){
   return view('wechat.section', compact('sections','chapter','course'));
 
 }
+
+
+//显示每个课程的章节
   public function chapter(Course $course){
 
     $chapters = Chapter::where('course_id',$course->id)->orderBy('created_at', 'desc')
@@ -146,6 +265,8 @@ public function section(Chapter $chapter){
     return view('wechat.chapter', compact('chapters','course'));
 
   }
+
+
 
     public function speechtotext(Request $request){
       $fileName = public_path(). '/tmp/'.$request->query('filename');;
@@ -169,6 +290,9 @@ public function section(Chapter $chapter){
     }
 
 
+
+// 从微信服务器上下载临时素材保持到本地服务器，并且把.amr 格式转换成H5可用的MP3格式
+// 百度语言识别并保存
     public function getsource(Request $request){
       $app = app('wechat.official_account');
       $Media_Id = $request->query('Media_Id');
@@ -178,6 +302,12 @@ public function section(Chapter $chapter){
       $stream->save($save_path,md5($Media_Id).".amr");
 
       $fileName = public_path(). '/tmp/'.md5($Media_Id).".amr";
+
+      $userfilename = public_path(). '/voice/uservoice/'.md5($Media_Id).".mp3";
+
+      exec('sox '.$fileName.' '.$userfilename);
+    //  $command ='sox '.$fileName.' '.$userfilename;
+
 
       $APP_ID=env('APP_ID') ;
       $API_KEY=env('API_KEY') ;
@@ -196,6 +326,7 @@ public function section(Chapter $chapter){
     }
 
 
+// google 语言识别
     public function getsourcetwo(Request $request){
       $app = app('wechat.official_account');
        $Media_Id = $request->query('Media_Id');
@@ -313,6 +444,13 @@ public function section(Chapter $chapter){
                     $stream->save($save_path,md5($Media_Id).".amr");
 
                     $fileName = public_path(). '/tmp/'.md5($Media_Id).".amr";
+
+                    $userfilename = public_path(). '/voice/uservoice/'.md5($Media_Id).".mp3";
+
+                  //  exec('sox '.$fileName.' '.$userfilename);
+                //  $command ='sox '.$fileName.' '.$userfilename;
+                //  exec($command);
+
 
 
 

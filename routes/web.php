@@ -18,17 +18,42 @@ Route::get('/', function () {
 //wechat
 Route::any('/wechat', 'WeChatController@serve');
 
-Route::any('/wechat/course', 'WeChatController@course')->name('wechatcourse');
-Route::any('/wechat/chapter/{course}', 'WeChatController@chapter')->name('wechatchapter');
-Route::any('/wechat/section/{chapter}', 'WeChatController@section')->name('wechatsection');
+//Route::any('/wechat/course', 'WeChatController@course')->name('wechatcourse');
 
-Route::get('/wechat/act/{section}', 'WeChatController@act')->name('wechatact');
+
+Route::group(['middleware' => ['wechat','web', 'wechat.oauth']], function () {
+
+  Route::any('/wechat/course', 'WeChatController@course')->name('wechatcourse');
+  Route::any('/wechat/chapter/{course}', 'WeChatController@chapter')->name('wechatchapter');
+  Route::any('/wechat/section/{chapter}', 'WeChatController@section')->name('wechatsection');
+  Route::get('/wechat/act/{section}', 'WeChatController@act')->name('wechatact');
+
+  Route::get('/wechat/record/{speech_unique}', 'WeChatController@record')->name('wechatrecord');
+
+  Route::any('/jssdk', 'WeChatController@jssdk')->name('jssdk');
+
+  Route::any('/wechatoauth', 'WeChatController@wechatoauth')->name('wechatoauth');
+
+});
+
+Route::group(['middleware' => ['web', 'wechat.oauth']], function () {
+
+  Route::any('/wechatoauth', 'WeChatController@wechatoauth')->name('wechatoauth');
+
+});
+
+
+
+
+
+
+
 
 //Route::get('/wechat/wechatoauth', 'WeChatController@wechatoauth')->name('wechatoauth');
 
 
 //oAuth 授权
-
+/*
 Route::group(['middleware' => ['web', 'wechat.oauth']], function () {
     Route::get('/wechat/wechatoauth', ['as'=>'wechatoauth',function () {
        $user = session('wechat.oauth_user'); // 拿到授权用户资料
@@ -36,11 +61,10 @@ Route::group(['middleware' => ['web', 'wechat.oauth']], function () {
       //return redirect()->route('wechatoauth');
     }]);
 });
-
+*/
 
 
 Route::any('/weixinmini', 'WeChatController@weixinmini')->name('weixinmini');
-Route::any('/jssdk', 'WeChatController@jssdk')->name('jssdk');
 Route::any('/getsource', 'WeChatController@getsource')->name('getsource');
 Route::any('/getsourcetwo', 'WeChatController@getsourcetwo')->name('getsourcetwo');
 

@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Auth;
 
 class Wechat
 {
@@ -15,9 +16,15 @@ class Wechat
      */
     public function handle($request, Closure $next)
     {
-      if (empty($_SESSION['wechat.oauth_user'])) {
+    //  $wechatuser = session('wechatuser');
+
+      $user = session('wechat.oauth_user');
+
+      if ($user ==false) {
         return redirect()->route('wechatoauth');
       }
+
+      return $next($request);
 
     }
 }
