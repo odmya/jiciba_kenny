@@ -18,7 +18,11 @@
       <td>{{ $phrase->english}}</td>
       <td>{{ $phrase->default_url}}</td>
 <td>
-  {!! Form::open(array('url' => route('sectionadditemremove',$id),'method'=>'delete')) !!}
+  {!! Form::open(array('url' => route('sectionadditemremove'),'method'=>'delete')) !!}
+
+  {!! Form::hidden('section_id',$section->id) !!}
+  {!! Form::hidden('phrase_id',$phrase->id) !!}
+
   {!! Form::submit('删除',array('class' => 'btn btn-info btn-danger')) !!}
   {!! Form::close()!!}
 

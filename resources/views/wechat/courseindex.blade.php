@@ -19,7 +19,11 @@
 
 </ul>
   <div>
+<h6>{{$user->nickname}}的练习记录</h6>
 
+@foreach ($records as $record)
+<li><a href="{{route('wechatrecord',$record->speech_unique)}}">{{ $record->created_at}}</a></li>
+@endforeach
 
 
   </div>

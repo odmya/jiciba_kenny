@@ -28,7 +28,6 @@ Route::group(['middleware' => ['wechat','web', 'wechat.oauth']], function () {
   Route::any('/wechat/section/{chapter}', 'WeChatController@section')->name('wechatsection');
   Route::get('/wechat/act/{section}', 'WeChatController@act')->name('wechatact');
 
-  Route::get('/wechat/record/{speech_unique}', 'WeChatController@record')->name('wechatrecord');
 
   Route::any('/jssdk', 'WeChatController@jssdk')->name('jssdk');
 
@@ -36,12 +35,17 @@ Route::group(['middleware' => ['wechat','web', 'wechat.oauth']], function () {
 
 });
 
+
+
 Route::group(['middleware' => ['web', 'wechat.oauth']], function () {
 
   Route::any('/wechatoauth', 'WeChatController@wechatoauth')->name('wechatoauth');
 
 });
 
+
+  Route::get('/wechat/record/{speech_unique}', 'WeChatController@record')->name('wechatrecord'); //不需要微信登录验证
+  Route::get('/record', 'RecordController@index')->name('recordindex');
 
 
 
@@ -82,7 +86,7 @@ Route::get('/section/{chapter}', 'SectionController@index')->name('sectionindex'
 Route::get('/section/additem/{section}', 'SectionController@additem')->name('sectionadditem');
 Route::post('/section/additemsave', 'SectionController@additemsave')->name('sectionadditemsave');
 
-Route::any('/section/additemremove/{phrasesection}', 'SectionController@additemremove')->name('sectionadditemremove');
+Route::any('/section/additemremove', 'SectionController@additemremove')->name('sectionadditemremove');
 
 Route::any('/section/{section}', 'SectionController@update')->name('sectionupdate');
 

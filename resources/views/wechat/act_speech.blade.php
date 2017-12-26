@@ -210,13 +210,13 @@ Your browser does not support the audio element.
 
             <input name="phrase_id" type="hidden" value="{{$phrase->id}}">
 
+            <input name="media_serverid" type="hidden" value="" id="media_serverid">
 
-           {!! Form::hidden('media_serverid',"",array("id"=>"media_serverid")) !!}
 
            @endforeach
 
 
-                     <button type="submit" class="btn col-xs-12">添加</button>
+                     <button type="submit" class="btn col-xs-12">继续</button>
 
 
 

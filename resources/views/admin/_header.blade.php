@@ -268,6 +268,10 @@
                                     <a href="{{route('course.index')}}">课程例表</a>
                                 </li>
 
+                                <li>
+                                    <a href="{{route('recordindex')}}">用户完成记录</a>
+                                </li>
+
                             </ul>
 
                         </li>

@@ -15,5 +15,12 @@ class Phrase extends Model
 
     }
 
+    public function Record()
+    {
+
+      return $this->hasMany(Record::class);
+
+    }
+
 
 }

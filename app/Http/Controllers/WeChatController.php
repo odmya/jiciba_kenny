@@ -119,15 +119,24 @@ $password = 'jciba20171221!@';
 
     public function course(){
       $courses = Course::all();
+      $user = session('wechat.oauth_user');
+      $records = Userrecord::where("openid",$user->id)->orderBy('created_at', 'desc')->paginate(20);
 
-      return view('wechat.courseindex',compact('courses'));
+      return view('wechat.courseindex',compact('courses','records','user'));
 
     }
 
 // 记录录音记录
 public function record($speech_unique, Request $request){
-  $record = Userrecord::where('speech_unique',trim($speech_unique));
-  dd($record);
+  $userrecord = Userrecord::where('speech_unique',trim($speech_unique))->first();
+  $user = User::where("openid",$userrecord->openid)->first();
+  $records = Record::where("speech_unique",$userrecord->speech_unique)->get();
+  //$records = array();
+
+
+
+//  $user = session('wechat.oauth_user');
+  return view('wechat.record',compact('userrecord','records','user'));
 }
 
     public function act(Section $section, Request $request){
@@ -209,25 +218,31 @@ if($request->media_serverid){
 
       if($nextpageurl==false){
         $speech_unique= session('speech_unique');
-        $nextpageurl = route('wechatsection',$chapter->id);
-          $nextpage = 100000;
-          if($request->page ==100000){
-            Userrecord::create([
-            'speech_unique' => $speech_unique,
-            'openid' => $user->id,
-            'push' => 0,
-            'section_id' => $section->id,
-            'chapter_id' => $section->chapter_id,
-            'course_id' => $course->id,
-            'media_serverid' => $media_serverid,
-            'media_path' => $media_path,
-        ]);
+          if($speech_unique){
+            $nextpageurl = route('wechatsection',$chapter->id);
+              $nextpage = 100000;
+              if($request->page ==100000){
+                Userrecord::create([
+                'speech_unique' => $speech_unique,
+                'openid' => $user->id,
+                'push' => 0,
+                'section_id' => $section->id,
+                'chapter_id' => $section->chapter_id,
+                'course_id' => $course->id,
+                'media_serverid' => $media_serverid,
+                'media_path' => $media_path,
+            ]);
 
-        session()->forget('speech_unique');
-        session()->flush();
-        return redirect(route('wechatrecord'));
+            session()->forget('speech_unique');
+           return redirect(route('wechatrecord',$speech_unique));
+          //return redirect(route('wechatchapter',$course->id));
 
+              }
+
+          }else{
+            return redirect(route('wechatact',$section->id));
           }
+
 
       }else{
 

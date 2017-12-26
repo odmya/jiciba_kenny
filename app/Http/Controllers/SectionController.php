@@ -38,12 +38,20 @@ class SectionController extends Controller
 
       }
 
-      public function additemremove(PhraseSection $phrasesection, Request $request){
+      public function additemremove(Request $request){
 
         if(Auth::user()->is_admin){
 
 
-          $phrasesection->delete();
+          $phrase_id = trim($request->phrase_id);
+          $phrase =    Phrase::find($phrase_id);
+          $section = Section::find($request->section_id);
+            if($phrase !=null){
+                  //PhraseSection::create(['phrase_id'=>$phrase->id,'section_id'=>$request->section_id]);
+                  $section->phrase()->detach([$phrase->id]);
+
+            }
+
           return Redirect::back();
 
         }else{
