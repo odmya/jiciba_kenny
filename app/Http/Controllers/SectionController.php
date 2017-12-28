@@ -9,6 +9,8 @@ use App\Models\Chapter;
 use App\Models\Phrase;
 use App\Models\PhraseSection;
 
+use App\Models\Question;
+
 use Redirect;
 use Auth;
 use Storage;
@@ -72,13 +74,21 @@ class SectionController extends Controller
         $phrase =    Phrase::where('english', 'like','%'.$query_word.'%')->first();
         */
         $id = trim($request->id);
-        $phrase =    Phrase::find($id);
+
         $section = Section::find($request->section_id);
-          if($phrase !=null){
-                //PhraseSection::create(['phrase_id'=>$phrase->id,'section_id'=>$request->section_id]);
-                $section->phrase()->attach([$phrase->id]);
+          if($section->type ==1){
+            $phrase =    Phrase::find($id);
+            if($phrase !=null){
+                  //PhraseSection::create(['phrase_id'=>$phrase->id,'section_id'=>$request->section_id]);
+                  $section->phrase()->attach([$phrase->id]);
+
+            }
+          }elseif($section->type ==3){
+            $question =    Question::find($id);
+            $section->question()->attach([$question->id]);
 
           }
+
 
 
 
@@ -98,16 +108,28 @@ class SectionController extends Controller
         $chapter = Chapter::find($chapter_id);
         $course_id = $chapter->course_id;
         $course  =Course::find($course_id);
-        $phrasesections  = $section->phrase()->orderBy('created_at', 'desc')->paginate(100);
-
-        $curentpage = $phrasesections->currentPage();
-        $nextpageurl = $phrasesections->nextPageUrl();
-        $itemes = $phrasesections->items();
-        $phrase_array =array();
 
 
+        if($section->type ==1){
+          $phrasesections  = $section->phrase()->orderBy('created_at', 'desc')->paginate(100);
+          $curentpage = $phrasesections->currentPage();
+          $nextpageurl = $phrasesections->nextPageUrl();
+          $itemes = $phrasesections->items();
+          $phrase_array =array();
 
-        return view('sections.additem', compact('section','chapter','course','phrasesections','phrase_array'));
+          return view('sections.additem', compact('section','chapter','course','phrasesections','phrase_array'));
+        }elseif($section->type ==3){
+          $questionsections  = $section->question()->orderBy('created_at', 'desc')->paginate(100);
+
+          $curentpage = $questionsections->currentPage();
+          $nextpageurl = $questionsections->nextPageUrl();
+          $itemes = $questionsections->items();
+          $phrase_array =array();
+
+          return view('sections.questionadditem', compact('section','chapter','course','questionsections'));
+        }
+
+
       }
 
 

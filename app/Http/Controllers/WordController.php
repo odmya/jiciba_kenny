@@ -458,9 +458,9 @@ echo $result_array['results'][0]['alternatives'][0]['transcript'];
 
        $word_obj = Word::where('word', $query_word)->first();  //单词
 
-if(count($word_obj->word_explain()->get())==false){
+if($word_obj ==false){
   $this->crawl($query_word);
-
+$word_obj = Word::where('word', $query_word)->first(); 
 }
 
       $voices =  WordVoice::where('word_id', $word_obj->id)->get();  //单词

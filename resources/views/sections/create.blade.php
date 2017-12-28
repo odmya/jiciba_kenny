@@ -20,7 +20,7 @@
 
           <div class="form-group">
             <label for="name">类型</label>
-            {!! Form::select('type', array('0' => '阅读模式', '1' => '语音模式', '2' =>'角色扮演模式')) !!}
+            {!! Form::select('type', array('0' => '阅读模式', '1' => '语音模式', '2' =>'角色扮演模式','3' =>'答题模式')) !!}
 
 
           </div>

@@ -28,6 +28,7 @@ Route::group(['middleware' => ['wechat','web', 'wechat.oauth']], function () {
   Route::any('/wechat/section/{chapter}', 'WeChatController@section')->name('wechatsection');
   Route::get('/wechat/act/{section}', 'WeChatController@act')->name('wechatact');
 
+Route::get('/wechat/question/{section}', 'WeChatController@wechatquestion')->name('wechatquestion');
 
   Route::any('/jssdk', 'WeChatController@jssdk')->name('jssdk');
 
@@ -76,6 +77,15 @@ Route::any('/getsourcetwo', 'WeChatController@getsourcetwo')->name('getsourcetwo
 //phrase
 
 Route::resource('phrase', 'PhraseController');
+
+Route::resource('answer', 'AnswerController');
+
+Route::resource('question', 'QuestionController');
+
+Route::get('/question/add/{question}', 'QuestionController@add')->name('questionadd');
+Route::post('/question/questionaddsave', 'QuestionController@questionaddsave')->name('questionaddsave');
+
+Route::resource('questiontype', 'QuestionTypeController');
 
 Route::post('/phrase/query', 'PhraseController@query')->name('phrasequery');
 

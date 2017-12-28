@@ -286,6 +286,27 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
+
+                        <li>
+                            <a href="#"><i class="fa fa-edit fa-fw"></i> 题库</a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="{{route('question.index')}}">题目</a>
+                                </li>
+                                <li>
+                                    <a href="{{route('answer.index')}}">选项</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{route('questiontype.index')}}">题目类型</a>
+                                </li>
+
+
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+
                         <li>
                             <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">

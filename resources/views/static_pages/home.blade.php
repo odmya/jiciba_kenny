@@ -1,16 +1,53 @@
-@extends('layouts.default')
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@yield('title', '记词吧')</title>
+    <link rel="stylesheet" href="/css/app.css">
 
-@section('content')
-  <div class="jumbotron">
-    <h1>Hello Laravel</h1>
-    <p class="lead">
-      你现在所看到的是 <a href="https://fsdhub.com/books/laravel-essential-training-5.1">Laravel 入门教程</a> 的项目主页。
-    </p>
-    <p>
-      一切，将从这里开始。
-    </p>
-    <p>
-      <a class="btn btn-lg btn-success" href="{{ route('signup') }}" role="button">现在注册</a>
-    </p>
-  </div>
-@stop
+    <!-- MetisMenu CSS -->
+    <link href="css/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+  </head>
+  <body>
+    @include('layouts._header')
+
+    <div class="container">
+      <div class="col-md-offset-1 col-md-10 text-center">
+
+
+
+        {!!Form::open(array('route' => 'search','method'=> "POST",'class'=>'form-inline','enctype'=>"multipart/form-data"))!!}
+
+          {{ csrf_field() }}
+            <div class="form-group">
+              <label for="name">输入你要查询的单词:</label>
+              <input type="text" name="query" class="form-control" value="">
+            </div>
+
+
+
+            <button type="submit" class="btn btn-primary ">查询</button>
+        {!! Form::close() !!}
+
+        @include('layouts._footer')
+      </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+    <script src="js/plugins/metisMenu/metisMenu.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="js/sb-admin-2.js"></script>
+
+  </body>
+
+
+</html>

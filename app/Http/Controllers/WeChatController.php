@@ -259,6 +259,12 @@ if($request->media_serverid){
     }
 
 
+public public function wechatquestion(Section $section, Request $request)
+{
+  # 答题模式
+  return view('wechat.question');
+}
+
 // 章节后面的 功能部分 显示没章节后面的功能
 public function section(Chapter $chapter){
 

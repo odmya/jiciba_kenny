@@ -10,7 +10,11 @@
     <tr><td>名称</td></tr>
     @foreach ($sections as $section)
     <tr>
+      @if($section->type ==1)
       <td><a href="{{route('wechatact',$section->id)}}">{{ $section->name}}</a></td>
+      @elseif($section->type ==3)
+      <td><a href="{{route('wechatquestion',$section->id)}}">{{ $section->name}}</a></td>
+      @endif
     </tr>
     @endforeach
   </table>

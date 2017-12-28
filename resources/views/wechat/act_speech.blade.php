@@ -85,30 +85,6 @@ if (useragent.match(/MicroMessenger/i) != 'MicroMessenger') {
              })
 
 
-			 $.ajax({
-                 url:"{{route('getsourcetwo')}}",
-                 type: 'get',
-                 data: {
-                       'Media_Id': res.serverId
-                   },
-                 cache:false,//false是不缓存，true为缓存
-                 async:true,//true为异步，false为同步
-                beforeSend:function(result){
-                    //请求成功时
-                   // alert(result);
-                    $("#resulttwo").html("请稍后，我们正在理解您的语音！")
-                },
-                 success:function(result){
-                     //请求成功时
-                    // alert(result);
-                     $("#resulttwo").html(result)
-                 },
-
-                 error:function(){
-                     //请求失败时
-                 }
-             })
-
 
           }
           });
@@ -187,9 +163,7 @@ Your browser does not support the audio element.
 
 <div id='yourspeech'>你的读音,点击播放<img src="/images/laba.jpg" id='laba'></div>
 
-<div>识别结果：<b id="result"></b></div>
-
-<div>识别结果 2：<b id="resulttwo"></b></div>
+<div>识别结果仅供参考：<b id="result"></b> </div>
 
 <div id='record_begin' style='display:none;text-align:center;'><img src="/images/voice.gif"></div>
 
