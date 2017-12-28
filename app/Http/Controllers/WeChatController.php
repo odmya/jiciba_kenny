@@ -259,10 +259,79 @@ if($request->media_serverid){
     }
 
 
-public public function wechatquestion(Section $section, Request $request)
+public function wechatquestion(Section $section, Request $request)
 {
   # 答题模式
-  return view('wechat.question');
+
+  $app = app('wechat.official_account');
+  $user = session('wechat.oauth_user');
+
+  $questionsections  = $section->question()->orderBy('created_at', 'desc')->paginate(1);
+  $curentpage = $questionsections->currentPage();
+  $nextpageurl = $questionsections->nextPageUrl();
+  $next_page = "";
+
+  $answers =array();
+  foreach($questionsections as $questions){
+    $answers = $questions->answer()->get();
+  }
+  $return_blade ="wechat.act_speech";
+  if(isset($request->page)==false||$request->page == 1){
+    //session('speech_unique')= uniqid();
+    session(['exam_unique'=> uniqid()]);
+
+    //$tt= session('speech_unique');
+  //  $tt = uniqid();
+    //dd($tt);
+  }
+
+  $chapter_id = $section->chapter_id;
+
+  $chapter = Chapter::find($chapter_id);
+  $course_id = $chapter->course_id;
+  $course  =Course::find($course_id);
+
+
+  if($nextpageurl){
+    $tmp_query = parse_url($nextpageurl)['query'];
+
+    $nextpage = str_replace('page=','',$tmp_query);
+
+
+    $exam_unique= session('exam_unique');
+      if($exam_unique){
+        $nextpageurl = route('wechatsection',$chapter->id);
+          $nextpage = 100000;
+          if($request->page ==100000){
+            Userrecord::create([
+            'speech_unique' => $exam_unique,
+            'openid' => $user->id,
+            'push' => 0,
+            'section_id' => $section->id,
+            'chapter_id' => $section->chapter_id,
+            'course_id' => $course->id
+        ]);
+
+        session()->forget('speech_unique');
+       return redirect(route('wechatrecord',$speech_unique));
+      //return redirect(route('wechatchapter',$course->id));
+
+          }
+
+      }else{
+        return redirect(route('wechatact',$section->id));
+      }
+
+  }else{
+    $nextpage =0;
+  }
+
+
+
+
+
+
+  return view('wechat.question',compact('questionsections','section','nextpage','nextpageurl','answers'));
 }
 
 // 章节后面的 功能部分 显示没章节后面的功能
