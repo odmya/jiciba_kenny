@@ -1,5 +1,6 @@
 /node_modules
 /public/hot
+/public/images
 /public/voice/word
 /public/storage
 /storage/*.key
