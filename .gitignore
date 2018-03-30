@@ -1,7 +1,7 @@
 /node_modules
 /public/hot
 /public/images
-/public/voice/word
+/public/voice
 /public/storage
 /storage/*.key
 /public/client_secret_650738411223-cma1o3vegjn1s608uml3djbruuavebdr.apps.googleusercontent.com.json
