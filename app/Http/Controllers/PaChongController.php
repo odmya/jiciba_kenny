@@ -12,7 +12,10 @@ use App\Models\LevelBase;
 use App\Models\LevelBaseWord;
 use App\Models\WordSpeech;
 use App\Models\WordExplain;
+use App\Models\WordImage;
+use App\Models\WordTip;
 use App\Jobs\crawl;
+use Storage;
 set_time_limit(0);
 class PaChongController extends Controller
 {
@@ -302,6 +305,170 @@ class PaChongController extends Controller
 
     }
 
+    public function crawl_dicts($words="test",$version="dicts"){
+
+      //$words = "explore";
+     $query_word = trim($words);
+     $query_word = strtolower($query_word);
+    //$query_word = $words;
+      $crawl_version = $version;
+
+
+
+
+      $word = Word::where('word', $query_word)->first();
+    //  $words = new Word;
+    //  $word = $words->where('word', $query_word)->first();
+
+    //  echo $query_word;
+
+      if($word==false){
+
+      //
+
+        return;
+
+      }else{
+      //  $word = Word::where('word', $query_word)->get();
+      }
+
+
+
+
+
+      $url = "http://www.dicts.cn/dict/dict/dict!searchhtml3.asp?id=".$query_word;
+    //  $tmp_url = curl_get_file_contents($url);
+
+
+    //  $url_page = "http://sample.app/test.php";
+$proxy = "209.88.95.2186:80";    //此处为代理服务器IP和PORT
+
+$tmp_url = curl_string($url);
+
+
+
+    //  dd($tmp_url);
+      if(  $tmp_url ){
+        $tmp_url = trim($tmp_url);
+
+        $crawl_url ="http://www.dicts.cn".$tmp_url;
+      }else{
+        $word->version = $version;
+
+        $word->save();
+        return;
+      }
+
+
+    //  dd($crawl_url);
+
+      $html = requests::get($crawl_url);
+
+      // 抽取图片
+
+      $selector = "//*[@id='cigencizui']/script[1]/text()";
+      // 提取结果
+      $result = selector::select($html, $selector);
+      $matches =array();
+      $regex1 = strpos($result,"var img_prefix = new Array");
+
+      $regex2 = strpos($result,"var img_num");
+
+      $tmp_images = substr($result,$regex1,$regex2 -$regex1 );
+      $tmp_images = str_replace("var img_prefix = new Array(","",$tmp_images);
+      $tmp_images = str_replace('"',"",$tmp_images);
+      $tmp_images = str_replace("'","",$tmp_images);
+      $tmp_images = str_replace(");","",$tmp_images);
+      //echo $tmp_images;
+      $tmp_images = explode(",",$tmp_images);
+      $tmp_images = array_map('trim', $tmp_images);
+
+      if(is_array($tmp_images)&&count($tmp_images)){
+
+          foreach ($tmp_images as $key => $image) {
+
+            $ext = pathinfo($image,PATHINFO_EXTENSION);
+          //  echo $image;
+          //echo $image;
+          //dd($word->word);
+          $tmp_filename = $word->word."_".$word->id."_".$key.".".$ext;
+          $tmp_image = WordImage::where("image",$tmp_filename)->first();
+
+          if($tmp_image==false){
+
+              if($image==false)
+                continue;
+
+            Storage::disk('word_images')->put($tmp_filename, file_get_contents($image));
+
+            $word_images = WordImage::create([
+                'image' => $tmp_filename,
+                'word_id' => $word->id
+              //  'level_star'=>$level_star
+          //      'version' => $crawl_version,
+            ]);
+
+
+          }else{
+            continue;
+          //  $word = Word::where('word', $query_word)->get();
+          }
+
+          //echo $filename;
+          }
+
+      }
+
+      // 提取词条
+      $selector = "//*[@id='cigencizui-content']/div[@style='font-family:SimSun,serif;']/text()";
+        $result = selector::select($html, $selector);
+if($result ==false||is_array($result)==false){
+
+  $word->version = $version;
+
+$word->save();
+return;
+}
+
+    foreach ($result as $key => $tip) {
+        if($tip ==false)
+        continue;
+      $tip =str_replace(array("1.","2.","3.","4.","5.","6.","7.","8.","9.","10.","12.","13.","14.","15.","16.","16."),"",$tip);
+      $tip =trim($tip);
+      $tmp_tip = WordTip::where("word_id",$word->id)->where("tip",$tip)->first();
+      if($tmp_tip==false){
+
+        $word_tip = WordTip::create([
+            'tip' => $tip,
+            'word_id' => $word->id
+          //  'level_star'=>$level_star
+      //      'version' => $crawl_version,
+        ]);
+
+
+      }else{
+
+        continue;
+      }
+
+
+  $word->version = $version;
+
+$word->save();
+  # code...
+}
+      //die();
+
+      //$bool = Storage::disk('word_images')->put($filename, file_get_contents($realPath));
+
+      //$tmp_regex = preg_match( $regex, $result, $matches);
+      //$result =str_replace("'","",$result);
+      //var_dump($tmp_images);
+//
+
+
+
+    }
     public function cibadb(){
       $word_list = file_get_contents("words2.txt");
 
@@ -326,7 +493,7 @@ class PaChongController extends Controller
     }
     public function list(){
 
-      $word = Word::whereNull('version')->paginate(20);
+      $word = Word::where('version','iciba02')->whereNotNull('level_star')->paginate(20);
       $curentpage = $word->currentPage();
       $nextpageurl = $word->nextPageUrl();
       $itemes = $word->items();
@@ -334,8 +501,8 @@ class PaChongController extends Controller
         # code...
       //  echo $perwords->word;
       $tmp = 0;
-        $this->crawl($perwords->word);
-
+        $this->crawl_dicts($perwords->word);
+//die("test");
         sleep(2);//睡眠
 
       }
@@ -392,3 +559,119 @@ foreach ($word_list as $key => $value) {
 
     }
 }
+
+
+
+function curl_string ($url){
+
+$proxy_list = array("47.104.155.76:1080","101.132.152.144:80","47.74.134.234:80","47.88.175.178:1080","120.26.51.101:8118","47.89.249.110:8118","47.94.107.71:8080","47.52.24.132:8118","139.196.17.196:8118","47.88.156.143:8118","47.94.230.42:9999","120.76.77.152:9999","47.88.32.46:3128","47.89.41.164:80","59.110.221.78:80","182.92.242.11:80","119.23.63.152:8118","47.90.2.253:8118","47.89.249.110:80","106.14.209.135:80","114.215.174.227:8080","47.89.241.103:8080","47.52.142.42:8118","47.52.62.110:8080","120.79.162.100:1080","39.108.171.142:80","121.196.226.246:84","118.178.227.171:80","115.29.170.58:8118","47.52.41.254:8118","120.76.79.21:80","39.106.97.102:8080","101.132.146.103:8080","120.25.253.234:8118","120.27.220.218:80","120.55.61.182:80","121.41.175.199:80","114.215.102.168:8081","39.106.19.230:3389","120.27.49.85:8090","47.90.87.225:88","101.201.79.172:808","120.77.201.46:8080","106.14.51.145:8118","47.52.231.140:8080","47.52.29.64:80","120.25.164.134:8118","47.96.250.208:3128","47.52.61.212:8080","101.200.89.170:8888","101.132.148.7:8080","47.88.20.189:80","115.28.229.65:80","47.93.3.242:80","47.52.98.198:8118","47.90.62.177:8080","120.27.10.38:8090","47.88.156.143:80","47.52.3.230:443","106.14.12.240:8082","120.27.195.59:9999","47.52.112.218:3128","47.88.226.56:80","47.52.58.163:80","121.40.108.76:80","47.52.41.254:80","121.40.164.232:8118","106.14.165.136:8118","47.90.62.177:8080","47.52.61.212:8080","47.52.231.140:8080","47.90.87.225:88","150.95.190.102:80","45.32.52.17:3128","118.193.107.174:80","118.193.107.190:80","118.193.107.99:80","106.39.179.248:80","118.193.107.36:80","118.193.107.207:80","118.193.107.37:80");
+  //$proxy ="118.193.107.207:80";
+$ch = curl_init();
+$headers = randIp();
+$useragent = array(
+            'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0)',
+            'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.2)',
+            'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)',
+            'Mozilla/5.0 (Windows; U; Windows NT 5.2) Gecko/2008070208 Firefox/3.0.1',
+            'Opera/9.27 (Windows NT 5.2; U; zh-cn)',
+            'Opera/8.0 (Macintosh; PPC Mac OS X; U; en)',
+            'Mozilla/5.0 (Windows; U; Windows NT 5.2) AppleWebKit/525.13 (KHTML, like Gecko) Chrome/0.2.149.27 Safari/525.13 ',
+            'Mozilla/5.0 (Windows; U; Windows NT 5.2) AppleWebKit/525.13 (KHTML, like Gecko) Version/3.1 Safari/525.13'
+
+        );
+//curl_setopt ($ch, CURLOPT_PROXY, $proxy);
+$proxy =array_rand($proxy_list);
+
+$proxy = $proxy_list[$proxy];
+
+curl_setopt ($ch, CURLOPT_PROXY, $proxy);
+curl_setopt ($ch, CURLOPT_URL, $url);
+curl_setopt ($ch, CURLOPT_USERAGENT, "Mozilla/4.0");
+//curl_setopt ($ch, CURLOPT_COOKIEJAR, "d:\cookies.txt");
+curl_setopt ($ch, CURLOPT_HEADER, 0);
+curl_setopt ($ch, CURLOPT_HTTPHEADER, $headers);  //此处可以改为任意假IP
+curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 1);
+curl_setopt ($ch, CURLOPT_TIMEOUT, 120);
+
+$result = curl_exec ($ch);
+curl_close($ch);
+return $result;
+}
+
+
+function curl_get_file_contents($URL)
+{
+  $URL = "http://sample.app/test.php";
+$curl = curl_init();
+$headers = randIp();
+
+$r = rand(80,255);
+$useragent = array(
+            'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0)',
+            'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.2)',
+            'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)',
+            'Mozilla/5.0 (Windows; U; Windows NT 5.2) Gecko/2008070208 Firefox/3.0.1',
+            'Opera/9.27 (Windows NT 5.2; U; zh-cn)',
+            'Opera/8.0 (Macintosh; PPC Mac OS X; U; en)',
+            'Mozilla/5.0 (Windows; U; Windows NT 5.2) AppleWebKit/525.13 (KHTML, like Gecko) Chrome/0.2.149.27 Safari/525.13 ',
+            'Mozilla/5.0 (Windows; U; Windows NT 5.2) AppleWebKit/525.13 (KHTML, like Gecko) Version/3.1 Safari/525.13'
+
+        );
+
+
+      //  curl_setopt($curl, CURLOPT_REFERER, "http://www.baidu.com");   //构造来路
+        //curl_setopt($curl, CURLOPT_USERAGENT, array_rand($useragent));
+$proxy = "120.198.224.104:8080";
+$proxy = explode(':', $proxy);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+//curl_setopt($curl, CURLOPT_POST, 1);
+//curl_setopt($curl, CURLOPT_PROXY, $proxy[0]);
+//curl_setopt($curl, CURLOPT_PROXYPORT, $proxy[1]);
+
+curl_setopt($curl, CURLOPT_HEADER, 1);//输出远程服务器的header信息
+curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);  //构造IP
+//curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727;http://www.baidu.com)');
+  curl_setopt($curl, CURLOPT_USERAGENT, array_rand($useragent));
+
+//  curl_setopt($curl, CURLOPT_NOBODY, true);
+
+  curl_setopt($curl, CURLOPT_REFERER, "http://www.baidu.com");
+
+curl_setopt($curl, CURLOPT_URL, $URL);
+
+
+$contents = curl_exec($curl);
+$info = curl_getinfo($curl);
+
+curl_close($curl);
+dd($contents);
+if ($contents) {return $contents;}
+else {return FALSE;}
+}
+
+
+function randIP(){
+       $ip_long = array(
+           array('607649792', '608174079'), //36.56.0.0-36.63.255.255
+           array('1038614528', '1039007743'), //61.232.0.0-61.237.255.255
+           array('1783627776', '1784676351'), //106.80.0.0-106.95.255.255
+           array('2035023872', '2035154943'), //121.76.0.0-121.77.255.255
+           array('2078801920', '2079064063'), //123.232.0.0-123.235.255.255
+           array('-1950089216', '-1948778497'), //139.196.0.0-139.215.255.255
+           array('-1425539072', '-1425014785'), //171.8.0.0-171.15.255.255
+           array('-1236271104', '-1235419137'), //182.80.0.0-182.92.255.255
+           array('-770113536', '-768606209'), //210.25.0.0-210.47.255.255
+           array('-569376768', '-564133889'), //222.16.0.0-222.95.255.255
+       );
+       $rand_key = mt_rand(0, 9);
+       $ip= long2ip(mt_rand($ip_long[$rand_key][0], $ip_long[$rand_key][1]));
+       $headers['CLIENT-IP'] = $ip;
+       $headers['X-FORWARDED-FOR'] = $ip;
+
+       $headerArr = array();
+       foreach( $headers as $n => $v ) {
+           $headerArr[] = $n .':' . $v;
+       }
+       return $headerArr;
+   }

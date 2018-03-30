@@ -17,6 +17,8 @@ use App\Models\PhraseSection;
 use App\Models\User;
 use App\Models\Record;
 use App\Models\Userrecord;
+use App\Models\Qestionrecord;
+use App\Models\Answer;
 
 use Redirect;
 use Auth;
@@ -89,7 +91,8 @@ $password = 'jciba20171221!@';
           }
           session(['wechatuser' => $openid]);
 
-          return redirect(route('wechatcourse'));
+          return redirect(session("return_web_url"));
+          //Redirect::back();
           //$oauth->redirect()->send();
         }
       }else{
@@ -129,14 +132,27 @@ $password = 'jciba20171221!@';
 // 记录录音记录
 public function record($speech_unique, Request $request){
   $userrecord = Userrecord::where('speech_unique',trim($speech_unique))->first();
+
+
   $user = User::where("openid",$userrecord->openid)->first();
-  $records = Record::where("speech_unique",$userrecord->speech_unique)->get();
+  $section = Section::find($userrecord->section_id);
+  if($section->type == 1){
+    $records = Record::where("speech_unique",$userrecord->speech_unique)->get();
+    return view('wechat.record',compact('userrecord','records','user'));
+  }elseif($section->type == 3){
+
+    $questions = Qestionrecord::where("speech_unique",$userrecord->speech_unique)->get();
+    return view('wechat.questionrecord',compact('userrecord','questions','user'));
+
+
+  }
+
   //$records = array();
 
 
 
 //  $user = session('wechat.oauth_user');
-  return view('wechat.record',compact('userrecord','records','user'));
+
 }
 
     public function act(Section $section, Request $request){
@@ -292,16 +308,44 @@ public function wechatquestion(Section $section, Request $request)
   $course  =Course::find($course_id);
 
 
+  if($request->question_id){
+
+    $this->validate($request, [
+        'answer_id' => 'required',
+    ]);
+
+    if(session('exam_unique')){
+
+      $exam_unique= session('exam_unique');
+
+      $records = Qestionrecord::where('speech_unique',$exam_unique)->where('question_id',$request->question_id)->count();
+
+
+      if($records==false){
+        Qestionrecord::create([
+        'speech_unique' => $exam_unique,
+        'openid' => $user->id,
+        'correct' => $request->correct_id,
+        'question_id' => $request->question_id,
+        'student_answer' => $request->answer_id,
+
+    ]);
+      }
+    }
+
+  }
+
   if($nextpageurl){
     $tmp_query = parse_url($nextpageurl)['query'];
 
     $nextpage = str_replace('page=','',$tmp_query);
-
+  }else{
 
     $exam_unique= session('exam_unique');
       if($exam_unique){
         $nextpageurl = route('wechatsection',$chapter->id);
           $nextpage = 100000;
+
           if($request->page ==100000){
             Userrecord::create([
             'speech_unique' => $exam_unique,
@@ -309,11 +353,11 @@ public function wechatquestion(Section $section, Request $request)
             'push' => 0,
             'section_id' => $section->id,
             'chapter_id' => $section->chapter_id,
-            'course_id' => $course->id
+            'course_id' => $course->id,
         ]);
 
-        session()->forget('speech_unique');
-       return redirect(route('wechatrecord',$speech_unique));
+        session()->forget('exam_unique');
+       return redirect(route('wechatrecord',$exam_unique));
       //return redirect(route('wechatchapter',$course->id));
 
           }
@@ -322,8 +366,8 @@ public function wechatquestion(Section $section, Request $request)
         return redirect(route('wechatact',$section->id));
       }
 
-  }else{
-    $nextpage =0;
+
+    $nextpage =100000;
   }
 
 
@@ -386,6 +430,7 @@ public function section(Chapter $chapter){
     public function getsource(Request $request){
       $app = app('wechat.official_account');
       $Media_Id = $request->query('Media_Id');
+      $english_txt = $request->query('english_txt');
       $stream = $app->media->get($Media_Id); //这里好像不行
 
       $save_path = public_path(). '/tmp/';
@@ -408,9 +453,13 @@ public function section(Chapter $chapter){
         $test = $client->asr(file_get_contents($fileName), 'amr', 8000, array(
           'lan' => 'en',
       ));
+$tmp_str1 =str_replace(array(" ",".","!","?","'",","),"",strtolower($test['result'][0]));
 
+$tmp_str2 = str_replace(array(" ",".","!","?","'",","),"",strtolower($english_txt));
 
-      return $test['result'][0];
+      similar_text(trim($tmp_str1), trim($tmp_str2), $percent);
+
+      return $test['result'][0]."本次发音得分: (".round($percent)."分)";
 
 
     }
@@ -455,6 +504,26 @@ public function section(Chapter $chapter){
 
 
     }
+
+    // 游戏
+    public function game(Request $request){
+
+    //  $app = app('wechat.official_account');
+  //  $test =  $app->jssdk->buildConfig(array $APIs, $debug = false, $beta = false, $json = true);
+$app = app('wechat.official_account');
+$option = $request->query('degree');
+if($option == null){
+  $option =0;
+}
+if($option ==3 ){
+  return view('wechat.game2',compact('option','app'));
+}else{
+  return view('wechat.game',compact('option','app'));
+}
+
+
+    }
+
 
     public function jssdk(){
 

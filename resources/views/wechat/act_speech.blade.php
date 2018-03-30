@@ -40,6 +40,9 @@ if (useragent.match(/MicroMessenger/i) != 'MicroMessenger') {
 
       $("#record_begin").css('display','none');
 
+	  $("#stopRecord").hide();
+	  $("#startRecord").show();
+
       wx.stopRecord({
        success: function (res) {
          voice.localId = res.localId;
@@ -62,7 +65,8 @@ if (useragent.match(/MicroMessenger/i) != 'MicroMessenger') {
                  url:"{{route('getsource')}}",
                  type: 'get',
                  data: {
-                       'Media_Id': res.serverId
+                       'Media_Id': res.serverId,
+                       'english_txt': $("#english_txt").text()
                    },
                  cache:false,//false是不缓存，true为缓存
                  async:true,//true为异步，false为同步
@@ -70,7 +74,7 @@ if (useragent.match(/MicroMessenger/i) != 'MicroMessenger') {
                  beforeSend:function(result){
                      //请求成功时
                     // alert(result);
-                     $("#result").html("请稍后，我们正在理解您的语音！")
+                     $("#result").html("我们正在为您评分！请稍后。")
                  },
 
                  success:function(result){
@@ -101,6 +105,8 @@ if (useragent.match(/MicroMessenger/i) != 'MicroMessenger') {
 
    $('#startRecord').on('click', function () {
 
+$("#stopRecord").show();
+	  $("#startRecord").hide();
 
      wx.startRecord({
       cancel: function () {
@@ -125,7 +131,7 @@ $("#record_begin").css('display','block');
 
 $(function(){
 
-
+$("#stopRecord").hide();
   function audioAutoPlay(id){
       var audio = document.getElementById(id);
     //  audio.play();
@@ -139,6 +145,30 @@ $(function(){
       audioAutoPlay('speech');
 
 $("#yourspeech").css('display','none');
+
+$(".btn1").click(function() {
+  var audio = $("#speech")[0];
+  audio.playbackRate = 0.5;
+  audio.defaultPlaybackRate = 0.5;
+  audio.play();
+
+})
+$(".btn2").click(function() {
+  var audio = $("#speech")[0];
+  audio.playbackRate = 1;
+  audio.defaultPlaybackRate = 1;
+  audio.play();
+
+})
+
+$(".btn4").click(function() {
+  var audio = $("#speech")[0];
+  audio.playbackRate = 2;
+  audio.defaultPlaybackRate = 2;
+  audio.play();
+
+});
+
 })
 </script>
 
@@ -152,18 +182,35 @@ $("#yourspeech").css('display','none');
  {!!Form::open(array(route('wechatact',$section->id),'method'=> "get"))!!}
 
         @foreach ($phrasesections as $id => $phrase)
-<div><audio id="speech" controls="controls" autoplay="autoplay">
+<div>
+  <button type="button" class="btn1">慢速</button>
+<button type="button" class="btn2">正常</button>
+
+  <audio id="speech" controls="controls" autoplay="autoplay">
   <source src="/voice/juzi/{{ $phrase->default_url }}" type="audio/mpeg" />
+Your browser does not support the audio element.
+</audio>
+
+@if($phrase->f_url)
+
+
+<div><span style="color:green;">对比机器读音，点击播放</span><audio id="speechmachine" controls="controls" >
+<source src="/voice/juzi/{{ $phrase->f_url }}" type="audio/mpeg" />
 Your browser does not support the audio element.
 </audio></div>
 
-<div>{{$phrase->english}}</div>
+ @endif
+
+
+</div>
+
+<div id="english_txt">{{$phrase->english}}</div>
 
 <div>{{$phrase->chinese}}</div>
 
 <div id='yourspeech'>你的读音,点击播放<img src="/images/laba.jpg" id='laba'></div>
 
-<div>识别结果仅供参考：<b id="result"></b> </div>
+<div><b style="color:red">尽量在安静的环境中跟读，可以练习并提高英语发音水平！</b><br/><b id="result"></b> </div>
 
 <div id='record_begin' style='display:none;text-align:center;'><img src="/images/voice.gif"></div>
 
@@ -176,8 +223,8 @@ Your browser does not support the audio element.
 
 
 
-          <button type="button" id="startRecord" data-loading-text="Loading..." class="btn btn-primary col-xs-6" autocomplete="off">录音开始</button>
-           <button type="button" id="stopRecord" data-loading-text="Loading..." class="btn btn-primary col-xs-6" autocomplete="off">录音结束</button>
+          <button type="button" id="startRecord" data-loading-text="Loading..." class="btn btn-primary col-xs-12 btn-lg" autocomplete="off">开始</button>
+           <button type="button" id="stopRecord" data-loading-text="Loading..." class="btn btn-primary col-xs-12 btn-lg" autocomplete="off">点击结束</button>
 
 
            <input name="page" type="hidden" value="{{$nextpage}}">
@@ -190,7 +237,7 @@ Your browser does not support the audio element.
            @endforeach
 
 
-                     <button type="submit" class="btn col-xs-12">继续</button>
+                     <button type="submit" class="btn btn-danger col-xs-12 btn-lg">下一句</button>
 
 
 

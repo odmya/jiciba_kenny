@@ -29,8 +29,9 @@ Route::group(['middleware' => ['wechat','web', 'wechat.oauth']], function () {
   Route::get('/wechat/act/{section}', 'WeChatController@act')->name('wechatact');
 
 Route::get('/wechat/question/{section}', 'WeChatController@wechatquestion')->name('wechatquestion');
-
+  Route::any('/game', 'WeChatController@game')->name('game');
   Route::any('/jssdk', 'WeChatController@jssdk')->name('jssdk');
+
 
   Route::any('/wechatoauth', 'WeChatController@wechatoauth')->name('wechatoauth');
 
@@ -43,6 +44,8 @@ Route::group(['middleware' => ['web', 'wechat.oauth']], function () {
   Route::any('/wechatoauth', 'WeChatController@wechatoauth')->name('wechatoauth');
 
 });
+
+
 
 
   Route::get('/wechat/record/{speech_unique}', 'WeChatController@record')->name('wechatrecord'); //不需要微信登录验证

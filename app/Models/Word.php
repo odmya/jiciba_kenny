@@ -22,11 +22,30 @@ class Word extends Model
 
     }
 
+    public function word_image()
+    {
+
+      return $this->hasMany(WordImage::class);
+
+    }
+
+    public function word_tip()
+    {
+
+      return $this->hasMany(WordTip::class);
+
+    }
+
     public function level_base()
     {
 
       return $this->belongsToMany(LevelBase::class);
 
+    }
+
+    public function word_description()
+    {
+        return $this->hasOne(WordDescription::class);
     }
 
 

@@ -14,15 +14,15 @@ class Qestionrecord extends Model
         return $this->belongsTo(Question::class);
     }
 
-    public function correct()
+    public function Correct()
     {
-        return $this->belongsTo(Answer::class,'id','correct');
+        return $this->belongsTo(Answer::class,'correct','id');
     }
 
 
-    public function student_answer()
+    public function Student_Answer()
     {
-        return $this->belongsTo(Answer::class,'id','student_answer');
+        return $this->belongsTo(Answer::class,'student_answer','id');
     }
 
 

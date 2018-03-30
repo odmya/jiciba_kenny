@@ -55,6 +55,8 @@ Your browser does not support the audio element.
 
             <input name="question_id" type="hidden" value="{{$question->id}}">
 
+            <input name="correct_id" type="hidden" value="{{$question->correct_answer}}">
+
 
 
             @endforeach
