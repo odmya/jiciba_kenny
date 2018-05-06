@@ -1,12 +1,15 @@
 /node_modules
 /public/hot
+/my-project
 /public/images
 /public/voice
+/public/uploads
 /public/storage
 /storage/*.key
 /public/client_secret_650738411223-cma1o3vegjn1s608uml3djbruuavebdr.apps.googleusercontent.com.json
 /public/google-95003-2d37e7203dfa2017-11-12.json
 /vendor
+/node_modules
 /.idea
 /.vagrant
 Homestead.json

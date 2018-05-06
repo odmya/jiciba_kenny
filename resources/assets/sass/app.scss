@@ -1,11 +1,10 @@
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
-$navbar-color: #3c3e42;
 
 /* universal */
 
 body {
-  padding-top: 60px;
+  padding-top: 120px;
 }
 
 section {
@@ -50,21 +49,18 @@ p {
 /* header */
 
 .navbar-inverse {
-  background-color: $navbar-color;
+  background-color: white;
+  border-color:white;
 }
 
 #logo {
   float: left;
   margin-right: 10px;
-  font-size: 1.7em;
-  color: #fff;
+  font-size: 2em;
   text-decoration: none;
   letter-spacing: -1px;
   padding-top: 9px;
   font-weight: bold;
-  &:hover {
-    color: #fff;
-  }
 }
 
 #logout {
@@ -80,7 +76,6 @@ footer {
   margin-top: 45px;
   padding-top: 5px;
   border-top: 1px solid #eaeaea;
-  color: #777;
 
   a {
     color: #555;

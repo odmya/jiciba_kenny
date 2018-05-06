@@ -19,4 +19,11 @@ class WordExplain extends Model
       return $this->hasMany(WordSpeech::class);
 
     }
+
+    public function speech()
+    {
+
+      return $this->belongsTo(WordSpeech::class,'word_speech_id');
+
+    }
 }

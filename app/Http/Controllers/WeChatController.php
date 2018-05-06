@@ -534,6 +534,148 @@ if($option ==3 ){
     return view('wechat.course', compact('app'));
     }
 
+
+    /**
+     * 处理微信用户标签
+     *
+     * @return string
+     */
+
+  public function userlabel(){
+
+    $app = app('wechat.official_account');
+
+//$tags = $app->user_tag->list();  //获取所有标签
+//var_dump($tags);
+$tag = $app->user_tag;
+
+//$tagusers = $tag->usersOfTag(100, $nextOpenId = ''); //获取同一标签下的所有用户
+
+$userlist = User::where('openid',"!=","")->get(); //取得所有微信课程的用户例表
+foreach($userlist as $ulist){
+  $openIds =array();
+  $openIds[]=$ulist->openid;
+  //修改用户标签
+  //$openIds = [$openId1, $openId2, ...];
+  $tag->tagUsers($openIds, 100);
+}
+
+//dd($openIds);
+
+$tagusers = $tag->usersOfTag(100, $nextOpenId = ''); //获取同一标签下的所有用户
+    dd($tagusers);
+  }
+
+
+  /**
+   * 处理微信用户菜单
+   *
+   */
+
+public function usermenu(){
+
+  $app = app('wechat.official_account');
+//  $list = $app->menu->list(); //读取已设置菜单
+
+  //$current = $app->menu->current();
+  //dd($current);
+
+  //设置个性菜单
+/*
+  $buttons = [
+    [
+        "type" => "view",
+        "name" => "我的课程",
+        "url"  => "https://www.jciba.cn/wechat/course"
+    ],
+    [
+        "type" => "view",
+        "name" => "我的账户",
+        "url"  => "https://www.jciba.cn/wechat/course"
+    ]
+];
+
+  $matchRule = [
+    "tag_id" => "100",
+];
+
+$app->menu->create($buttons, $matchRule);
+*/
+  //设置个性菜单 结束
+
+  $list = $app->menu->list(); //读取已设置菜单
+
+  $current = $app->menu->current();
+  dd($list);
+}
+
+
+/**
+ * 处理微信用户模板消息推送
+ *
+ */
+public function usertemplate(){
+
+
+//用户kenny的openID olReJv1BsSNRrfoi6bsXZdrJ9JPg
+$app = app('wechat.official_account');
+$tag = $app->user_tag;
+$tagusers = $tag->usersOfTag(100, $nextOpenId = ''); //获取同一标签下的所有用户
+$openids = $tagusers['data']['openid'];
+//print_r($openids);
+
+//发送模板消息
+//$openids=["olReJv1BsSNRrfoi6bsXZdrJ9JPg"];
+foreach($openids as $useropenid){
+
+
+  $app->template_message->send([
+          'touser' => $useropenid,
+          'template_id' => 'bevD68gJR6wuPnkhKjrVIrBprz0-Fb5c0gXvFS2gsWY',
+          'url' => 'https://www.jciba.cn/game?degree=3',
+          'data' => [
+              'first' => '默写前五单元英语单词！',
+              'keyword1' => ["默写前五单元英语单词！", '#F00'],
+              'keyword2' => '默写单词',
+              'remark' => ["默写前五单元英语单词！", '#F00']
+          ],
+      ]);
+
+/*
+  $app->template_message->send([
+          'touser' => $useropenid,
+          'template_id' => 'xT9hggF-g_7O2bsG7ilDQhgBLj53gICyi4pTy0a2V9w',
+          'url' => 'https://www.jciba.cn/wechat/section/11',
+          'data' => [
+              'first' => '更新了新的课程，请及时学习',
+              'keyword1' => ["Unit 5 Pass me the milk,please!", '#F00'],
+              'keyword2' => '口语练习',
+              'remark' => ["请及时完成练习！", '#F00']
+          ],
+      ]);
+*/
+
+/*
+  $app->template_message->send([
+          'touser' => $useropenid,
+          'template_id' => 'bevD68gJR6wuPnkhKjrVIrBprz0-Fb5c0gXvFS2gsWY',
+          'url' => 'https://www.jciba.cn/game3.html',
+          'data' => [
+              'first' => '前方遭遇单词速降！',
+              'keyword1' => ["前方遭遇单词速降！速来挑战！", '#F00'],
+              'keyword2' => '单词速降',
+              'remark' => ["前方遭遇单词速降！速来挑战！", '#F00']
+          ],
+      ]);
+*/
+
+}
+
+
+//die();
+}
+
+
     /**
      * 处理微信的请求消息
      *

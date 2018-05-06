@@ -15,4 +15,46 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+
 });
+
+$api = app('Dingo\Api\Routing\Router');
+
+
+$api->version('v1', [
+    'namespace' => 'App\Http\Controllers\Api'
+], function($api) {
+    // 短信验证码
+    $api->get('version', function() {
+        return response('this is version v1');
+    });
+
+    $api->post('word', 'WordController@show')
+        ->name('api.WordController.show');
+
+    $api->post('sentence', 'SentenceController@show')
+        ->name('api.SentenceController.show');
+
+    $api->post('sentenceSearch', 'SentenceController@search')
+            ->name('api.SentenceController.search');
+
+    $api->post('star', 'WordController@star')
+            ->name('api.WordController.apistar');
+
+});
+
+$api->version('v2', function($api) {
+    $api->get('version', function() {
+        return response('this is version v2');
+    });
+});
+
+
+
+Route::get('/posts', 'PostsController@index');
+
+Route::post('/query/', 'WordController@queryapi')->name('wordqueryapi');
+Route::get('/root/', 'RootController@queryapi')->name('rootqueryapi');
+Route::get('/sentence/', 'SentenceController@queryapi')->name('sentencequeryapi');
+
+Route::any('/praise/', 'WordTipController@praise')->name('tipspraise');

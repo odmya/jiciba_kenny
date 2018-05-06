@@ -12,4 +12,9 @@ class WordSpeech extends Model
     {
         return $this->belongsTo(WordExplain::class);
     }
+
+    public function explain()
+    {
+        return $this->hasMany(WordExplain::class);
+    }
 }

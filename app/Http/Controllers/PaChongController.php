@@ -14,16 +14,110 @@ use App\Models\WordSpeech;
 use App\Models\WordExplain;
 use App\Models\WordImage;
 use App\Models\WordTip;
+use App\Models\Sentence;
 use App\Jobs\crawl;
 use Storage;
 set_time_limit(0);
 class PaChongController extends Controller
 {
     //
-    public function crawl($words="test",$version="iciba02"){
+    public function crawl($words="test",$version="iciba03"){
+      $query_word = trim($words);
+      $query_word = strtolower($query_word);
+      //$query_word = $words;
+       $crawl_version = $version;
+
+       $word = Word::where('word', $query_word)->first();
+       $word->version = $crawl_version;
+       $word->save();
+
+for($i=0;$i<10;$i++){
+
+
+
+
+       //$url = "http://dj.iciba.com/".$query_word;
+       $url="http://www.jukuu.com/show-".$query_word."-".$i.".html";
+       $html = requests::get($url);
+
+       // 抽取星级
+
+       //$selector = "//span[contains(@class,'stc_en_txt ')]";
+       //$selector = "//span[contains(@class,'stc_cn_txt')]";
+
+       $selector = "//table[@id='Table1']//table/tr[@class='e']/td";
+       $selector2 = "//table[@id='Table1']//table/tr[@class='c']/td";
+       $selector3 = "//table[@id='Table1']//table/tr/td[@width='75%']";
+       // 提取结果 container1
+       $result_en_tmp = selector::select($html, $selector);
+       $result_zh_tmp = selector::select($html, $selector2);
+       $result_en =array();
+       if($result_en_tmp ==false){
+         break;
+       }
+
+       foreach($result_en_tmp as $k=>$en){
+         if($k%2){
+            $result_en[] =trim(str_replace(array('<b>','</b>'),'',strip_tags($en)));
+         }
+       }
+        $result_zh =array();
+       foreach($result_zh_tmp as $kzh=>$zh){
+         if($kzh%2){
+            $result_zh[] =trim(str_replace(array('<b>','</b>'),'',strip_tags($zh)));
+         }
+       }
+
+       $result_from = selector::select($html, $selector3);
+
+       foreach($result_en as $key=>$item){
+
+         $sentence = Sentence::where('english', trim($result_en[$key]))->first();
+
+        //  $words = new Word;
+        //  $word = $words->where('word', $query_word)->first();
+
+        //  echo $query_word;
+
+         if($sentence==false&&strlen($result_en[$key])<255&&strlen($result_zh[$key])<255){
+           if(trim($result_from[$key]) !="-- 来源 -- 网友提供"){
+             $sentence = Sentence::create([
+                 'english' => trim($result_en[$key]),
+                 'chinese' =>trim($result_zh[$key]),
+                 'quote' =>trim($result_from[$key]),
+               //  'level_star'=>$level_star
+           //      'version' => $crawl_version,
+             ]);
+             $sentence->words()->attach($word->id);
+           }
+
+
+
+         }else{
+           if( $sentence){
+             if($sentence->words()->where("words.id",$word->id)->count()==false){
+               $sentence->words()->attach($word->id);
+             }
+           }
+
+         //  $word = Word::where('word', $query_word)->get();
+          continue;
+         }
+
+
+       }
+
+       sleep(2);//睡眠
+}
+
+
+
+    }
+    public function crawl2($words="test",$version="iciba02"){
 
      $query_word = trim($words);
      $query_word = strtolower($query_word);
+     $query_word = str_replace("'s","",$query_word);
     //$query_word = $words;
       $crawl_version = $version;
 
@@ -339,7 +433,7 @@ class PaChongController extends Controller
       $url = "http://www.dicts.cn/dict/dict/dict!searchhtml3.asp?id=".$query_word;
     //  $tmp_url = curl_get_file_contents($url);
 
-
+dd($url);
     //  $url_page = "http://sample.app/test.php";
 $proxy = "209.88.95.2186:80";    //此处为代理服务器IP和PORT
 
@@ -493,15 +587,17 @@ $word->save();
     }
     public function list(){
 
-      $word = Word::where('version','iciba02')->whereNotNull('level_star')->paginate(20);
+      $word = Word::where('version',"!=",'jukuu05')->paginate(20);
       $curentpage = $word->currentPage();
       $nextpageurl = $word->nextPageUrl();
       $itemes = $word->items();
+
       foreach ($itemes as $key => $perwords) {
         # code...
       //  echo $perwords->word;
+
       $tmp = 0;
-        $this->crawl_dicts($perwords->word);
+        $this->crawl($perwords->word,'jukuu05');
 //die("test");
         sleep(2);//睡眠
 

@@ -16,7 +16,8 @@ Route::get('/', function () {
 });
 */
 //wechat
-Route::any('/wechat', 'WeChatController@serve');
+Route::any('/wechat', 'WeChatController@serve'); //微信服务器认证
+
 
 //Route::any('/wechat/course', 'WeChatController@course')->name('wechatcourse');
 
@@ -110,18 +111,29 @@ Route::post('/section', 'SectionController@store')->name('sectionstore');
 
 Route::get('/chapter/{course}', 'ChapterController@index')->name('chapterindex');
 
-Route::get('/chapter/edit/{course}', 'ChapterController@edit')->name('chapteredit');
+Route::get('/chapter/edit/{chapter}', 'ChapterController@edit')->name('chapteredit');
 
 Route::any('/chapter/destroy/{chapter}', 'ChapterController@destroy')->name('chapterdestroy');
 
 Route::get('/chapter/create/{course}', 'ChapterController@create')->name('chaptercreate');
 
 Route::post('/chapter/store', 'ChapterController@store')->name('chapterstore');
+Route::any('/chapter/{chapter}', 'ChapterController@update')->name('chapterupdate');
 
 //ciba
 Route::get('/query/{word}', 'WordController@query')->name('query');
+
+
+Route::get('/star/{star}', 'WordController@star')->name('querystar');
+
 Route::get('/googlespeech', 'WordController@googlespeech')->name('googlespeech');
 Route::get('/baiduspeech', 'WordController@baiduspeech')->name('baiduspeech');
+
+
+//root 词根
+Route::get('/cigen/{root_id}', 'RootController@query')->name('rootquery');
+
+
 
 Route::post('/search', 'WordController@search')->name('search');
 
@@ -150,3 +162,12 @@ Route::delete('logout', 'SessionsController@destroy')->name('logout');
 Route::get('/users/{user}/edit', 'UsersController@edit')->name('users.edit');
 
 Route::get('signup/confirm/{token}', 'UsersController@confirmEmail')->name('confirm_email');
+
+
+Route::any('/wechat/userlabel', 'WeChatController@userlabel'); //微信用户标签
+Route::any('/wechat/usermenu', 'WeChatController@usermenu');  //自定义菜单
+Route::any('/wechat/usertemplate', 'WeChatController@usertemplate'); //模板信息
+
+Route::get('/novel', 'NovelController@list')->name("novelList");
+Route::get('/novel/{novel}', 'NovelController@show')->name("novelShow");
+Route::get('/novel/chapter/{novel}/{page?}', 'NovelController@chapter')->name("novelChapter");

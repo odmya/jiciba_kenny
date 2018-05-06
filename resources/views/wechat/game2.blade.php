@@ -11,521 +11,132 @@
 	<script>
 var score=1;
 
-  wx.config({!! $app->jssdk->buildConfig(array('onMenuShareTimeline','onMenuShareAppMessage'), false) !!});
+wx.config({!! $app->jssdk->buildConfig(array('onMenuShareTimeline','onMenuShareAppMessage'), false) !!});
 
 // 分享朋友圈
-  var share_config = {
-       "share": {
-          "imgUrl": 'https://www.jciba.cn/images/words.jpg', // 分享图标
-          "desc": '不服来战', // 分享描述
-          "title": '不服来战！默写三年级单词！', // 分享标题
-          "link": 'https://www.jciba.cn/game?degree=3',
-          "success":function(){//分享成功后的回调函数
-          },
-          'cancel': function () {
-              // 用户取消分享后执行的回调函数
-          }
-      }
-  };
-      wx.ready(function () {
-      wx.onMenuShareAppMessage(share_config.share);//分享给好友
-      wx.onMenuShareTimeline(share_config.share);//分享到朋友圈
-  });
+var share_config = {
+     "share": {
+        "imgUrl": 'https://www.jciba.cn/images/words.jpg', // 分享图标
+        "desc": '不服来战', // 分享描述
+        "title": '挑战三年级单词', // 分享标题
+        "link": 'https://www.jciba.cn/game',
+        "success":function(){//分享成功后的回调函数
+        },
+        'cancel': function () {
+            // 用户取消分享后执行的回调函数
+        }
+    }
+};
+    wx.ready(function () {
+    wx.onMenuShareAppMessage(share_config.share);//分享给好友
+    wx.onMenuShareTimeline(share_config.share);//分享到朋友圈
+});
 
 
-	    var words_array = [
-		{
-        name: 'cool',
-        explain: '酷',
-        voice: 'voice/word/cool_1.mp3'
-      },
-	  {
-        name: 'cat',
-        explain: '猫',
-        voice: 'voice/word/cat_1.mp3'
-      }
-	  ,
-	  {
-        name: 'cute',
-        explain: '漂亮的',
-        voice: 'voice/word/cute_1.mp3'
-      }
-	  ,
+var words_array = [
+{
+ name: 'door',
+ explain: '门',
+ voice: 'voice/word/door_1.mp3'
+},
+{
+ name: 'window',
+ explain: '窗户',
+ voice: 'voice/word/window_1.mp3'
+}
+, {
+ name: 'open',
+ explain: '（打）开',
+ voice: 'voice/word/open_0.mp3'
+}
 
-	  {
-        name: 'chair',
-        explain: '椅子',
-        voice: 'voice/word/chair_1.mp3'
-      }
-	  ,
-	  {
-        name: 'Chinese',
-        explain: '中文（课）',
-        voice: 'voice/word/chinese_1.mp3'
-      }
-	  ,
-	  {
-        name: 'colour',
-        explain: '颜色',
-        voice: 'voice/word/colour_1.mp3'
-      }
-	  ,
+, {
+ name: 'close',
+ explain: '关',
+ voice: 'voice/word/close_0.mp3'
+}
 
-	   {
-        name: 'dad',
-        explain: '(口语)爸爸',
-        voice: 'voice/word/dad_1.mp3'
-      }
-	  ,
+, {
+ name: 'pupil',
+ explain: '学生',
+ voice: 'voice/word/pupil_0.mp3'
+}
 
-	  {
-        name: 'dog',
-        explain: '狗',
-        voice: 'voice/word/dog_0.mp3'
-      }
 
-	   ,
+, {
+ name: 'mum',
+ explain: '妈妈',
+ voice: 'voice/word/mum_1.mp3'
+}
 
-	  {
-        name: 'draw',
-        explain: '画',
-        voice: 'voice/word/draw_1.mp3'
-      }
+, {
+ name: 'dad',
+ explain: '爸爸',
+ voice: 'voice/word/dad_1.mp3'
+}
 
-	  ,
 
-	  {
-        name: 'ear',
-        explain: '耳朵',
-        voice: 'voice/word/ear_1.mp3'
-      }
+, {
+ name: 'friend',
+ explain: '朋友',
+ voice: 'voice/word/friend_1.mp3'
+}
+, {
+ name: 'read',
+ explain: '阅读',
+ voice: 'voice/word/read_1.mp3'
+}
+, {
+ name: 'write',
+ explain: '写',
+ voice: 'voice/word/write_1.mp3'
+}
+, {
+ name: 'jump',
+ explain: '跳',
+ voice: 'voice/word/jump_1.mp3'
+}
+, {
+ name: 'run',
+ explain: '跑',
+ voice: 'voice/word/run_1.mp3'
+}
+, {
+ name: 'rice',
+ explain: '大米',
+ voice: 'voice/word/rice_1.mp3'
+}, {
+ name: 'bread',
+ explain: '面包',
+ voice: 'voice/word/bread_1.mp3'
+}, {
+ name: 'noodle',
+ explain: '面条',
+ voice: 'voice/word/noodle_1.mp3'
+}
+, {
+ name: 'food',
+ explain: '食物',
+ voice: 'voice/word/food_1.mp3'
+}
 
-	  ,
+, {
+ name: 'milk',
+ explain: '牛奶',
+ voice: 'voice/word/milk_1.mp3'
+}
+, {
+ name: 'water',
+ explain: '水',
+ voice: 'voice/word/water_1.mp3'
+}
 
-	  {
-        name: 'egg',
-        explain: '蛋',
-        voice: 'voice/word/egg_1.mp3'
-      }
+, {
+ name: 'box',
+ explain: '盒子',
+ voice: 'voice/word/box_1.mp3'
+}
 
-	  ,
-
-	  {
-        name: 'English',
-        explain: '英语(课)',
-        voice: 'voice/word/english_1.mp3'
-      }
-
-	   ,
-
-	  {
-        name: 'eraser',
-        explain: '橡皮',
-        voice: 'voice/word/eraser_1.mp3'
-      }
-
-	  ,
-
-	  {
-        name: 'eye',
-        explain: '眼睛',
-        voice: 'voice/word/eye_1.mp3'
-      }
-	  ,
-
-	  {
-        name: 'fish',
-        explain: '鱼',
-        voice: 'voice/word/fish_1.mp3'
-      }
-
-	  ,
-	  {
-        name: 'for',
-        explain: '为; 给',
-        voice: 'voice/word/for_1.mp3'
-      }
-
-	  ,
-	  {
-        name: 'gift',
-        explain: '礼物',
-        voice: 'voice/word/gift_1.mp3'
-      }
-
-	  ,
-	  {
-        name: 'goal',
-        explain: '得分',
-        voice: 'voice/word/goal_1.mp3'
-      }
-
-	  ,
-	  {
-        name: 'goodbye',
-        explain: '再见',
-        voice: 'voice/word/goodbye_1.mp3'
-      }
-
-	  ,
-	  {
-        name: 'green',
-        explain: '绿色的',
-        voice: 'voice/word/green_1.mp3'
-      }
-
-	  ,
-	  {
-        name: 'guess',
-        explain: '猜',
-        voice: 'voice/word/guess_1.mp3'
-      }
-
-	   ,
-	  {
-        name: 'please',
-        explain: '请',
-        voice: 'voice/word/please_1.mp3'
-      }
-
-	   ,
-	  {
-        name: 'pupil',
-        explain: '学生',
-        voice: 'voice/word/pupil_1.mp3'
-      }
-
-	   ,
-	  {
-        name: 'red',
-        explain: '红色的',
-        voice: 'voice/word/red_1.mp3'
-      }
-	  ,
-	  {
-        name: 'ruler',
-        explain: '尺',
-        voice: 'voice/word/ruler_1.mp3'
-      }
-	  ,
-	  {
-        name: 'she',
-        explain: '她',
-        voice: 'voice/word/she_1.mp3'
-      }
-	   ,
-	  {
-        name: 'shoot',
-        explain: '射门',
-        voice: 'voice/word/shoot_1.mp3'
-      }
-	  ,
-	  {
-        name: 'small',
-        explain: '小的',
-        voice: 'voice/word/small_1.mp3'
-      }
-
-	  ,
-	  {
-        name: 'table',
-        explain: '桌子',
-        voice: 'voice/word/table_1.mp3'
-      }
-	  ,
-	  {
-        name: 'teacher',
-        explain: '老师',
-        voice: 'voice/word/teacher_1.mp3'
-      }
-	  ,
-	  {
-        name: 'that',
-        explain: '那，那个',
-        voice: 'voice/word/that_1.mp3'
-      }
-	  ,
-	  {
-        name: 'they',
-        explain: '他/她/它们',
-        voice: 'voice/word/they_1.mp3'
-      }
-	  ,
-	  {
-        name: 'too',
-        explain: '也',
-        voice: 'voice/word/too_1.mp3'
-      }
-	  ,
-	  {
-        name: 'touch',
-        explain: '触摸',
-        voice: 'voice/word/touch_1.mp3'
-      }
-
-	  ,
-	  {
-        name: 'turtle',
-        explain: '乌龟',
-        voice: 'voice/word/turtle_1.mp3'
-      }
-	  ,
-	  {
-        name: 'ugly',
-        explain: '丑的',
-        voice: 'voice/word/ugly_1.mp3'
-      }
-	   ,
-	  {
-        name: 'who',
-        explain: '谁',
-        voice: 'voice/word/who_1.mp3'
-      }
-
-	   ,
-	  {
-        name: 'yellow',
-        explain: '黄色',
-        voice: 'voice/word/yellow_1.mp3'
-      },
-	  {
-        name: 'yes',
-        explain: '是的',
-        voice: 'voice/word/yes_1.mp3'
-      }
-	   ,
-	   {
-        name: 'one',
-        explain: '一',
-        voice: 'voice/word/one_1.mp3'
-      }
-	  ,
-	   {
-        name: 'two',
-        explain: '二',
-        voice: 'voice/word/two_1.mp3'
-      }
-
-	  ,
-	   {
-        name: 'three',
-        explain: '三',
-        voice: 'voice/word/three_1.mp3'
-      } ,
-	   {
-        name: 'four',
-        explain: '四',
-        voice: 'voice/word/four_1.mp3'
-      } ,
-	   {
-        name: 'five',
-        explain: '五',
-        voice: 'voice/word/five_1.mp3'
-      },
-	   {
-        name: 'six',
-        explain: '六',
-        voice: 'voice/word/six_1.mp3'
-      }
-	  ,
-	   {
-        name: 'seven',
-        explain: '七',
-        voice: 'voice/word/seven_1.mp3'
-      },
-	   {
-        name: 'eight',
-        explain: '八',
-        voice: 'voice/word/eight_1.mp3'
-      },
-	   {
-        name: 'eight',
-        explain: '八',
-        voice: 'voice/word/eight_1.mp3'
-      }
-	  ,
-	   {
-        name: 'nine',
-        explain: '九',
-        voice: 'voice/word/nine_1.mp3'
-      },
-	   {
-        name: 'ten',
-        explain: '十',
-        voice: 'voice/word/ten_1.mp3'
-      },
-	   {
-        name: 'eleven',
-        explain: '十一',
-        voice: 'voice/word/eleven_1.mp3'
-      },
-	   {
-        name: 'twelve',
-        explain: '十二',
-        voice: 'voice/word/twelve_1.mp3'
-      }
-	  ,
-	   {
-        name: 'thirteen',
-        explain: '十三',
-        voice: 'voice/word/thirteen_1.mp3'
-      },
-	   {
-        name: 'fourteen',
-        explain: '十四',
-        voice: 'voice/word/fourteen_1.mp3'
-      },
-	   {
-        name: 'fifteen',
-        explain: '十五',
-        voice: 'voice/word/fifteen_1.mp3'
-      },
-	   {
-        name: 'sixteen',
-        explain: '十六',
-        voice: 'voice/word/sixteen_1.mp3'
-      },
-	   {
-        name: 'seventeen',
-        explain: '十七',
-        voice: 'voice/word/seventeen_1.mp3'
-      },
-	   {
-        name: 'eighteen',
-        explain: '十八',
-        voice: 'voice/word/eighteen_1.mp3'
-      },
-	   {
-        name: 'nineteen',
-        explain: '十九',
-        voice: 'voice/word/nineteen_1.mp3'
-      }
-	  ,
-	   {
-        name: 'twenty',
-        explain: '二十',
-        voice: 'voice/word/twenty_1.mp3'
-      }
-	   ,
-
-	  {
-        name: 'where',
-        explain: '在哪里',
-        voice: 'voice/word/where_1.mp3'
-      }
-	   ,
-	  {
-        name: 'toy',
-        explain: '玩具',
-        voice: 'voice/word/toy_1.mp3'
-      }
-
-	  ,
-	  {
-        name: 'the',
-        explain: '用于特定的人或物之前',
-        voice: 'voice/word/the_1.mp3'
-      }
-	  ,
-	  {
-        name: 'a',
-        explain: '一（本，个...）',
-        voice: 'voice/word/a_1.mp3'
-      }
-	  ,
-
-	  {
-        name: 'and',
-        explain: '和，与',
-        voice: 'voice/word/and_1.mp3'
-      }
-	  ,
-
-	  {
-        name: 'apple',
-        explain: '苹果',
-        voice: 'voice/word/apple_1.mp3'
-      }
-	  ,
-
-	  {
-        name: 'arm',
-        explain: '臂',
-        voice: 'voice/word/arm_1.mp3'
-      }
-	  ,
-
-	  {
-        name: 'bag',
-        explain: '书包',
-        voice: 'voice/word/bag_1.mp3'
-      }
-	  ,
-
-	  {
-        name: 'basketball',
-        explain: '篮球',
-        voice: 'voice/word/basketball_1.mp3'
-      }
-
-	  , {
-        name: 'be',
-        explain: '是',
-        voice: 'voice/word/be_1.mp3'
-      }
-
-	  ,
-
-	  {
-        name: 'beautiful',
-        explain: '美丽的',
-        voice: 'voice/word/beautiful_1.mp3'
-      }
-
-	  ,
-
-	  {
-        name: 'big',
-        explain: '大的',
-        voice: 'voice/word/big_1.mp3'
-      }
-
-	  ,
-
-	  {
-        name: 'blue',
-        explain: '蓝色',
-        voice: 'voice/word/blue_1.mp3'
-      }
-
-	  ,
-
-	  {
-        name: 'book',
-        explain: '书',
-        voice: 'voice/word/book_1.mp3'
-      }
-	  ,
-
-	  {
-        name: 'cake',
-        explain: '蛋糕',
-        voice: 'voice/word/cake_1.mp3'
-      }
-
-	  ,
-
-	  {
-        name: 'card',
-        explain: '卡片',
-        voice: 'voice/word/card_1.mp3'
-      }
-
-	  , {
-        name: 'desk',
-        explain: '书桌',
-        voice: 'voice/word/desk_1.mp3'
-      }
 
 	  ];
 	  var words;
@@ -578,6 +189,8 @@ var crrent_arr = new Array();
 
 var answer_arr = new Array();
 
+var user_list = new Array();
+
 
 var crash; // 爆炸音效
 var explain1;
@@ -593,6 +206,7 @@ var falltime =6000;
 
 var txt_score;
 var txt_wrong;
+var delete_sprite;
 game.together  = {};
 
 game.together.boot = function() {
@@ -631,6 +245,16 @@ game.together.boot = function() {
   };
   this.create = function() {
     //game.state.start('preload');
+    /*
+var user_object = new object();
+user_object.name = {{ session('wechat.oauth_user')->name}};
+
+user_object.openid = {{ session('wechat.oauth_user')->id}};
+user_object.avatar = {{ session('wechat.oauth_user')->avatar}};
+
+*/
+
+
 	words = words_array.concat();
 	words.sort(randomSort);
 	miss_words=0;
@@ -645,7 +269,7 @@ game.together.boot = function() {
       wordWrapWidth: game.width - 80
     };
 
-	var game_start = game.add.text(50, game.height/2, "相鲁班三年级英语第下学期 单词练习(点击开始)", this.textStyle);
+	var game_start = game.add.text(50, game.height/2, "单词听写！点击开始", this.textStyle);
 	audio.pause();
 
 
@@ -684,6 +308,44 @@ console.log(words);
 
 }
 
+function delete_word(sprite){
+
+  for (var i=0;i< answer_arr.length;i++){
+    var alphabet = answer_arr[i].alphabet;
+    var x = answer_arr[i].x;
+    var y = answer_arr[i].y;
+
+    var explain1 = game.add.text(10, 10, alphabet, this.textStyle);
+
+  var sprite1 = game.add.sprite(x, y, "greenjian");
+
+
+    var rounded1 = game.make.graphics(0, 0);
+
+    rounded1.beginFill(0xa0e75a);
+    rounded1.drawRoundedRect(-2, -2, 30, explain1. height+10, 4);
+
+    rounded1.endFill();
+
+    sprite1.addChild(rounded1);
+    sprite1.addChild(explain1);
+    sprite1.alphabet = alphabet;
+
+    sprite1.inputEnabled = true;
+   // sprite1.input.enableDrag();
+
+    sprite1.events.onInputDown.add(oncheck, this);
+
+  }
+
+  for (var i=0;i< answer_arr.length;i++){
+		crrent_arr[i].getChildAt(1).setText("");
+	}
+
+  answer_arr = new Array();
+
+
+}
 game.together.main = function() {
 
   this.preload = function() {
@@ -692,30 +354,95 @@ game.together.main = function() {
 
   };
   this.update = function() {
+    //console.log(answer_arr);
 	//game.physics.arcade.collide(ground, sprite, shift_words);
 	//game.physics.arcade.collide(ground, rounded, shift_words);
+  this.textStyle = {
+     font: "14px Arial",
+     fill: '#000000',
+     wordWrap: true,
+     wordWrapWidth: game.width - 80
+   };
+
+
 txt_score.setText("第: " + score + "关");
 	for (var i=0;i< answer_arr.length;i++){
-		crrent_arr[i].getChildAt(1).setText(answer_arr[i]);
+		crrent_arr[i].getChildAt(1).setText(answer_arr[i].alphabet);
 	}
+  if(answer_arr.length>0){
+
+    if (typeof delete_sprite == "undefined"){
+
+      delete_sprite = game.add.text(10 + crrent_arr.length *35, game.height/2, "修改", this.textStyle);
+      delete_sprite.inputEnabled = true;
+      delete_sprite.events.onInputDown.add(delete_word, this);
+
+    }
+  }else{
+  //console.log(delete_sprite);
+    if (typeof delete_sprite !== "undefined"){
+      delete_sprite.destroy();
+      delete_sprite = undefined;
+    }
+  }
+
+
 	if(answer_arr.length == current_word.name.length){
-		if(answer_arr.join("") ==current_word.name){
+    var correct_answer="";
+    for (var i=0;i< answer_arr.length;i++){
+      correct_answer +=answer_arr[i].alphabet;
+    }
+
+
+		if(correct_answer.toLowerCase() ==current_word.name.toLowerCase()){
 
 
 
 			for (var i=0;i< crrent_arr.length;i++){
-				crrent_arr[i].destroy();;
+				crrent_arr[i].destroy();
 			}
 
 			for (var i=0;i< explain_arr.length;i++){
-				explain_arr[i].destroy();;
+				explain_arr[i].destroy();
 			}
 
 			crrent_arr = new Array();
 			select_alphabet  = new Array();
 			explain_arr = new Array();
 			answer_arr = new Array();
-			current_word =words.shift();
+
+
+		}else{
+			miss_array.push(current_word);
+      for (var i=0;i< crrent_arr.length;i++){
+				crrent_arr[i].destroy();
+			}
+
+			for (var i=0;i< explain_arr.length;i++){
+				explain_arr[i].destroy();
+			}
+
+			crrent_arr = new Array();
+			select_alphabet  = new Array();
+			explain_arr = new Array();
+			answer_arr = new Array();
+			//game.state.start('over')
+
+			}
+
+      if(miss_array.length>=1){
+
+        game.state.start('over')
+      }else{
+
+        if(words.length ==0){
+      	// fall = 0;
+
+      	 game.state.start('over')
+      	}
+
+        current_word =words.shift();
+      tips_zh.setText("提示中文翻译");
 			audio.src = current_word.voice;
 		audio.play();
 		audioAutoPlay();
@@ -789,15 +516,10 @@ txt_score.setText("第: " + score + "关");
 					}
 
 
-		}else{
-			miss_array.push(current_word);
-			crrent_arr = new Array();
-			select_alphabet  = new Array();
-			explain_arr = new Array();
-			answer_arr = new Array();
-			game.state.start('over')
+      }
 
-			}
+
+
 	}
 
 	//console.log(answer_arr.length);
@@ -859,6 +581,12 @@ txt_score.setText("第: " + score + "关");
 		   // sprite1.input.enableDrag();
 
 				tips.events.onInputDown.add(playagain, this);
+
+        tips_zh = game.add.text(50, game.height/2 -20, "提示中文翻译", this.textStyle);
+        tips_zh.inputEnabled = true;
+  		   // sprite1.input.enableDrag();
+
+  				tips_zh.events.onInputDown.add(transzh, this);
 			//console.log(current_word);
 
 			//console.log(crrent_arr);
@@ -1068,11 +796,26 @@ audio.src = current_word.voice;
 		audioAutoPlay();
 
 }
+
+function transzh(sprite){
+
+
+sprite.setText(current_word.explain);
+
+
+}
+
+
 function oncheck(click_word) {
 			 // do something wonderful here
 			 //this.y=this.y-100;
 			 //alert(this);
-			 answer_arr.push(click_word.alphabet);
+       tmp_object= new Object();
+       tmp_object.alphabet = click_word.alphabet;
+       tmp_object.x = click_word.x;
+       tmp_object.y = click_word.y;
+
+			 answer_arr.push(tmp_object);
 			 click_word.inputEnabled =false;
 			 click_word.destroy();
 

@@ -8,12 +8,17 @@ use phpspider\core\phpspider;
 use phpspider\core\requests;
 use phpspider\core\selector;
 
+use App\Models\Root;
+use App\Models\RootcixingWord;
+use App\Models\Rootcixing;
 use App\Models\Word;
+use App\Models\WordTip;
 use App\Models\LevelBase;
 use App\Models\LevelBaseWord;
 use App\Models\WordSpeech;
 use App\Models\WordExplain;
 use App\Models\WordVoice;
+use App\Models\Sentence;
 
 use AipSpeech;
 
@@ -31,6 +36,7 @@ class WordController extends Controller
 
      $query_word = trim($words);
      $query_word = strtolower($query_word);
+     //dd($query_word);
     //$query_word = $words;
       $crawl_version = $version;
 
@@ -128,7 +134,8 @@ class WordController extends Controller
           foreach ($yinbiao as $key => $value) {
             $tmp_yinbiao = $word->word_voice()->where("symbol",$value)->first();
             if($tmp_yinbiao == false){
-              $local_path ="voice/word/".$query_word."_".$key.".mp3";
+              $local_path =str_replace(" ","_",$query_word)."_".$key.".mp3";
+              $save_local_path = public_path()."/uploads/voice/word/".str_replace(" ","_",$query_word)."_".$key.".mp3";
               if(is_array($fayingpath)){
                 $path_tmp = str_replace(array("sound('","')"),"",$fayingpath[$key]);
               }else{
@@ -136,7 +143,7 @@ class WordController extends Controller
               }
               if($path_tmp!=false){
                 $voice_path = file_get_contents($path_tmp);
-                $sign=file_put_contents($local_path,$voice_path);
+                $sign=file_put_contents($save_local_path,$voice_path);
               }
 
 
@@ -157,10 +164,11 @@ class WordController extends Controller
 
           $tmp_yinbiao = $word->word_voice()->where("symbol",$yinbiao)->first();
           if($tmp_yinbiao == false){
-            $local_path ="voice/word/".$query_word.".mp3";
+            $local_path =str_replace(" ",'_',$query_word).".mp3";
+            $save_local_path = public_path()."/uploads/voice/word/".str_replace(" ",'_',$query_word).".mp3";
             $path_tmp = str_replace(array("sound('","')"),"",$fayingpath);
             $voice_path = file_get_contents($path_tmp);
-            $sign=file_put_contents($local_path,$voice_path);
+            $sign=file_put_contents($save_local_path,$voice_path);
 
             if($sign!=false){
               $word->word_voice()->create(['word_id' => $word->id,'symbol' => $yinbiao, 'path'=>$local_path]);
@@ -260,7 +268,7 @@ class WordController extends Controller
 
 
       $word->save();
-
+      $this->crawl2($query_word, $version);
       //return true;
       /*
       die('test');
@@ -310,6 +318,96 @@ class WordController extends Controller
 
     }
 
+
+    public function crawl2($words="test",$version="iciba03"){
+      $query_word = trim($words);
+      $query_word = strtolower($query_word);
+      //$query_word = $words;
+       $crawl_version = $version;
+
+       $word = Word::where('word', $query_word)->first();
+       $word->version = $crawl_version;
+       $word->save();
+
+    for($i=0;$i<10;$i++){
+
+
+
+
+       //$url = "http://dj.iciba.com/".$query_word;
+       $url="http://www.jukuu.com/show-".$query_word."-".$i.".html";
+       $html = requests::get($url);
+
+       // 抽取星级
+
+       //$selector = "//span[contains(@class,'stc_en_txt ')]";
+       //$selector = "//span[contains(@class,'stc_cn_txt')]";
+
+       $selector = "//table[@id='Table1']//table/tr[@class='e']/td";
+       $selector2 = "//table[@id='Table1']//table/tr[@class='c']/td";
+       $selector3 = "//table[@id='Table1']//table/tr/td[@width='75%']";
+       // 提取结果 container1
+       $result_en_tmp = selector::select($html, $selector);
+       $result_zh_tmp = selector::select($html, $selector2);
+       $result_en =array();
+       if($result_en_tmp ==false){
+         break;
+       }
+
+       foreach($result_en_tmp as $k=>$en){
+         if($k%2){
+            $result_en[] =trim(str_replace(array('<b>','</b>'),'',strip_tags($en)));
+         }
+       }
+        $result_zh =array();
+       foreach($result_zh_tmp as $kzh=>$zh){
+         if($kzh%2){
+            $result_zh[] =trim(str_replace(array('<b>','</b>'),'',strip_tags($zh)));
+         }
+       }
+
+       $result_from = selector::select($html, $selector3);
+
+       foreach($result_en as $key=>$item){
+
+         $sentence = Sentence::where('english', trim($result_en[$key]))->first();
+
+        //  $words = new Word;
+        //  $word = $words->where('word', $query_word)->first();
+
+        //  echo $query_word;
+
+         if($sentence==false&&strlen($result_en[$key])<255&&strlen($result_zh[$key])<255){
+           if(trim($result_from[$key]) !="-- 来源 -- 网友提供"){
+             $sentence = Sentence::create([
+                 'english' => trim($result_en[$key]),
+                 'chinese' =>trim($result_zh[$key]),
+                 'quote' =>trim($result_from[$key]),
+               //  'level_star'=>$level_star
+           //      'version' => $crawl_version,
+             ]);
+             $sentence->words()->attach($word->id);
+           }
+
+
+
+         }else{
+           if( $sentence){
+             if($sentence->words()->where("words.id",$word->id)->count()==false){
+               $sentence->words()->attach($word->id);
+             }
+           }
+
+         //  $word = Word::where('word', $query_word)->get();
+          continue;
+         }
+
+
+       }
+
+    }
+  }
+
     public function search(Request $request)
     {
       # code...
@@ -318,7 +416,9 @@ class WordController extends Controller
       $query_word = trim($query_word);
       $query_word = strtolower($query_word);
       $word_obj = Word::where('word', $query_word)->first();  //单词
+
       if($word_obj !=false){
+
         return redirect()->route('query', $query_word);
       }else{
 
@@ -453,23 +553,24 @@ echo $result_array['results'][0]['alternatives'][0]['transcript'];
       # code...
       $query_word = trim($word);
       $query_word = strtolower($query_word);
+
      //$query_word = $words;
     //  PaChongController::crawl($word);
 
        $word_obj = Word::where('word', $query_word)->first();  //单词
 
 if($word_obj ==false){
-  $this->crawl($query_word);
-$word_obj = Word::where('word', $query_word)->first(); 
+  $this->crawl($query_word,"jukuu05");
+$word_obj = Word::where('word', $query_word)->first();
 }
-
+//$this->crawl($query_word);
       $voices =  WordVoice::where('word_id', $word_obj->id)->get();  //单词
 
       $voice_array = array();
       $tmp_array =array();
       foreach ($voices as $voice) {
         $tmp_array['symbol'] = $voice->symbol;
-        $url = 'https://www.jciba.cn/voice/word/'.str_replace('voice/word/',"",$voice->path);
+        $url = '/uploads/voice/word/'.str_replace('voice/word/',"",$voice->path);
 
         $tmp_array['path'] = $url;
         $voice_array[]=$tmp_array;
@@ -481,7 +582,17 @@ $word_obj = Word::where('word', $query_word)->first();
       $explain_array = array();
       $tmp_array =array();
       foreach ($word_explains as $word_explain) {
-        $explain_array[WordSpeech::find($word_explain->word_speech_id)->cixing][] = $word_explain->explain;
+        //$explain_array[WordSpeech::find($word_explain->word_speech_id)->cixing][] = $word_explain->explain;
+
+        if(WordSpeech::find($word_explain['word_speech_id'])){
+          $explain_array[WordSpeech::find($word_explain->word_speech_id)->cixing][] = $word_explain->explain;
+        }else{
+          $explain_array[][] = $word_explain['explain'];
+        }
+
+
+
+
       //  echo WordSpeech::find(10)->first()->cixing."<br/>";
         //echo $word_explain->word_speech_id."<br/>";
 
@@ -490,6 +601,92 @@ $word_obj = Word::where('word', $query_word)->first();
 
 
       return view('word.query', compact('word_obj','explain_array','voice_array'));
+
+    }
+
+    public function star($star){
+      $query_word = "star".$star;
+      $has_star =Word::where('level_star', $query_word)->count();
+      if($has_star==false){
+        return redirect()->route('home');
+      }
+      return view('word.starapi', compact('star'));
+    }
+
+    public function queryapi(Request $request)
+    {
+      # code...
+      $word = $request->word;
+      $query_word = trim($word);
+      $query_word = strtolower($query_word);
+     //$query_word = $words;
+    //  PaChongController::crawl($word);
+
+       $word_obj = Word::where('word', $query_word)->first();  //单词
+
+if($word_obj ==false){
+  $this->crawl($query_word);
+$word_obj = Word::where('word', $query_word)->first();
+}
+
+      $voices =  WordVoice::where('word_id', $word_obj->id)->get();  //单词
+
+      $voice_array = array();
+      $tmp_array =array();
+      foreach ($voices as $voice) {
+        $tmp_array['symbol'] = $voice->symbol;
+        $url = '/uploads/voice/word/'.str_replace('voice/word/',"",$voice->path);
+
+        $tmp_array['path'] = $url;
+        $voice_array[]=$tmp_array;
+
+    }
+
+      $word_explains = WordExplain::where('word_id', $word_obj->id)->get();  //单词
+
+      $explain_array = array();
+      $tmp_array =array();
+      foreach ($word_explains as $word_explain) {
+        //$explain_array[WordSpeech::find($word_explain->word_speech_id)->cixing][] = $word_explain->explain;
+
+        if(WordSpeech::find($word_explain['word_speech_id'])){
+          $explain_array[WordSpeech::find($word_explain->word_speech_id)->cixing][] = $word_explain->explain;
+        }else{
+          $explain_array[][] = $word_explain['explain'];
+        }
+
+
+      //  echo WordSpeech::find(10)->first()->cixing."<br/>";
+        //echo $word_explain->word_speech_id."<br/>";
+
+    }
+//单词 Tips
+$wordtips ="";
+$wordtips =WordTip::where('word_id', $word_obj->id)->orderBy('praise')->get();
+
+
+    // 单词词根....
+    $word_cixing_roots = $word_obj->rootcixing_word()->get();
+
+    foreach ($word_cixing_roots as $cixing_roots) {
+      //$explain_array[WordSpeech::find($word_explain->word_speech_id)->cixing][] = $word_explain->explain;
+
+$root_cixing_array[Rootcixing::find($cixing_roots->rootcixing_id)->root_id]['cixing_alias']= $cixing_roots->root_alias;
+$root_cixing_array[Rootcixing::find($cixing_roots->rootcixing_id)->root_id]['cixing_name']= WordSpeech::find(Rootcixing::find($cixing_roots->rootcixing_id)->word_speech_id)->cixing;
+      $root_cixing_array[Rootcixing::find($cixing_roots->rootcixing_id)->root_id]['cixing']= Rootcixing::find($cixing_roots->rootcixing_id);
+      $root_cixing_array[Rootcixing::find($cixing_roots->rootcixing_id)->root_id]['root']=Root::find(Rootcixing::find($cixing_roots->rootcixing_id)->root_id);
+
+
+
+    //  echo WordSpeech::find(10)->first()->cixing."<br/>";
+      //echo $word_explain->word_speech_id."<br/>";
+
+  }
+
+
+
+    return response()->success(compact('word_obj','explain_array','voice_array','root_cixing_array','wordtips'));
+      //return view('word.query', compact('word_obj','explain_array','voice_array'));
 
     }
 }

@@ -166,6 +166,9 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Overtrue\LaravelWeChat\ServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+        Jadjoubran\LaravelAngular\Provider\LaravelServiceProvider::class,
+
+
 
         /*
          * Package Service Providers...
@@ -179,6 +182,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+
+        'Nutsweb\LaravelPrerender\LaravelPrerenderServiceProvider',
 
     ],
 

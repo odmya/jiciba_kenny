@@ -88,6 +88,22 @@ return [
             //'root' => public_path('uploads'),
         ],
 
+        'wordvoice_uploads' => [  //单词录音目录
+            'driver' => 'local',
+            // 文件将上传到storage/app/uploads目录
+            'root' => public_path('voice/word'),
+            // 文件将上传到public/uploads目录 如果需要浏览器直接访问 请设置成这个
+            //'root' => public_path('uploads'),
+        ],
+
+        'admin' => [
+           'driver' => 'local',
+           'root' => public_path('uploads'),
+           'visibility' => 'public',
+           'url' => env('APP_URL').'/uploads',
+       ],
+
+
 
         's3' => [
             'driver' => 's3',

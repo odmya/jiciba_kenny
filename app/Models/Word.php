@@ -15,6 +15,20 @@ class Word extends Model
 
     }
 
+    public function explain()
+    {
+
+      return $this->hasMany(WordExplain::class);
+
+    }
+
+    public function voice()
+    {
+
+      return $this->hasMany(WordVoice::class);
+
+    }
+
     public function word_voice()
     {
 
@@ -29,10 +43,24 @@ class Word extends Model
 
     }
 
+
+    public function tip()
+    {
+
+      return $this->hasMany(WordTip::class);
+
+    }
     public function word_tip()
     {
 
       return $this->hasMany(WordTip::class);
+
+    }
+
+    public function level()
+    {
+
+      return $this->belongsToMany(LevelBase::class);
 
     }
 
@@ -48,6 +76,32 @@ class Word extends Model
         return $this->hasOne(WordDescription::class);
     }
 
+    public function rootcixing()
+      {
+          return $this->belongsToMany(Rootcixing::class);
+      }
+
+
+      public function root()
+      {
+
+        return $this->hasMany(RootcixingWord::class);
+
+      }
+
+      public function rootcixing_word()
+      {
+
+        return $this->hasMany(RootcixingWord::class);
+
+      }
+
+      public function sentences()
+      {
+
+        return $this->belongsToMany(Sentence::class);
+
+      }
 
 
 }

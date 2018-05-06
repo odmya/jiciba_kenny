@@ -39,7 +39,24 @@ class ChapterController extends Controller
 
       public function edit(Chapter $chapter)
       {
-          return view('chapter.edit', compact('phrase'));
+          return view('chapters.edit', compact('chapter'));
+      }
+
+      public function update(Chapter $chapter, Request $request)
+      {
+          $this->validate($request, [
+              'name' => 'required',
+          ]);
+          $data = [];
+          $data['name'] = $request->name;
+          $data['description'] = $request->description;
+
+          $chapter->update($data);
+
+          session()->flash('success', '修改成功');
+
+        return redirect()->route('chapterindex',$chapter->course_id);
+
       }
 
 
