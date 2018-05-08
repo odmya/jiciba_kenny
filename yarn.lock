@@ -2,6 +2,24 @@
 # yarn lockfile v1
 
 
+"@angular/animations@^6.0.0":
+  version "6.0.0"
+  resolved "http://r.cnpmjs.org/@angular/animations/download/@angular/animations-6.0.0.tgz#cfc825dbfdf33bf3bf75962d1e12495aed5e3c32"
+  dependencies:
+    tslib "^1.9.0"
+
+"@angular/cdk@^6.0.0":
+  version "6.0.1"
+  resolved "http://r.cnpmjs.org/@angular/cdk/download/@angular/cdk-6.0.1.tgz#dde0ef5b1b3ce9989136ca1a73af1de404141bfd"
+  dependencies:
+    tslib "^1.7.1"
+
+"@angular/material@^6.0.0":
+  version "6.0.1"
+  resolved "http://r.cnpmjs.org/@angular/material/download/@angular/material-6.0.1.tgz#17558dba6b9372df6cae1d248d2360c9570dc44a"
+  dependencies:
+    tslib "^1.7.1"
+
 "@uirouter/angularjs@^1.0.15":
   version "1.0.15"
   resolved "http://r.cnpmjs.org/@uirouter/angularjs/download/@uirouter/angularjs-1.0.15.tgz#06d7a350576301f8897f5132b37e69756872139e"
@@ -5967,6 +5985,10 @@ trim-repeated@^1.0.0:
 trim-right@^1.0.1:
   version "1.0.1"
   resolved "http://registry.npm.taobao.org/trim-right/download/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
+
+tslib@^1.7.1, tslib@^1.9.0:
+  version "1.9.0"
+  resolved "http://r.cnpmjs.org/tslib/download/tslib-1.9.0.tgz#e37a86fda8cbbaf23a057f473c9f4dc64e5fc2e8"
 
 tty-browserify@0.0.0:
   version "0.0.0"

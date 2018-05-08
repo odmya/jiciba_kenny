@@ -28,6 +28,6 @@ class NovelController extends Controller
     {
       // code...
       $chapters = $novel->novel_chapter()->paginate(1);
-      return view('novel.chapter', compact('chapters'));
+      return view('angular.novel.chapter', compact('chapters'));
     }
 }

@@ -107,7 +107,7 @@ for($i=0;$i<10;$i++){
 
        }
 
-       sleep(2);//睡眠
+       sleep(1);//睡眠
 }
 
 
@@ -215,7 +215,7 @@ for($i=0;$i<10;$i++){
           foreach ($yinbiao as $key => $value) {
             $tmp_yinbiao = $word->word_voice()->where("symbol",$value)->first();
             if($tmp_yinbiao == false){
-              $local_path ="voice/word/".$query_word."_".$key.".mp3";
+              $local_path ="uploads/voice/word/".$query_word."_".$key.".mp3";
               if(is_array($fayingpath)){
                 $path_tmp = str_replace(array("sound('","')"),"",$fayingpath[$key]);
               }else{
@@ -244,7 +244,7 @@ for($i=0;$i<10;$i++){
 
           $tmp_yinbiao = $word->word_voice()->where("symbol",$yinbiao)->first();
           if($tmp_yinbiao == false){
-            $local_path ="voice/word/".$query_word.".mp3";
+            $local_path ="uploads/voice/word/".$query_word.".mp3";
             $path_tmp = str_replace(array("sound('","')"),"",$fayingpath);
 
             $voice_path = file_get_contents($path_tmp);
@@ -349,7 +349,7 @@ for($i=0;$i<10;$i++){
 
 
       $word->save();
-      return true;
+      //return true;
       //return true;
       /*
       die('test');

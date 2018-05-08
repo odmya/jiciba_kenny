@@ -100,7 +100,7 @@
 <div class="row">
 
 <h3>{{$chapter->name}}</h3>
-<div ><div ng-mouseleave="mouseleaveEvent()" ng-mouseup="mouseUpEvent()"  ng-mousedown="mousedownEvent()" >{!!$chapter->english!!}</a></div>
+<div ><div ng-mouseleave="mouseleaveEvent()" ng-mouseup="mouseUpEvent()"  ng-mousedown="mousedownEvent()" ng-touchstart="mousedownEvent()" ng-touchend="mouseUpEvent()"  >{!!$chapter->english!!}</a></div>
 </div>
 @endforeach
 

@@ -19,6 +19,9 @@
         "vue": "^2.1.10"
     },
     "dependencies": {
+        "@angular/animations": "^6.0.0",
+        "@angular/cdk": "^6.0.0",
+        "@angular/material": "^6.0.0",
         "@uirouter/angularjs": "^1.0.15",
         "angular": "^1.6.10",
         "angular-touch": "^1.6.10",

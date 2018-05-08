@@ -8352,10 +8352,6 @@ button.close {
 
 /* universal */
 
-body {
-  padding-top: 120px;
-}
-
 section {
   overflow: auto;
 }
@@ -8410,10 +8406,10 @@ p {
 #logo {
   float: left;
   margin-right: 10px;
-  font-size: 2em;
+  font-size: 1.5em;
   text-decoration: none;
   letter-spacing: -1px;
-  padding-top: 9px;
+  padding-top: 2px;
   font-weight: bold;
 }
 

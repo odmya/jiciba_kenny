@@ -144,6 +144,7 @@ Route::get('/ciba', 'PaChongController@ciba')->name('ciba');
 Route::get('/ciba/list', 'PaChongController@list')->name('cibalist');
 //Route::get('/cibadb', 'PaChongController@cibadb')->name('cibadb');
 Route::get('/crawl/{word}', 'PaChongController@crawl')->name('crawl');
+Route::get('/crawl/ciba/{word}', 'PaChongController@crawl2')->name('cibacrawl');
 
 //endciba
 Route::get('/', 'StaticPagesController@home')->name('home');

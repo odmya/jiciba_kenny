@@ -18,7 +18,7 @@
 <script src="{{ asset('/js/angular/angular.min.js') }}"></script>
 <script src="{{ asset('/js/angular/angular-sanitize.min.js') }}"></script>
 <script src="{{ asset('/js/angular/angular-animate.min.js') }}"></script>
-
+<script src="{{ asset('/js/angular/ngTouch.min.js') }}"></script>
 
 <script src="{{ asset('/js/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js') }}"></script>
 

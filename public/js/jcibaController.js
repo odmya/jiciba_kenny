@@ -308,6 +308,11 @@ $scope.starpages=function(){
 	
 $scope.mouseUpEvent = function() {
 
+
+$scope.touchEvent =function(){
+	
+	alert("test");
+}
 	if($scope.ismousedown){
 		
 		$scope.selectedText =  $scope.getSelectionText();
@@ -349,6 +354,7 @@ $scope.open = function (size,word) {
         animation: $scope.animationsEnabled,
         templateUrl: 'myModalContent.html',
         controller: 'ModalInstanceCtrl',
+		backdrop: 'false',
         size: size,
         resolve: {
             items: function () {

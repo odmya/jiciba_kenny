@@ -5,7 +5,7 @@
 @section('content')
 
 
-<div  ng-controller="mainController">
+<div  ng-controller="rovelController">
 
 
   @foreach ($novels as $novel)

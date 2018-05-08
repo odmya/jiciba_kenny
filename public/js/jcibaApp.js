@@ -2,7 +2,7 @@
 
 
 
-var app = angular.module('myApp', ['ngSanitize', 'mainCtrl', 'querywordService','ui.bootstrap','mgcrea.bootstrap.affix','ngAnimate']);
+var app = angular.module('myApp', ['ngSanitize', 'mainCtrl', 'querywordService','ui.bootstrap','mgcrea.bootstrap.affix','ngAnimate','ngTouch']);
 
 
 
