@@ -2,7 +2,7 @@
   <footer class="footer">
     <nav>
 
-        <ul class="navbar navbar-default navbar-fixed-bottom">
+        <ul class="navbar navbar-default ">
 
             <li><a href="{{ route('about') }}">关于</a></li>
 
