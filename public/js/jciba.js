@@ -30,9 +30,6 @@ app.controller('rovelController', function($scope,$rootScope, $location, $http, 
 // 划词开始
 $scope.mouseUpEvent = function() {
 
-$scope.touchEvent =function(){
-	
-}
 	if($scope.ismousedown){
 		
 		$scope.selectedText =  $scope.getSelectionText();
