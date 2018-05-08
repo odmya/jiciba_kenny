@@ -3,7 +3,7 @@
 
 <div layout="column" class="container">
   <div layout="row" >
-    <div id="logo" flex="20"><a href="/" id="logo">记词吧</a></div>
+    <div><a href="/" id="logo">记词吧</a></div>
     <div flex="60" layout-align="end start"> <a href="{{route('novelList')}}">英语小说</a></div>
 
     <div flex="20">

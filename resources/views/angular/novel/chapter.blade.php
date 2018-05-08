@@ -95,7 +95,7 @@
 <div layout="column">
 
 <h3 layout="row">{{$chapter->name}}</h3>
-<div layout="row"><div ng-mouseleave="mouseleaveEvent()" ng-mouseup="mouseUpEvent()"  ng-mousedown="mousedownEvent()" ng-touchstart="mousedownEvent()" ng-touchend="mouseUpEvent()"  >{!!$chapter->english!!}</a></div>
+<div layout="row"><div ng-mouseleave="mouseleaveEvent($event)" ng-mouseup="mouseUpEvent($event)"  ng-mousedown="mousedownEvent($event)" ng-touchstart="mousedownEvent($event)" ng-touchend="mouseUpEvent($event)"  >{!!$chapter->english!!}</a></div>
 </div>
 @endforeach
 

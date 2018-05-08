@@ -28,22 +28,22 @@ app.controller('rovelController', function($scope,$rootScope, $location, $http, 
 	  
 
 // 划词开始
-$scope.mouseUpEvent = function() {
+$scope.mouseUpEvent = function(ev) {
 
 	if($scope.ismousedown){
 		
-		$scope.selectedText =  $scope.getSelectionText();
+		$scope.selectedText =  $scope.getSelectionText(ev);
 		$scope.ismousedown = false;
 	}
 }; 
-$scope.mousedownEvent = function() {
+$scope.mousedownEvent = function(ev) {
 	//alert("aa");
     $scope.ismousedown = true;
    // do i do the function here to replace
 
 }; 
 
-$scope.getSelectionText = function(){
+$scope.getSelectionText = function(ev){
 $scope.ismousedown = false;
 // Predefine select and range
 var sel = (document.selection && document.selection.createRange().text) ||
@@ -51,7 +51,7 @@ var sel = (document.selection && document.selection.createRange().text) ||
   if(sel){
 	  $rootScope.selectword =sel;
 $scope.frameShow=true;
-$scope.showTabDialog();
+$scope.showTabDialog(ev);
 //alert(sel);
   //$scope.open("lg",sel);
   }else{
@@ -61,11 +61,12 @@ $scope.showTabDialog();
 }
 
 
- $scope.showTabDialog = function() {
+ $scope.showTabDialog = function(ev) {
     $mdDialog.show({
       controller: DialogController,
       templateUrl: 'tabDialog.tmpl.html',
       parent: angular.element(document.body),
+	  targetEvent: ev,
       clickOutsideToClose:true
     })
         .then(function(answer) {
