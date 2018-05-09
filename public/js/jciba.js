@@ -24,7 +24,7 @@ app.config(function($mdIconProvider) {
       .iconSet("social", '/img/icons/sets/social-icons.svg', 24);
   })
   
-app.controller('rovelController', function($scope,$rootScope, $location, $http, $log, $mdDialog) {
+app.controller('quciController', function($scope,$rootScope, $location, $http, $log, $mdDialog) {
 	  
 
 // 划词开始

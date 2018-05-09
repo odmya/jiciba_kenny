@@ -65,10 +65,10 @@ return [
      * 公众号
      */
     'official_account' => [
-        'app_id' => env('WECHAT_OFFICIAL_ACCOUNT_APPID', 'wxa5236a25a9fad71e'),         // AppID
-        'secret' => env('WECHAT_OFFICIAL_ACCOUNT_SECRET', '63392096d54ca2802911f417f0ba53e7'),    // AppSecret
-        'token' => env('WECHAT_OFFICIAL_ACCOUNT_TOKEN', 'jiahe'),           // Token
-        'aes_key' => env('WECHAT_OFFICIAL_ACCOUNT_AES_KEY', 'JLRIKq6OJZrzZh1OCfYDl3yEGDagbJMiFOIyxmNkKD8'),                 // EncodingAESKey
+        'app_id' => env('WECHAT_OFFICIAL_ACCOUNT_APPID'),         // AppID
+        'secret' => env('WECHAT_OFFICIAL_ACCOUNT_SECRET'),    // AppSecret
+        'token' => env('WECHAT_OFFICIAL_ACCOUNT_TOKEN'),           // Token
+        'aes_key' => env('WECHAT_OFFICIAL_ACCOUNT_AES_KEY'),                 // EncodingAESKey
 
         /*
          * OAuth 配置
@@ -98,10 +98,10 @@ return [
      * 小程序
      */
     'mini_program' => [
-        'app_id'  => env('WECHAT_MINI_PROGRAM_APPID', 'wx329579d60620d7fb'),
-         'secret'  => env('WECHAT_MINI_PROGRAM_SECRET', '3de077fb0d899e2dc0800b8c74ec4ecc'),
-         'token'   => env('WECHAT_MINI_PROGRAM_TOKEN', 'jlkjdf123'),
-         'aes_key' => env('WECHAT_MINI_PROGRAM_AES_KEY', 'GKbPsMDopo0WqCTcZhDvw8qJQwG8R5NQxxRcCjPnBCJ'),
+        'app_id'  => env('WECHAT_MINI_PROGRAM_APPID'),
+         'secret'  => env('WECHAT_MINI_PROGRAM_SECRET'),
+         'token'   => env('WECHAT_MINI_PROGRAM_TOKEN'),
+         'aes_key' => env('WECHAT_MINI_PROGRAM_AES_KEY'),
      ],
 
     /*

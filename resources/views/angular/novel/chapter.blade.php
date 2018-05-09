@@ -5,7 +5,7 @@
 @section('content')
 
 
-<div ng-controller="rovelController" class="md-padding dialogdemoBasicUsage" id="popupContainer" ng-cloak="">
+<div ng-controller="quciController" class="md-padding dialogdemoBasicUsage" id="popupContainer" ng-cloak="">
 
 
   <script type="text/ng-template" id="tabDialog.tmpl.html"><md-dialog aria-label="Mango (Fruit)">

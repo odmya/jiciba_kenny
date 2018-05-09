@@ -35,4 +35,10 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'weixin' => [
+        'client_id' => env('WECHAT_OFFICIAL_ACCOUNT_APPID'),
+        'client_secret' => env('WECHAT_OFFICIAL_ACCOUNT_SECRET'),
+        'redirect' => env('WEIXIN_REDIRECT_URI'),
+    ],
+
 ];

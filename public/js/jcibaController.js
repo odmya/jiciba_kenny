@@ -303,7 +303,7 @@ $scope.starpages=function(){
 		});  
 
   
-  }).controller('rovelController', function($scope,$rootScope, $location, $http, $uibModal, $log) {
+  }).controller('quciController', function($scope,$rootScope, $location, $http, $uibModal, $log) {
 	  
 	
 $scope.mouseUpEvent = function() {
