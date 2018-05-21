@@ -20,6 +20,21 @@ class WordController extends Controller
     }
 
 
+    public function wordsearch(Request $request, Word $word)
+    {
+
+      $query = $request->input('query');
+      $query = trim($query);
+
+      $query_array=explode(" ",$query);
+
+      $words = Word::where('word', 'like', $query.'%')->take(5)->paginate(5);
+
+
+
+      return $this->response->paginator($words, new WordTransformer());
+    }
+
     public function star(Request $request, Word $word){
 
       $star = $request->star;

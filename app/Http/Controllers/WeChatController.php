@@ -56,7 +56,7 @@ class WeChatController extends Controller
 
 
       $user = session('wechat.oauth_user');
-
+$user =$user['default'];
 $openid =  $user->id;
 $email = $user->email;
 if($email==false){
@@ -123,6 +123,7 @@ $password = 'jciba20171221!@';
     public function course(){
       $courses = Course::all();
       $user = session('wechat.oauth_user');
+      $user =$user['default'];
       $records = Userrecord::where("openid",$user->id)->orderBy('created_at', 'desc')->paginate(20);
 
       return view('wechat.courseindex',compact('courses','records','user'));
@@ -161,6 +162,7 @@ public function record($speech_unique, Request $request){
 
       $app = app('wechat.official_account');
       $user = session('wechat.oauth_user');
+      $user =$user['default'];
       switch ($section->type) {
         case '0':
         $phrasesections  = $section->phrase()->orderBy('created_at', 'desc');
@@ -281,7 +283,7 @@ public function wechatquestion(Section $section, Request $request)
 
   $app = app('wechat.official_account');
   $user = session('wechat.oauth_user');
-
+$user =$user['default'];
   $questionsections  = $section->question()->orderBy('created_at', 'desc')->paginate(1);
   $curentpage = $questionsections->currentPage();
   $nextpageurl = $questionsections->nextPageUrl();

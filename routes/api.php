@@ -32,6 +32,9 @@ $api->version('v1', [
     $api->post('word', 'WordController@show')
         ->name('api.WordController.show');
 
+    $api->post('wordsearch', 'WordController@wordsearch')
+          ->name('api.WordController.wordsearch');
+
     $api->post('sentence', 'SentenceController@show')
         ->name('api.SentenceController.show');
 
@@ -62,12 +65,19 @@ $api->version('v1', [
                      // 登录
                 $api->post('authorizations', 'AuthorizationsController@store')
                       ->name('api.authorizations.store');
+                      // 小程序登录
+                $api->post('weapp/authorizations', 'AuthorizationsController@weappStore')
+                    ->name('api.weapp.authorizations.store');
+                    // 小程序注册
+                $api->post('weapp/users', 'UsersController@weappStore')
+                    ->name('api.weapp.users.store');
+
                       // 刷新token
                 $api->put('authorizations/current', 'AuthorizationsController@update')
                       ->name('api.authorizations.update');
                       // 删除token
                 $api->delete('authorizations/current', 'AuthorizationsController@destroy')
-                      ->name('api.authorizations.destroy');                                                                            
+                      ->name('api.authorizations.destroy');
     });
 
 
