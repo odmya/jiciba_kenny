@@ -64,7 +64,8 @@ if(count($explain_array)){
 
 public function includeRoot(Word $word)
 {
-
+//$aaa=$word->rootcixing_word()->get();
+//dd($aaa);
     return $this->collection($word->rootcixing_word()->get(), new RootTransformer());
 }
 //发音

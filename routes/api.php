@@ -29,6 +29,8 @@ $api->version('v1', [
         return response('this is version v1');
     });
 
+    $api->get('roots/{root}', 'RootController@show')->name('api.RootController.show');
+
     $api->post('word', 'WordController@show')
         ->name('api.WordController.show');
 

@@ -25,4 +25,11 @@ class Rootcixing extends Model
         return $this->hasMany(RootcixingWord::class);
     }
 
+    public function words()
+    {
+
+      return $this->belongsToMany(Word::class)->withPivot('detail', 'explain','root_alias');;
+
+    }
+
 }
