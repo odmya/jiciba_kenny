@@ -20,6 +20,7 @@ Route::group([
     $router->resource('wordvoices', WordVoiceController::class);
     $router->resource('wordspeeh', WordSpeechController::class);
     $router->resource('root', RootController::class);
+    $router->resource('news', NewsController::class);
 
     $router->resource('rootcixing', RootcixingController::class);
     $router->resource('sentence', SentenceControllers::class);

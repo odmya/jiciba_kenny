@@ -30,6 +30,10 @@ $api->version('v1', [
     });
 
     $api->get('roots/{root}', 'RootController@show')->name('api.RootController.show');
+    $api->get('roots/list/{roottype}', 'RootController@list')->name('api.RootController.list');
+
+    $api->get('news/show/{news}', 'NewsController@show')->name('api.NewsController.show');
+    $api->get('news', 'NewsController@list')->name('api.NewsController.list');
 
     $api->post('word', 'WordController@show')
         ->name('api.WordController.show');

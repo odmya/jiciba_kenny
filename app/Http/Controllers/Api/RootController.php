@@ -25,5 +25,11 @@ class RootController extends Controller
     }
 
 
+    public function list($roottype){
+      $cigen = Root::where('types',$roottype)->get();
+      
+      return $this->response->item($cigen, new RootCigenTransformer())
+          ->setStatusCode(201);
+    }
 
 }

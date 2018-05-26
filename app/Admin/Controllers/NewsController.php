@@ -2,8 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\Root;
-use App\Models\WordSpeech;
+use App\Models\news;
 
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -12,7 +11,7 @@ use Encore\Admin\Layout\Content;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
 
-class RootController extends Controller
+class NewsController extends Controller
 {
     use ModelForm;
 
@@ -72,15 +71,16 @@ class RootController extends Controller
      */
     protected function grid()
     {
-        return Admin::grid(Root::class, function (Grid $grid) {
+        return Admin::grid(news::class, function (Grid $grid) {
 
             $grid->id('ID')->sortable();
-            $grid->name('词根');
-            //$grid->types()->options()->select([0 => '前缀', 1 => '后缀', 2 => '词根']);
-             $grid->types()->editable('select', [0 => '前缀', 1 => '后缀', 2 => '词根']); //可编辑
-            $grid->description('描述');
-            //$grid->created_at();
-            //$grid->updated_at();
+            $grid->title('title');
+            $grid->author("author");
+            $grid->is_enable("is_enable");
+            $grid->count("count");
+
+            $grid->created_at();
+            $grid->updated_at();
         });
     }
 
@@ -91,19 +91,14 @@ class RootController extends Controller
      */
     protected function form()
     {
-        return Admin::form(Root::class, function (Form $form) {
+        return Admin::form(news::class, function (Form $form) {
 
-            //$form->display('id', 'ID');
-            $form->text('name','词根');
-            $form->select('types')->options([0 => '前缀', 1 => '后缀', 2 => '词根']);
+            $form->display('id', 'ID');
+            $form->text('title', '标题');
             $form->ckeditor('description','描述');
-
-            $form->hasMany('rootcixing', function (Form\NestedForm $form) {
-            //$form->text('rootcixing.description',"描叙");
-            $form->select('word_speech_id',"词性")->options(WordSpeech::all()->pluck('cixing', 'id'));
-
-            });
-
+            $form->file('image', '图片')->uniqueName()->move('images');
+            $form->text('author', '作者');
+            $form->select('is_enable', '是否可用')->options([0 => '失效', 1 => '有效']);
 
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
