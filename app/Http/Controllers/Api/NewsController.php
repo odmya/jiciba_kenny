@@ -9,6 +9,7 @@ use App\Transformers\NewsTransformer;
 class NewsController extends Controller
 {
     //
+    
     public function show($news)
     {
       $news = News::where('id',$news)->first();
