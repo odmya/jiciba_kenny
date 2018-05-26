@@ -9,7 +9,7 @@ use League\Fractal\TransformerAbstract;
 
 class WordTransformer extends TransformerAbstract
 {
-    protected $availableIncludes = ['explain', 'voice','tip','level','root'];
+    protected $availableIncludes = ['explain', 'voice','tip','level','root','sentence'];
     public function transform(Word $word)
     {
         return [
@@ -79,6 +79,18 @@ public function includeRoot(Word $word)
     public function includeTip(Word $word)
     {
         return $this->collection($word->word_tip()->get(), new TipTransformer());
+    }
+
+    public function includeSentence(Word $word){
+
+      $sentences = $word->sentences()->offset(0)->limit(2)->get();
+
+    //  dd($sentences);
+      //$sentences = Sentence::where('english', 'like', '%'.$query.'%')->limit(30)->paginate(10);
+
+
+
+      return $this->collection($sentences, new SentenceTransformer());
     }
 
 // 例句

@@ -94,7 +94,7 @@ class NovelController extends Controller
             $form->display('id', 'ID');
             $form->text('name', '小说名称');
             $form->ckeditor('description','描述');
-            $form->text('image', '图片');
+            $form->file('image', '图片')->uniqueName()->move('images');
             $form->text('author', '作者');
             $form->select('novel_type_id', '类型')->options(NovelType::all()->pluck('name', 'id'));
 

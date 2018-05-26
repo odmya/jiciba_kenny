@@ -19,7 +19,9 @@ class SessionsController extends Controller
 
     public function create()
     {
-        return view('sessions.create');
+      $app = app('wechat.official_account');
+        //return view('sessions.create');
+        return view('sessions.wechatlogin',compact('app'));
     }
 
     public function store(Request $request)
