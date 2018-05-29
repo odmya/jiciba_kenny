@@ -90,7 +90,7 @@ class LevelBaseController extends Controller
         return Admin::form(LevelBase::class, function (Form $form) {
 
             $form->display('id', 'ID');
-
+            $form->text('level_bases', 'Level Base');
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
         });

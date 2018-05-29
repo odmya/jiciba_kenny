@@ -143,7 +143,7 @@ for($i=0;$i<10;$i++){
       //  $word = Word::where('word', $query_word)->get();
       }
 
-      $word->version = $version;
+      //$word->version = $version;
 
 
 
@@ -349,6 +349,8 @@ for($i=0;$i<10;$i++){
 
 
       $word->save();
+
+      sleep(2);//睡眠
       //return true;
       //return true;
       /*
@@ -564,14 +566,21 @@ $word->save();
 
     }
     public function cibadb(){
-      $word_list = file_get_contents("words2.txt");
+
+      //word_list_5.txt
+      $word_list = file_get_contents("word_list_5.txt");
 
       $word_list=array_unique(explode(",",preg_replace("/\n+/",",",$word_list)));
 
       foreach ($word_list as $key => $value) {
         # code...
+        $value=trim($value);
+        if($value==false)
+        continue;
         $word = Word::where('word', $value)->first();
+
         if($word==false){
+
           $value = trim($value);
           $query_word = strtolower($value);
           $word = Word::create([
@@ -581,8 +590,186 @@ $word->save();
           ]);
 
         }
+        //$this->crawl2(trim($value));
+        $tmp_level =  $word->level_base()->where('level_base_id',11)->first();
+
+        if($tmp_level==false){
+
+              $LevelBaseWord = LevelBaseWord::create(['word_id' => $word->id,'level_base_id' => 11]);
+        }
 
       }
+
+
+      //word_list_4.txt
+      $word_list = file_get_contents("word_list_4.txt");
+
+      $word_list=array_unique(explode(",",preg_replace("/\n+/",",",$word_list)));
+
+      foreach ($word_list as $key => $value) {
+        # code...
+        $value=trim($value);
+        if($value==false)
+        continue;
+        $word = Word::where('word', $value)->first();
+
+        if($word==false){
+
+          $value = trim($value);
+          $query_word = strtolower($value);
+          $word = Word::create([
+              'word' => $value,
+            //  'level_star'=>$level_star
+        //      'version' => $crawl_version,
+          ]);
+
+        }
+        //$this->crawl2(trim($value));
+        $tmp_level =  $word->level_base()->where('level_base_id',10)->first();
+
+        if($tmp_level==false){
+
+              $LevelBaseWord = LevelBaseWord::create(['word_id' => $word->id,'level_base_id' => 10]);
+        }
+
+      }
+
+
+      //word_list_3.txt
+      $word_list = file_get_contents("word_list_3.txt");
+
+      $word_list=array_unique(explode(",",preg_replace("/\n+/",",",$word_list)));
+
+      foreach ($word_list as $key => $value) {
+        # code...
+        $value=trim($value);
+        if($value==false)
+        continue;
+        $word = Word::where('word', $value)->first();
+
+        if($word==false){
+
+          $value = trim($value);
+          $query_word = strtolower($value);
+          $word = Word::create([
+              'word' => $value,
+            //  'level_star'=>$level_star
+        //      'version' => $crawl_version,
+          ]);
+
+        }
+        //$this->crawl2(trim($value));
+        $tmp_level =  $word->level_base()->where('level_base_id',9)->first();
+
+        if($tmp_level==false){
+
+              $LevelBaseWord = LevelBaseWord::create(['word_id' => $word->id,'level_base_id' => 9]);
+        }
+
+      }
+
+
+      //word_list_2.txt
+      $word_list = file_get_contents("word_list_2.txt");
+
+      $word_list=array_unique(explode(",",preg_replace("/\n+/",",",$word_list)));
+
+      foreach ($word_list as $key => $value) {
+        # code...
+        $value=trim($value);
+        if($value==false)
+        continue;
+        $word = Word::where('word', $value)->first();
+
+        if($word==false){
+
+          $value = trim($value);
+          $query_word = strtolower($value);
+          $word = Word::create([
+              'word' => $value,
+            //  'level_star'=>$level_star
+        //      'version' => $crawl_version,
+          ]);
+
+        }
+        //$this->crawl2(trim($value));
+        $tmp_level =  $word->level_base()->where('level_base_id',8)->first();
+
+        if($tmp_level==false){
+
+              $LevelBaseWord = LevelBaseWord::create(['word_id' => $word->id,'level_base_id' => 8]);
+        }
+
+      }
+
+
+      //word_list_1.txt
+      $word_list = file_get_contents("word_list_1.txt");
+
+      $word_list=array_unique(explode(",",preg_replace("/\n+/",",",$word_list)));
+
+      foreach ($word_list as $key => $value) {
+        # code...
+        $value=trim($value);
+        if($value==false)
+        continue;
+        $word = Word::where('word', $value)->first();
+
+        if($word==false){
+
+          $value = trim($value);
+          $query_word = strtolower($value);
+          $word = Word::create([
+              'word' => $value,
+            //  'level_star'=>$level_star
+        //      'version' => $crawl_version,
+          ]);
+
+        }
+        //$this->crawl2(trim($value));
+        $tmp_level =  $word->level_base()->where('level_base_id',7)->first();
+
+        if($tmp_level==false){
+
+              $LevelBaseWord = LevelBaseWord::create(['word_id' => $word->id,'level_base_id' => 7]);
+        }
+
+      }
+
+
+      //word_list_0.txt
+      $word_list = file_get_contents("word_list_0.txt");
+
+      $word_list=array_unique(explode(",",preg_replace("/\n+/",",",$word_list)));
+
+      foreach ($word_list as $key => $value) {
+        # code...
+        $value=trim($value);
+        if($value==false)
+        continue;
+        $word = Word::where('word', $value)->first();
+
+        if($word==false){
+
+          $value = trim($value);
+          $query_word = strtolower($value);
+          $word = Word::create([
+              'word' => $value,
+            //  'level_star'=>$level_star
+        //      'version' => $crawl_version,
+          ]);
+
+        }
+        //$this->crawl2(trim($value));
+        $tmp_level =  $word->level_base()->where('level_base_id',12)->first();
+
+        if($tmp_level==false){
+
+              $LevelBaseWord = LevelBaseWord::create(['word_id' => $word->id,'level_base_id' => 12]);
+        }
+
+      }
+
 
     }
     public function list(){
