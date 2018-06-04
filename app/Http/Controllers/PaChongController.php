@@ -784,16 +784,18 @@ $word->save();
 
       $words_ids = LevelBaseWord::distinct('word_id')->pluck('word_id');
 
+      $words_ids = $words_ids->toArray();
+
     //  $sql="select * from word where version='' and word_id NOT IN(select distinct word_id from level_base_word)";
       //$words = DB::select($sql,[1]);
       //dd($words);
 
     //  $word = Word::whereNull('version')->whereIn('id', $words_ids)->paginate(15);
       $word = Word::where('version',"!=","xingji")->whereIn('id', $words_ids)->paginate(15);
+
       $curentpage = $word->currentPage();
       $nextpageurl = $word->nextPageUrl();
       $itemes = $word->items();
-
       foreach ($itemes as $key => $perwords) {
         # code...
       //  echo $perwords->word;
