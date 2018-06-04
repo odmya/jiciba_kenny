@@ -117,7 +117,7 @@ for($i=0;$i<10;$i++){
 
      $query_word = trim($words);
      $query_word = strtolower($query_word);
-     $query_word = str_replace("'s","",$query_word);
+    // $query_word = str_replace("'s","",$query_word);
     //$query_word = $words;
       $crawl_version = $version;
 
@@ -125,6 +125,8 @@ for($i=0;$i<10;$i++){
 
 
       $word = Word::where('word', $query_word)->first();
+
+
     //  $words = new Word;
     //  $word = $words->where('word', $query_word)->first();
 
@@ -134,8 +136,9 @@ for($i=0;$i<10;$i++){
 
         $word = Word::create([
             'word' => $query_word,
+          //  'version' => $crawl_version
           //  'level_star'=>$level_star
-      //      'version' => $crawl_version,
+      //
         ]);
 
 
@@ -143,7 +146,7 @@ for($i=0;$i<10;$i++){
       //  $word = Word::where('word', $query_word)->get();
       }
 
-      //$word->version = $version;
+      $word->version = $version;
 
 
 
@@ -208,6 +211,9 @@ for($i=0;$i<10;$i++){
       $selector = "//i[contains(@class,'new-speak-step')]/@ms-on-mouseover";
 
       $result = selector::select($html, $selector);
+
+
+
       $fayingpath= $result;
       if($fayingpath!="sound('')"){
       if($yinbiao){
@@ -302,7 +308,7 @@ for($i=0;$i<10;$i++){
       $selector = "//ul[contains(@class,'base-list')]//span";
 
       // 提取结果
-      $tmp_list=array("n.", "pron.","adj.", "adv.","vt.& vi.","int.","abbr.",'vt.&amp; vi.', "v.","vi.", "vt.", "num.","art.", "prep.","conj.", "interj.");
+      $tmp_list=array("n.", "pron.","adj.", "adv.","vt.& vi.","int.","abbr.",'vt.&amp; vi.', "v.","vi.", "vt.", "num.","art.", "prep.","conj.", "interj.","quant.","na.");
       foreach ($tmp_list as $key => $value) {
         $word_speech = WordSpeech::where('cixing', $value)->first();
         if($word_speech == false){
@@ -311,6 +317,8 @@ for($i=0;$i<10;$i++){
       }
 
       $result = selector::select($html, $selector);
+
+
       if(is_array($result)&&$result)
       $result = array_map('trim', $result);
 
@@ -350,7 +358,7 @@ for($i=0;$i<10;$i++){
 
       $word->save();
 
-      sleep(2);//睡眠
+      sleep(1);//睡眠
       //return true;
       //return true;
       /*
@@ -774,7 +782,14 @@ $word->save();
     }
     public function list(){
 
-      $word = Word::where('version',"!=",'jukuu05')->paginate(20);
+      $words_ids = LevelBaseWord::distinct('word_id')->pluck('word_id');
+
+    //  $sql="select * from word where version='' and word_id NOT IN(select distinct word_id from level_base_word)";
+      //$words = DB::select($sql,[1]);
+      //dd($words);
+
+      $word = Word::whereNull('version')->whereIn('id', $words_ids)->paginate(15);
+
       $curentpage = $word->currentPage();
       $nextpageurl = $word->nextPageUrl();
       $itemes = $word->items();
@@ -784,9 +799,10 @@ $word->save();
       //  echo $perwords->word;
 
       $tmp = 0;
-        $this->crawl($perwords->word,'jukuu05');
+        //$this->crawl2($perwords->word,'ciping');
+        $this->crawl2($perwords->word,'xingji');
 //die("test");
-        sleep(2);//睡眠
+      //  sleep(2);//睡眠
 
       }
       //return redirect('login');

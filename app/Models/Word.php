@@ -29,6 +29,13 @@ class Word extends Model
 
     }
 
+    public function word_review()
+    {
+
+      return $this->hasOne(WordReview::class);
+
+    }
+
     public function word_voice()
     {
 

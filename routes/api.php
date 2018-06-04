@@ -50,11 +50,56 @@ $api->version('v1', [
     $api->post('star', 'WordController@star')
           ->name('api.WordController.apistar');
 
+    $api->post('wordsearchcache', 'WordController@wordsearchcache')
+          ->name('api.WordController.wordsearch');
+
+    $api->post('newwords', 'WordController@newwords')
+          ->name('api.WordController.newwords');
+
+    $api->post('wordreview', 'WordReviewController@show')
+          ->name('api.WordReivewController.show');
+    $api->post('riskupdate', 'WordReviewController@riskupdate')
+          ->name('api.WordReivewController.riskupdate');
+    $api->post('viewupdate', 'WordReviewController@viewupdate')
+          ->name('api.WordReivewController.viewupdate');
+
+    $api->post('answerlist', 'WordController@answerlist')
+          ->name('api.WordController.answerlist');
+
+    $api->get('wordrisklist', 'WordReviewController@wordrisklist')
+          ->name('api.WordReviewController.wordrisklist');
+
+    $api->get('wordreviewlist', 'WordReviewController@wordreviewlist')
+          ->name('api.WordReviewController.wordreviewlist');
+    $api->get('wordsetting', 'WordReviewController@wordsetting')
+          ->name('api.WordReviewController.wordsetting');
+
+    $api->get('bundlelist', 'WordReviewController@bundlelist')
+           ->name('api.WordReviewController.bundlelist');
+
+    $api->post('newbundle', 'WordReviewController@newbundle')
+          ->name('api.WordReviewController.newbundle');
+
+    $api->post('updatebundle', 'WordReviewController@updatebundle')
+          ->name('api.WordReviewController.updatebundle');
+
+    $api->delete('deletebundle', 'WordReviewController@deletebundle')
+          ->name('api.WordReviewController.deletebundle');
+
+    $api->group(['middleware' => 'api.auth'], function($api) {
+
+    });
+
     $api->group([
                  'middleware' => 'api.throttle',
                  'limit' => config('api.rate_limits.sign.limit'),
                  'expires' => config('api.rate_limits.sign.expires'),
              ], function($api) {
+
+               // 短信验证码---无需图片验证码
+               $api->post('sendmsg', 'VerificationCodesController@sendmsg')
+                   ->name('api.verificationCodes.sendmsg');
+
                  // 短信验证码
                  $api->post('verificationCodes', 'VerificationCodesController@store')
                      ->name('api.verificationCodes.store');

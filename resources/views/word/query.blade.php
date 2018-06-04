@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title', $word_obj->word.", 怎么记忆单词".$word_obj->word)
+@section('title', $word_obj->word.", 单词".$word_obj->word)
 
 @section('content')
 
@@ -134,8 +134,8 @@
                     <img src="/uploads/images/sound.png"  ng-click="playvoice(voice.path)"/>
                   </div>
                 </div>
-                <div class="level " ng-show="words.level_star">
-                    <div><a href="{{route('querystar',str_replace('star','',$word_obj->level_star))}}"><span class="@{{ words.level_star }}" ng-repeat="ls in level_star"><img src="/uploads/images/star.png" /></span> </a><span ng-repeat="level in words.level.data">@{{level.level_base}}</span></div>
+                <div class="level " >
+                    <div><a href="{{route('querystar',str_replace('star','',$word_obj->level_star))}}" ng-show="words.level_star"><span class="@{{ words.level_star }}" ng-repeat="ls in level_star"><img src="/uploads/images/star.png" /></span> </a> <span ng-repeat="level in words.level.data">@{{level.level_base}}</span></div>
 
                 </div>
 
