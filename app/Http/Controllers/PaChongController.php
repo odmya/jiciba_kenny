@@ -788,8 +788,8 @@ $word->save();
       //$words = DB::select($sql,[1]);
       //dd($words);
 
-      $word = Word::whereNull('version')->whereIn('id', $words_ids)->paginate(15);
-
+    //  $word = Word::whereNull('version')->whereIn('id', $words_ids)->paginate(15);
+      $word = Word::where('version',"!=","xingji")->whereIn('id', $words_ids)->paginate(15);
       $curentpage = $word->currentPage();
       $nextpageurl = $word->nextPageUrl();
       $itemes = $word->items();
