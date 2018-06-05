@@ -26,9 +26,9 @@ class RootController extends Controller
 
 
     public function list($roottype){
-      $cigen = Root::where('types',$roottype)->get();
-      
-      return $this->response->item($cigen, new RootCigenTransformer())
+      $cigen = Root::where('types',$roottype)->paginate(20);
+
+      return $this->response->paginator($cigen, new RootCigenTransformer())
           ->setStatusCode(201);
     }
 
