@@ -35,21 +35,26 @@ class WordReviewController extends Controller
     public function newbundle(Request $request)
     {
         $user_id = $request->input('user_id');
-        $maxsize = $request->input('maxsize');
-        $title = $request->input('maxsize');
         $level_base_id = $request->input('level_base_id');
+
+
 
         $wordbundle = WordBundle::create([
             'level_base_id' => $level_base_id,
             'user_id' => $user_id,
-            'maxsize' => $title,
-            'title' => strtotime('+1 hour')
+            'maxsize' => 10
 
           //  'level_star'=>$level_star
       //      'version' => $crawl_version,
         ]);
 
-        return $this->response->item($wordbundle, new WordBundleTransformer())->setStatusCode(201);
+        if($wordbundle){
+          return $this->response->item($wordbundle, new WordBundleTransformer())->setStatusCode(201);
+        }else{
+          return $this->response->error('参数不正确', 422);
+        }
+
+
     }
 
     public function deletebundle(Request $request)
@@ -69,8 +74,18 @@ class WordReviewController extends Controller
         $maxsize = $request->input('maxsize');
 
         $wordbundle =WordBundle::where('user_id', $user_id)->where('id', $bundle_id)->first();
-        $wordbundle->maxsize = $maxsize;
-        $wordbundle->save();
+        if($wordbundle){
+          if($maxsize>=30){
+            $maxsize = 30;
+          }else if($maxsize<=1){
+            $maxsize =1;
+          }
+          $wordbundle->maxsize = $maxsize;
+          $wordbundle->save();
+        }else{
+          return $this->response->error('没有找到正确的单词本', 422);
+        }
+
 
         return $this->response->item($wordbundle, new WordBundleTransformer())->setStatusCode(201);
     }
