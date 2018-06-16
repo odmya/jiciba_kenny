@@ -23,7 +23,7 @@ class WordReviewController extends Controller
     {
       $user_id = $request->input('user_id');
       $datastuf = strtotime(date('Y-m-d H:i:s'));
-      $wordreviews= WordReview::where('user_id',$user_id)->where('remember_time','<',$datastuf)->paginate(10);
+      $wordreviews= WordReview::where('user_id',$user_id)->where('remember_time','<',$datastuf)->paginate(5);
 
       //  return $this->response->item($root_obj->rootcixing()->get(), new RootCiXingTransformer())->setStatusCode(201);
     //  return $this->response->collection($wordreviews, new WordReviewTransformer());
