@@ -24,17 +24,20 @@ class RootController extends Controller
          $array_rootcixing[$speech->cixing]['description'] = $cixing->description;
          $wordroots =$cixing->rootcixing_word()->get();
          $wordlist = array();
+
          foreach ($wordroots as $word_root) {
            // code...
            $tmpword =Word::find($word_root->word_id);
-           $wordlist['word'] =$tmpword->word;
-           $wordlist['detail'] =$word_root->detail;
-           $wordlist['explain'] =$word_root->explain;
+           if($tmpword){
+             $wordlist['word'] =$tmpword;
+             $wordlist['detail'] =$word_root->detail;
+             $wordlist['explain'] =$word_root->explain;
+           }
+
          }
          $array_rootcixing[$speech->cixing]['wordlist'] = $wordlist;
 
       }
-
 
       return view('root.query', compact('root_obj','array_rootcixing'));
 
@@ -55,16 +58,21 @@ class RootController extends Controller
          $array_rootcixing[$speech->cixing]['description'] = $cixing->description;
          $wordroots =$cixing->rootcixing_word()->get();
          $wordlist = array();
+
          foreach ($wordroots as $word_root) {
            // code...
            $tmpword =Word::find($word_root->word_id);
-           $wordlist[$tmpword->word]['word'] =$tmpword->word;
-           $wordlist[$tmpword->word]['detail'] =$word_root->detail;
-           $wordlist[$tmpword->word]['explain'] =$word_root->explain;
+          if($tmpword){
+            $wordlist[$tmpword->word]['word'] =$tmpword->word;
+            $wordlist[$tmpword->word]['detail'] =$word_root->detail;
+            $wordlist[$tmpword->word]['explain'] =$word_root->explain;
+          }
+
          }
          $array_rootcixing[$speech->cixing]['wordlist'] = $wordlist;
 
       }
+
 
 
       return response()->success(compact('root_obj','array_rootcixing'));
