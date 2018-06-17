@@ -74,6 +74,18 @@ class RootController extends Controller
     {
         return Admin::grid(Root::class, function (Grid $grid) {
 
+          $grid->filter(function($filter){
+
+              // 去掉默认的id过滤器
+              $filter->disableIdFilter();
+              $filter->like('name')->placeholder('请输入查询词根');
+
+              // 在这里添加字段过滤器
+            //  $filter->like('word');
+            //  $filter->equal('word_id')->placeholder('请输入查询单词');
+
+          });
+
             $grid->id('ID')->sortable();
             $grid->name('词根');
             //$grid->types()->options()->select([0 => '前缀', 1 => '后缀', 2 => '词根']);
