@@ -7,6 +7,8 @@ use App\Models\WordRisk;
 use App\Models\WordRemember;
 use App\Models\WordBundle;
 use App\Models\LevelBase;
+use App\Models\AutoRecord;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Transformers\WordReviewTransformer;
 use App\Transformers\WordRiskTransformer;
@@ -146,6 +148,8 @@ class WordReviewController extends Controller
       $user_id = $request->input('user_id');
       $word_id = $request->input('word_id');
       $datastuf = strtotime(date('Y-m-d H:i:s'));
+
+
       $wordreview =WordReview::where('word_id',$word_id)->where('user_id',$user_id)->where('remember_time','<',$datastuf)->first();
 
       if($wordreview){
@@ -206,6 +210,23 @@ class WordReviewController extends Controller
       $user_id = $request->input('user_id');
       $word_id = $request->input('word_id');
       $wordrisk = WordRisk::where('word_id',$word_id)->where('user_id',$user_id)->where('status',0)->first();
+
+      $user = User::find($user_id);
+      $autorecord = AutoRecord::where('user_openid',$user->weapp_openid)->first();
+      if($autorecord==false){
+        $datastuf = strtotime(date('+1 hour'));
+        $template_id = 'vjl0mS58ggACnSdZhG2_6f43RFfED0uGaFJM4IJkJDM';
+        $autorecord = AutoRecord::create([
+            'user_openid' => $user->weapp_openid,
+            'template_id' => $template_id,
+            'miniformid' => $user->miniformid,
+            'run_time' => $datastuf
+
+          //  'level_star'=>$level_star
+      //      'version' => $crawl_version,
+        ]);
+      }
+
       if($wordrisk){
 
         $wordreview =WordReview::where('word_id',$wordrisk->word_id)->where('user_id',$wordrisk->user_id)->first();

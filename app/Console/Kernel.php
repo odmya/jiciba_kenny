@@ -36,20 +36,7 @@ class Kernel extends ConsoleKernel
       })->twiceDaily(6, 20);
 
       $schedule->call(function () {
-          // 每周星期一13:00运行一次...
-          $app = app('wechat.mini_program');
-          $app->template_message->send([
-          'touser' => 'octkF0YMdvEd3qIzNV3kvpJiVezA',
-          'template_id' => 'vjl0mS58ggACnSdZhG2_6f43RFfED0uGaFJM4IJkJDM',
-          'page' => 'index',
-          'form_id' => 'form-id',
-          'data' => [
-              'keyword1' => '你需要及时复习',
-              'keyword2' => '每天记单词',
-              'keyword3' => '点击开始背单词',
-              // ...
-          ],
-      ]);
+
       })->hourly();
         // $schedule->command('inspire')
         //          ->hourly();

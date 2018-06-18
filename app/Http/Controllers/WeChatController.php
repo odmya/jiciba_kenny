@@ -580,12 +580,13 @@ public function wechatminisendmsg(){
   $test2=  $app->template_message->send([
     'touser' => 'octkF0YMdvEd3qIzNV3kvpJiVezA',
     'template_id' => 'vjl0mS58ggACnSdZhG2_6f43RFfED0uGaFJM4IJkJDM',
-    'page' => 'index',
-    'form_id' => 'form-id',
+    'page' => 'pages/words/jidanci',
+    'form_id' => 'a66d9c921e6cb10e930972ca2e7d788e',
     'data' => [
         'keyword1' => '你需要及时复习',
         'keyword2' => '每天记单词',
         'keyword3' => '点击开始背单词',
+        'keyword5' => '请及时复习单词',
         // ...
     ],
 ]);
