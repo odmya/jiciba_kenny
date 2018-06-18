@@ -66,6 +66,9 @@ $api->version('v1', [
     $api->post('answerlist', 'WordController@answerlist')
           ->name('api.WordController.answerlist');
 
+    $api->post('updateformid', 'WordController@updateformid')
+          ->name('api.WordController.updateformid');
+
     $api->get('wordrisklist', 'WordReviewController@wordrisklist')
           ->name('api.WordReviewController.wordrisklist');
 

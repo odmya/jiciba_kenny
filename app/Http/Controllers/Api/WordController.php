@@ -8,6 +8,7 @@ use App\Models\WordBundle;
 use App\Models\LevelBaseWord;
 use App\Models\WordRemember;
 use App\Models\WordRisk;
+use App\Models\User;
 use App\Models\WordReview;
 
 use App\Models\Sentence;
@@ -207,6 +208,24 @@ $words_ids = WordSearch::where('user_id', '=', $user_id)->orderBy('count', 'DESC
       }
 
       //return $this->response->collection($words, new WordTransformer());
+    }
+
+
+    public function updateformid(Request $request)
+    {
+        $user_id = $request->input('user_id');
+        $miniformid = $request->input('formid');
+
+        $formid =User::find($user_id);
+        if($formid){
+          $formid->miniformid = $miniformid;
+          $formid->save();
+        }else{
+          return $this->response->error('参数错误', 422);
+        }
+
+
+        return $this->response->noContent()->setStatusCode(200);
     }
 
 }

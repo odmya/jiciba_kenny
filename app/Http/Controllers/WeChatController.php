@@ -575,7 +575,9 @@ $tagusers = $tag->usersOfTag(100, $nextOpenId = ''); //获取同一标签下的�
 
 public function wechatminisendmsg(){
     $app = app('wechat.mini_program'); // 小程序
-    $app->template_message->send([
+    $test = $app->template_message->getTemplates(0, 5);
+
+  $test2=  $app->template_message->send([
     'touser' => 'octkF0YMdvEd3qIzNV3kvpJiVezA',
     'template_id' => 'vjl0mS58ggACnSdZhG2_6f43RFfED0uGaFJM4IJkJDM',
     'page' => 'index',
@@ -587,7 +589,9 @@ public function wechatminisendmsg(){
         // ...
     ],
 ]);
-    dd($app);
+
+
+dd($test2);
 }
 
   /**
