@@ -47,6 +47,7 @@ Route::group(['middleware' => ['web', 'wechat.oauth']], function () {
 });
 
 
+Route::get('/wechatminisendmsg', 'WeChatController@wechatminisendmsg')->name('wechatminisendmsg'); //微信小程序
 
 
   Route::get('/wechat/record/{speech_unique}', 'WeChatController@record')->name('wechatrecord'); //不需要微信登录验证

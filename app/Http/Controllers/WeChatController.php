@@ -568,6 +568,27 @@ $tagusers = $tag->usersOfTag(100, $nextOpenId = ''); //获取同一标签下的�
     dd($tagusers);
   }
 
+  /**
+   * 处理微信小程序 自动发送
+   *
+   */
+
+public function wechatminisendmsg(){
+    $app = app('wechat.mini_program'); // 小程序
+    $app->template_message->send([
+    'touser' => 'octkF0YMdvEd3qIzNV3kvpJiVezA',
+    'template_id' => 'vjl0mS58ggACnSdZhG2_6f43RFfED0uGaFJM4IJkJDM',
+    'page' => 'index',
+    'form_id' => 'form-id',
+    'data' => [
+        'keyword1' => '你需要及时复习',
+        'keyword2' => '每天记单词',
+        'keyword3' => '点击开始背单词',
+        // ...
+    ],
+]);
+    dd($app);
+}
 
   /**
    * 处理微信用户菜单
@@ -576,7 +597,7 @@ $tagusers = $tag->usersOfTag(100, $nextOpenId = ''); //获取同一标签下的�
 
 public function usermenu(){
 
-  $app = app('wechat.official_account');
+  $app = app('wechat.mini_program');
 //  $list = $app->menu->list(); //读取已设置菜单
 
   //$current = $app->menu->current();
