@@ -15,6 +15,8 @@ use App\Models\Chapter;
 use App\Models\Phrase;
 use App\Models\PhraseSection;
 use App\Models\User;
+use App\Models\AutoRecord;
+
 use App\Models\Record;
 use App\Models\Userrecord;
 use App\Models\Qestionrecord;
@@ -574,6 +576,13 @@ $tagusers = $tag->usersOfTag(100, $nextOpenId = ''); //获取同一标签下的�
    */
 
 public function wechatminisendmsg(){
+
+  $datastuf = strtotime(date('Y-m-d H:i:s'));
+  $autorecord = AutoRecord::where('run_time','<',$datastuf)->get();
+
+
+  dd($autorecord);
+  die();
     $app = app('wechat.mini_program'); // 小程序
     $test = $app->template_message->getTemplates(0, 5);
 

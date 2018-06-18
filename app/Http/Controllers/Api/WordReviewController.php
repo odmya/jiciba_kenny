@@ -216,12 +216,13 @@ class WordReviewController extends Controller
         $autorecord = AutoRecord::where('user_openid',$user->weapp_openid)->first();
         if($autorecord==false){
           $datastuf = strtotime(date('+1 hour'));
+
           $template_id = 'vjl0mS58ggACnSdZhG2_6f43RFfED0uGaFJM4IJkJDM';
           $autorecord = AutoRecord::create([
               'user_openid' => $user->weapp_openid,
               'template_id' => $template_id,
               'miniformid' => $user->miniformid,
-              'run_time' => $datastuf
+              'run_time' => strtotime('+1 hour')
 
             //  'level_star'=>$level_star
         //      'version' => $crawl_version,
