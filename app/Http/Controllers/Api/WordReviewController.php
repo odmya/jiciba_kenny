@@ -215,7 +215,7 @@ class WordReviewController extends Controller
       if($user->miniformid){
         $autorecord = AutoRecord::where('user_openid',$user->weapp_openid)->first();
         if($autorecord==false){
-          $datastuf = strtotime(date('+1 hour'));
+          $datastuf = strtotime('+1 hour');
 
           $template_id = 'vjl0mS58ggACnSdZhG2_6f43RFfED0uGaFJM4IJkJDM';
           $autorecord = AutoRecord::create([
