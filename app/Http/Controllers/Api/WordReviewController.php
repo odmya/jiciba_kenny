@@ -212,7 +212,7 @@ class WordReviewController extends Controller
       $wordrisk = WordRisk::where('word_id',$word_id)->where('user_id',$user_id)->where('status',0)->first();
 
       $user = User::find($user_id);
-      if($user->weapp_openid){
+      if($user->miniformid){
         $autorecord = AutoRecord::where('user_openid',$user->weapp_openid)->first();
         if($autorecord==false){
           $datastuf = strtotime(date('+1 hour'));
