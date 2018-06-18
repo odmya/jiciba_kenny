@@ -212,20 +212,23 @@ class WordReviewController extends Controller
       $wordrisk = WordRisk::where('word_id',$word_id)->where('user_id',$user_id)->where('status',0)->first();
 
       $user = User::find($user_id);
-      $autorecord = AutoRecord::where('user_openid',$user->weapp_openid)->first();
-      if($autorecord==false){
-        $datastuf = strtotime(date('+1 hour'));
-        $template_id = 'vjl0mS58ggACnSdZhG2_6f43RFfED0uGaFJM4IJkJDM';
-        $autorecord = AutoRecord::create([
-            'user_openid' => $user->weapp_openid,
-            'template_id' => $template_id,
-            'miniformid' => $user->miniformid,
-            'run_time' => $datastuf
+      if($user->weapp_openid){
+        $autorecord = AutoRecord::where('user_openid',$user->weapp_openid)->first();
+        if($autorecord==false){
+          $datastuf = strtotime(date('+1 hour'));
+          $template_id = 'vjl0mS58ggACnSdZhG2_6f43RFfED0uGaFJM4IJkJDM';
+          $autorecord = AutoRecord::create([
+              'user_openid' => $user->weapp_openid,
+              'template_id' => $template_id,
+              'miniformid' => $user->miniformid,
+              'run_time' => $datastuf
 
-          //  'level_star'=>$level_star
-      //      'version' => $crawl_version,
-        ]);
+            //  'level_star'=>$level_star
+        //      'version' => $crawl_version,
+          ]);
+        }
       }
+
 
       if($wordrisk){
 
