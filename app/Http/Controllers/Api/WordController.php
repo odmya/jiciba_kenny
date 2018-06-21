@@ -171,7 +171,7 @@ $words_ids = WordSearch::where('user_id', '=', $user_id)->orderBy('count', 'DESC
 
       //  dd($words_array);
 
-        $words_id = LevelBaseWord::where('level_base_id',$newwords->level_base_id)->whereNotIn('word_id',$words_ids)->whereNotIn('word_id',$words_reviews)->paginate($maxsize);
+        $words_id = LevelBaseWord::where('level_base_id',$newwords->level_base_id)->whereNotIn('word_id',$words_ids)->whereNotIn('word_id',$words_reviews)->orderByRaw('RAND()')->paginate($maxsize);
         $words_array_id =array();
         foreach($words_id as $word){
           $words_array_id [] = $word->word_id;

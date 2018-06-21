@@ -20,8 +20,7 @@ class Kernel extends ConsoleKernel
 
 
     protected function sendmsg(){
-      $datastuf = strtotime(date('Y-m-d H:i:s'));
-      $autorecord = AutoRecord::where('run_time','<',$datastuf)->get();
+
 
     }
 
@@ -33,16 +32,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-
       $schedule->call(function () {
-          // 每周星期一13:00运行一次...
-      })->twiceDaily(6, 20);
-
-      $schedule->call(function () {
-
-        $app = app('wechat.mini_program'); // 小程序
-        $datastuf = strtotime(date('Y-m-d H:i:s'));
-        $autorecords = AutoRecord::where('run_time','<',$datastuf)->get();
+      $app = app('wechat.mini_program'); // 小程序
+      $datastuf = strtotime(date('Y-m-d H:i:s'));
+      $autorecords = AutoRecord::where('run_time','<',$datastuf)->get();
+      if(count($autorecords)){
         foreach($autorecords as $record){
           $app->template_message->send([
             'touser' => $record->user_openid,
@@ -58,11 +52,15 @@ class Kernel extends ConsoleKernel
             ],
         ]);
 
-        $record->delete();
-
+          $record->delete();
         }
 
-      })->hourly();
+      }
+
+
+      })->everyThirtyMinutes();
+
+
         // $schedule->command('inspire')
         //          ->hourly();
         //liyuping added 2018-4-20
@@ -72,7 +70,8 @@ class Kernel extends ConsoleKernel
 
           //liyuping added 2018-4-20
 
-    }
+
+  }
 
     /**
      * Register the commands for the application.

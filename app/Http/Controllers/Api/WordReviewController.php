@@ -181,15 +181,21 @@ class WordReviewController extends Controller
           $wordreview->save();
               break;
         case 5:
+          $wordreview->status =6;
+          $wordreview->remember_time = strtotime(date('Y-m-d',strtotime('+15 day')));
+          $wordreview->next_time = strtotime(date('Y-m-d',strtotime('+30 day')));
+          $wordreview->save();
+              break;
+        case 6:
               $wordremember =WordRemember::where('word_id',$word_id)->where('user_id',$user_id)->first();
               if($wordremember == false){
-                $wordremember = WordRemember::create([
-                    'word_id' => $word_id,
-                    'user_id' => $user_id
+                      $wordremember = WordRemember::create([
+                          'word_id' => $word_id,
+                          'user_id' => $user_id
 
-                  //  'level_star'=>$level_star
-              //      'version' => $crawl_version,
-                ]);
+                        //  'level_star'=>$level_star
+                    //      'version' => $crawl_version,
+                      ]);
 
               }
               $wordreview->delete();
