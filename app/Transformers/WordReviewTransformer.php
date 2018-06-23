@@ -42,7 +42,7 @@ class WordReviewTransformer extends TransformerAbstract
             'tips' => $wordreview->word->word_tip()->offset(0)->limit(1)->get(),
             'voice' => $wordreview->word->word_voice,
             'explain' => $explain_tmp,
-            'root' => $wordreview->word->rootcixing_word,
+            'root' => $wordreview->word->root,
             'sentences' => $wordreview->word->sentences()->offset(0)->limit(1)->get(),
 
             'review' => $wordreview->review,
