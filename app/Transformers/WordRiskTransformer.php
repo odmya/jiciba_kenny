@@ -28,6 +28,13 @@ class WordRiskTransformer extends TransformerAbstract
               //echo $word_explain->word_speech_id."<br/>";
 
           }
+          $cixingword_array =array();
+          $rootcixingwords = $wordrisk->word->rootcixing_word()->get();
+
+          foreach($rootcixingwords as $cixingword){
+            $cixingword['root'] =$cixingword->rootcixing->root;
+            $cixingword_array[]= $cixingword;
+          }
 
         return [
             'id' => $wordrisk->id,
@@ -37,7 +44,7 @@ class WordRiskTransformer extends TransformerAbstract
             'tips' => $wordrisk->word->word_tip()->offset(0)->limit(1)->get(),
             'voice' => $wordrisk->word->word_voice,
             'explain' => $explain_array,
-            'root' => $wordrisk->word->rootcixing_word,
+            'root' => $cixingword_array,
             'sentences' => $wordrisk->word->sentences()->offset(0)->limit(1)->get(),
 
             'review' => $wordrisk->review,

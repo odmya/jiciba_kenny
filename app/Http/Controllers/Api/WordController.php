@@ -158,8 +158,8 @@ $words_ids = WordSearch::where('user_id', '=', $user_id)->orderBy('count', 'DESC
       $newwords= WordBundle::where('user_id',$user_id)->first();
       if($newwords){
         $maxsize = $newwords->maxsize;
-        if($maxsize>=30){
-          $maxsize = 30;
+        if($maxsize>=100){
+          $maxsize = 100;
         }
         $sql="select * from level_base_word where level_base_id='".$newwords->level_base_id."' and word_id NOT IN(select word_id from wordremember where user_id=".$user_id.")";
         //$words = DB::select($sql,[1]);
@@ -171,7 +171,7 @@ $words_ids = WordSearch::where('user_id', '=', $user_id)->orderBy('count', 'DESC
 
       //  dd($words_array);
 
-        $words_id = LevelBaseWord::where('level_base_id',$newwords->level_base_id)->whereNotIn('word_id',$words_ids)->whereNotIn('word_id',$words_reviews)->orderByRaw('RAND()')->paginate($maxsize);
+        $words_id = LevelBaseWord::where('level_base_id',$newwords->level_base_id)->whereNotIn('word_id',$words_ids)->whereNotIn('word_id',$words_reviews)->orderByRaw('RAND()')->paginate($maxsize, ['word_id'], 'uPage');
         $words_array_id =array();
         foreach($words_id as $word){
           $words_array_id [] = $word->word_id;
@@ -199,7 +199,7 @@ $words_ids = WordSearch::where('user_id', '=', $user_id)->orderBy('count', 'DESC
 
         //$wordrisk =WordRisk::where('time',$datastuf)->where('status',0)->pluck('word_id');
 
-        $wordrisk =WordRisk::where('user_id', $user_id)->where('time',$datastuf)->where('status',0)->paginate($maxsize);
+        $wordrisk =WordRisk::where('user_id', $user_id)->where('time',$datastuf)->where('status',0)->paginate(10);
 
 
         return $this->response->paginator($wordrisk, new WordRiskTransformer());

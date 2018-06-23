@@ -29,9 +29,19 @@ class WordReviewTransformer extends TransformerAbstract
 
           }
           $explain_tmp =array();
+          $cixingword_array =array();
           foreach($explain_array as $cixing => $explain){
               $explain_tmp[$cixing] = implode("",$explain);
           }
+
+          $rootcixingwords = $wordreview->word->rootcixing_word()->get();
+
+          foreach($rootcixingwords as $cixingword){
+            $cixingword['root'] =$cixingword->rootcixing->root;
+            $cixingword_array[]= $cixingword;
+          }
+
+
 
         return [
             'id' => $wordreview->id,
@@ -40,7 +50,7 @@ class WordReviewTransformer extends TransformerAbstract
             'word' => $wordreview->word->word,
             'word_review' => $wordreview->word->word_review,
             'tips' => $wordreview->word->word_tip()->offset(0)->limit(1)->get(),
-            'root' => $wordreview->word->rootcixing_word()->get(),
+            'root' => $cixingword_array,
             'voice' => $wordreview->word->word_voice,
             'explain' => $explain_tmp,
             'sentences' => $wordreview->word->sentences()->offset(0)->limit(1)->get(),
