@@ -32,6 +32,7 @@ class WordRiskTransformer extends TransformerAbstract
           $rootcixingwords = $wordrisk->word->rootcixing_word()->get();
 
           foreach($rootcixingwords as $cixingword){
+            $cixingword->rootcixing->root['description'] = str_replace(array("&rdquo;","&ldquo;"),"'",$cixingword->rootcixing->root['description'])
             $cixingword['root'] =$cixingword->rootcixing->root;
             $cixingword_array[]= $cixingword;
           }
