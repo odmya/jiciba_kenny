@@ -40,9 +40,9 @@ class WordReviewTransformer extends TransformerAbstract
             'word' => $wordreview->word->word,
             'word_review' => $wordreview->word->word_review,
             'tips' => $wordreview->word->word_tip()->offset(0)->limit(1)->get(),
+            'root' => $wordreview->word->root,
             'voice' => $wordreview->word->word_voice,
             'explain' => $explain_tmp,
-            'root' => $wordreview->word->root,
             'sentences' => $wordreview->word->sentences()->offset(0)->limit(1)->get(),
 
             'review' => $wordreview->review,
