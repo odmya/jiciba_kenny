@@ -40,7 +40,7 @@ class WordReviewTransformer extends TransformerAbstract
             'word' => $wordreview->word->word,
             'word_review' => $wordreview->word->word_review,
             'tips' => $wordreview->word->word_tip()->offset(0)->limit(1)->get(),
-            'root' => $wordreview->word->root,
+            'root' => $this->collection($wordreview->word->rootcixing_word()->get(), new RootTransformer()),
             'voice' => $wordreview->word->word_voice,
             'explain' => $explain_tmp,
             'sentences' => $wordreview->word->sentences()->offset(0)->limit(1)->get(),
