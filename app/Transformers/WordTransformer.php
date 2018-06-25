@@ -83,7 +83,7 @@ public function includeRoot(Word $word)
 
     public function includeSentence(Word $word){
 
-      $sentences = $word->sentences()->offset(0)->limit(2)->get();
+      $sentences = $word->sentences()->orderBy('updated_at','DESC')->offset(0)->limit(2)->get();
 
     //  dd($sentences);
       //$sentences = Sentence::where('english', 'like', '%'.$query.'%')->limit(30)->paginate(10);

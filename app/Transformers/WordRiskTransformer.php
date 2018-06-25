@@ -42,11 +42,11 @@ class WordRiskTransformer extends TransformerAbstract
             'user_id' => $wordrisk->user_id,
             'word_id' => $wordrisk->word_id,
             'word' => $wordrisk->word->word,
-            'tips' => $wordrisk->word->word_tip()->offset(0)->limit(1)->get(),
+            'tips' => $wordrisk->word->word_tip()->orderBy('updated_at','DESC')->offset(0)->limit(1)->get(),
             'voice' => $wordrisk->word->word_voice,
             'explain' => $explain_array,
             'root' => $cixingword_array,
-            'sentences' => $wordrisk->word->sentences()->offset(0)->limit(1)->get(),
+            'sentences' => $wordrisk->word->sentences()->orderBy('updated_at','DESC')->offset(0)->limit(1)->get(),
 
             'review' => $wordrisk->review,
             'time' => $wordrisk->time,

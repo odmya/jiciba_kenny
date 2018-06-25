@@ -50,11 +50,11 @@ class WordReviewTransformer extends TransformerAbstract
             'word_id' => $wordreview->word_id,
             'word' => $wordreview->word->word,
             'word_review' => $wordreview->word->word_review,
-            'tips' => $wordreview->word->word_tip()->offset(0)->limit(1)->get(),
+            'tips' => $wordreview->word->word_tip()->orderBy('updated_at','DESC')->offset(0)->limit(1)->get(),
             'root' => $cixingword_array,
             'voice' => $wordreview->word->word_voice,
             'explain' => $explain_tmp,
-            'sentences' => $wordreview->word->sentences()->offset(0)->limit(1)->get(),
+            'sentences' => $wordreview->word->sentences()->orderBy('updated_at','DESC')->offset(0)->limit(1)->get(),
 
             'review' => $wordreview->review,
             'time' => $wordreview->time,
