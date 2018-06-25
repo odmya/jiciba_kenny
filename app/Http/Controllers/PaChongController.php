@@ -236,7 +236,7 @@ for($i=0;$i<10;$i++){
 
 
 
-           $local_path ="uploads/images/words/".$query_word."_".$i.".jpg";
+           $local_path ="uploads/images/words/".$image_tmpname;
 
 
            $image_cache = file_get_contents($image_tmppath);
