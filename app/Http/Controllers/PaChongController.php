@@ -113,10 +113,162 @@ for($i=0;$i<10;$i++){
 
 
     }
+    public function crawl3($words="test",$version="iciba02"){
+
+      $query_word = trim($words);
+      $query_word = strtolower($query_word);
+
+      $crawl_version = $version;
+
+
+
+     // $query_word = str_replace("'s","",$query_word);
+     //$query_word = $words;
+       $crawl_version = $version;
+
+
+
+
+       $word = Word::where('word', $query_word)->first();
+       $url = "http://www.youdict.com/w/".$query_word;
+       $html = requests::get($url);
+
+
+
+
+
+
+
+       // 抽取星级
+//*[@id="yd-liju"]/dl[1]/dt
+       $selector = "//*[@id='yd-liju']/dl/dt";
+       $selector2 = "//*[@id='yd-liju']/dl/dd";
+       $selector3 = "//*[@id='yd-liju']/dl/p";
+       // 提取结果
+       $result = selector::select($html, $selector);
+       $result2 = selector::select($html, $selector2);
+       $result3 = selector::select($html, $selector3);
+
+       $result_en=array();
+       $result_zh=array();
+       $result_from=array();
+       if($result==false){
+         return;
+       }
+       if(count($result)){
+         foreach($result as $key =>$liju){
+           if($key>=5){
+             break;
+           }else{
+             $result_en[]=str_replace(array('<b>','</b>','1.','2.','3. ','4.','5.'),'',$liju);
+           }
+
+
+         }
+
+         foreach($result2 as $key =>$liju){
+           if($key>=5){
+             break;
+           }else{
+             $result_zh[]=str_replace(array('<b>','</b>','1.','2.','3. ','4.','5.'),'',$liju);
+           }
+
+
+         }
+
+         foreach($result3 as $key =>$liju){
+           if($key>=5){
+             break;
+           }else{
+             $result_from[]=str_replace(array('<b>','</b>','1.','2.','3. ','4.','5.'),'',$liju);
+           }
+
+
+         }
+
+         foreach($result_en as $key=>$item){
+
+           $sentence = Sentence::where('english', trim($result_en[$key]))->first();
+
+          //  $words = new Word;
+          //  $word = $words->where('word', $query_word)->first();
+
+          //  echo $query_word;
+
+           if($sentence==false&&strlen($result_en[$key])<255&&strlen($result_zh[$key])<255){
+             if(trim($result_from[$key]) !="-- 来源 -- 网友提供"){
+               $sentence = Sentence::create([
+                   'english' => trim($result_en[$key]),
+                   'chinese' =>trim($result_zh[$key]),
+                   'quote' =>trim($result_from[$key]),
+                 //  'level_star'=>$level_star
+             //      'version' => $crawl_version,
+               ]);
+               $sentence->words()->attach($word->id);
+             }
+
+
+
+           }else{
+             if( $sentence){
+               if($sentence->words()->where("words.id",$word->id)->count()==false){
+                 $sentence->words()->attach($word->id);
+               }
+             }
+
+           //  $word = Word::where('word', $query_word)->get();
+            continue;
+           }
+
+
+         }
+
+       }
+
+       for($i=1;$i<=10;$i++){
+        $image_tmppath = "http://www.youdict.com/images/words/".$query_word.$i.".jpg";
+         //$image_tmppath = "http://www.youdict.com/images/words/testddd2.jpg";
+         $image_tmpname =$query_word.$i.".jpg";
+
+         $word_image = WordImage::where('image', $image_tmpname)->first();
+
+         if($word_image==false){
+
+
+
+           $local_path ="uploads/images/words/".$query_word."_".$i.".jpg";
+
+
+           $image_cache = file_get_contents($image_tmppath);
+
+           if(strlen($image_cache)<=20000){
+             $sign=file_put_contents($local_path,$image_cache);
+             $word_images = WordImage::create([
+                 'image' => $image_tmpname,
+                 'word_id' => $word->id
+               //  'level_star'=>$level_star
+           //      'version' => $crawl_version,
+             ]);
+           }else{
+             break;
+           }
+
+
+         }
+
+       }
+
+       $word->version = $crawl_version;
+       $word->save();
+       sleep(1);//睡眠
+
+    }
     public function crawl2($words="test",$version="iciba02"){
 
      $query_word = trim($words);
      $query_word = strtolower($query_word);
+
+     //dd($query_word);
     // $query_word = str_replace("'s","",$query_word);
     //$query_word = $words;
       $crawl_version = $version;
@@ -790,7 +942,8 @@ $word->save();
       //$words = DB::select($sql,[1]);
       //dd($words);
 
-      $word = Word::whereNull('version')->whereIn('id', $words_ids)->paginate(15);
+      //$word = Word::whereNull('version')->whereIn('id', $words_ids)->paginate(15);
+      $word = Word::where('version',"!=","youdict")->whereIn('id', $words_ids)->paginate(15);
       //$word = Word::where('version',"!=","xingji")->whereIn('id', $words_ids)->paginate(15);
 
       $curentpage = $word->currentPage();
@@ -802,7 +955,7 @@ $word->save();
 
       $tmp = 0;
         //$this->crawl2($perwords->word,'ciping');
-        $this->crawl2($perwords->word,'xingji');
+        $this->crawl3($perwords->word,'youdict');
 //die("test");
       //  sleep(2);//睡眠
 
