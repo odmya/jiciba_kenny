@@ -943,7 +943,7 @@ $word->save();
       //dd($words);
 
       //$word = Word::whereNull('version')->whereIn('id', $words_ids)->paginate(15);
-      $word = Word::where('version',"!=","youdict")->whereIn('id', $words_ids)->paginate(15);
+      $word = Word::where('version',"!=","youdict01")->whereIn('id', $words_ids)->paginate(15);
       //$word = Word::where('version',"!=","xingji")->whereIn('id', $words_ids)->paginate(15);
 
       $curentpage = $word->currentPage();
@@ -955,7 +955,7 @@ $word->save();
 
       $tmp = 0;
         //$this->crawl2($perwords->word,'ciping');
-        $this->crawl3($perwords->word,'youdict');
+        $this->crawl3($perwords->word,'youdict01');
 //die("test");
       //  sleep(2);//睡眠
 
