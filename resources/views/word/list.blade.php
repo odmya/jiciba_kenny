@@ -14,7 +14,7 @@
 <div>
   <script>
   function jumpurl(){
-    location='https://www.jciba.cn/ciba/list?page=1';
+    location='http://www.sbguh.com/ciba/list?page=1';
   }
   setTimeout('jumpurl()',3000);
   </script>

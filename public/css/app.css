@@ -8403,6 +8403,14 @@ p {
   border-color: white;
 }
 
+.navbar {
+  border: none;
+}
+
+.navbar-inverse li a:hover {
+  color: black;
+}
+
 #logo {
   float: left;
   margin-right: 10px;

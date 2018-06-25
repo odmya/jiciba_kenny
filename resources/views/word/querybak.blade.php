@@ -115,7 +115,7 @@
                     <li spy="overview" bs-affix> <a  ng-click="scrollTo('overview')">基础</a></li>
                     <li ng-show="words.tip.data.length" spy="tips"> <a ng-click="scrollTo('tips')">小贴士</a></li>
                     <li ng-show="words.root.data.length" spy="cixing"> <a ng-click="scrollTo('cixing')">词根</a></li>
-                    <li ng-show="{{count($sentences)}}" spy="sentences" ><a ng-click="scrollTo('sentences')">例句</a></li>
+                    <li ng-show="sentences.data.length" spy="sentences" ><a ng-click="scrollTo('sentences')">例句</a></li>
                 </ul>
               </div>
 
@@ -126,9 +126,8 @@
 
 
 
-              <div id="overview" class="row">
-                <div class="col-xs-6">
-                  <h1 >{{ $word_obj->word }}</h1>
+              <div id="overview">
+                  <h1 >@{{ words.word }}</h1>
                 <div id="voice">
 
                   <div ng-repeat="voice in words.voice.data">@{{ voice.symbol}}
@@ -142,34 +141,9 @@
 
                 <div id="explain"><ul>
 
-                  @foreach ($explain_array as $key => $explain)
-                    <li>{{$key}} {{implode(',',$explain)}}</li>
-                  @endforeach
-
+                 <li ng-repeat="(key, explain) in words.explain.data.explain">@{{key}}, @{{explain}}</li>
 
                 </ul>
-                </div>
-              </div>
-                <div class="col-xs-6">
-
-                  <div class="carousel slide">
-
-                    <!-- 轮播图片 -->
-                    <div class="carousel-inner">
-                      @foreach ($word_obj->word_image as $key => $wordimage)
-                      @if($key==0)
-                        <div class="item active" >
-                      @else
-                        <div class="item">
-                      @endif
-
-                          <img src="/uploads/images/words/{{$wordimage->image}}">
-                        </div>
-                      @endforeach
-                    </div>
-
-                  </div>
-
                 </div>
               </div>
 
@@ -201,7 +175,7 @@
 
 
 
-              <div id="sentences" ng-show="{{count($sentences)}}" >
+              <div id="sentences" ng-show="sentences.data.length" >
                 <hr>
                 <div class="row">
                   <p class="col-xs-3" > 例句</p>
@@ -214,16 +188,13 @@
 
 
                 <ul>
-                  @foreach ($sentences as $sentence)
-                    <li><div><p >{{$sentence->english}}</p><p>{{$sentence->chinese}}</p><p>{{$sentence->quote}}</p></div></li>
-                  @endforeach
+                  <li ng-repeat="item in sentences.data"><div><p ng-mouseleave="mouseleaveEvent()" ng-mouseup="mouseUpEvent()"  ng-mousedown="mousedownEvent()" ng-bind-html="item.english | highlight:search"></p><p>@{{item.chinese}}</p><p>@{{item.quote}}</p></div></li>
                 </ul>
 
 
                 <div id="page">
-                  @if(count($sentences))
-              {{ $sentences->render() }}
-              @endif
+                  <div uib-pagination ng-change="sentencespage()" total-items="totalItems" ng-model="currentPage" max-size="maxSize"  first-text="第一页" previous-text="上一页" next-text="下一页" last-text="最后页" boundary-links="true" boundary-link-numbers="true"></div>
+
               </div>
               </div>
 

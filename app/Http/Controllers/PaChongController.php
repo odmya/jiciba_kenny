@@ -130,6 +130,8 @@ for($i=0;$i<10;$i++){
 
 
        $word = Word::where('word', $query_word)->first();
+
+       $word->version = $crawl_version;
        $url = "http://www.youdict.com/w/".$query_word;
        $html = requests::get($url);
 
@@ -153,9 +155,13 @@ for($i=0;$i<10;$i++){
        $result_zh=array();
        $result_from=array();
        if($result==false){
+         $word->save();
          return;
        }
-       if(count($result)){
+
+
+
+       if(is_array($result)&&count($result)){
          foreach($result as $key =>$liju){
            if($key>=5){
              break;
@@ -250,6 +256,7 @@ for($i=0;$i<10;$i++){
            //      'version' => $crawl_version,
              ]);
            }else{
+
              break;
            }
 
@@ -258,7 +265,7 @@ for($i=0;$i<10;$i++){
 
        }
 
-       $word->version = $crawl_version;
+
        $word->save();
        sleep(1);//睡眠
 

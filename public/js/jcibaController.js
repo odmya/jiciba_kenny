@@ -148,7 +148,7 @@ $scope.mouseleaveEvent = function(){
 
 		
 		//例句
-		
+		/*
 		$scope.sentencespage=function(){
 
 	
@@ -207,7 +207,7 @@ $scope.mouseleaveEvent = function(){
 			console.info(result);  
 
 		}); 
-		
+		*/
   
   }).controller('cigenController', function($scope,$rootScope, $location, $http, rootQueryword) {
     // 持有新评论所有表单数据的对象

@@ -48,8 +48,14 @@ p {
 .navbar-inverse {
   background-color: white;
   border-color:white;
-}
 
+}
+.navbar{
+  border: none;
+}
+.navbar-inverse li a:hover{
+  color:black;
+}
 #logo {
   float: left;
   margin-right: 10px;
@@ -196,4 +202,7 @@ input {
   float: right;
   position: relative;
   right: 0;
+}
+.mainword{
+
 }

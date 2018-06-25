@@ -35,21 +35,6 @@ input.ng-invalid {
     <div class="container">
       <div class="col-md-offset-1 col-md-10 text-center">
 
-
-
-        {!!Form::open(array('route' => 'search','method'=> "POST",'class'=>'form-inline','enctype'=>"multipart/form-data"))!!}
-
-          {{ csrf_field() }}
-            <div class="form-group">
-              <label for="name">输入你要查询的单词:</label>
-              <input type="text" name="query" class="form-control" value="">
-            </div>
-
-
-
-            <button type="submit" class="btn btn-primary ">查询</button>
-        {!! Form::close() !!}
-
         @include('layouts._footer')
       </div>
     </div>

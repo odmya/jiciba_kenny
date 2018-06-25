@@ -553,7 +553,7 @@ echo $result_array['results'][0]['alternatives'][0]['transcript'];
       # code...
       $query_word = trim($word);
       $query_word = strtolower($query_word);
-
+      $sentences =array();
      //$query_word = $words;
     //  PaChongController::crawl($word);
 
@@ -591,16 +591,22 @@ $word_obj = Word::where('word', $query_word)->first();
         }
 
 
+        $sentences =$word_obj->sentences()->orderBy('updated_at','DESC')->paginate(5);
 
+
+
+        //dd($liju);
 
       //  echo WordSpeech::find(10)->first()->cixing."<br/>";
         //echo $word_explain->word_speech_id."<br/>";
 
     }
 
+    //$wordimages = $word_obj->word_image;
 
 
-      return view('word.query', compact('word_obj','explain_array','voice_array'));
+
+      return view('word.query', compact('word_obj','explain_array','sentences','voice_array'));
 
     }
 

@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="fragment" content="!">
-<meta name="prerender-status-code" content="404">
     <title>@yield('title', '记词吧')</title>
     <link rel="stylesheet" href="/css/app.css">
 
@@ -38,7 +37,7 @@
   <body>
     @include('layouts._header')
 
-    <div class="container">
+    <div class="container mainword">
 
 
 
