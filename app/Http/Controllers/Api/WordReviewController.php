@@ -158,31 +158,31 @@ class WordReviewController extends Controller
         case 1:
           //$datastuf = strtotime(date('+1 day'));
           $wordreview->status =2;
-          $wordreview->remember_time = strtotime(date('Y-m-d',strtotime('+1 day')));
-          $wordreview->next_time = strtotime(date('Y-m-d',strtotime('+2 day')));
+          $wordreview->remember_time = strtotime(date('Y-m-d',strtotime('+1 day'))); //一天后复习
+          $wordreview->next_time = strtotime(date('Y-m-d',strtotime('+1 day')));
           $wordreview->save();
           break;
         case 2:
         $wordreview->status =3;
-          $wordreview->remember_time = strtotime(date('Y-m-d',strtotime('+2 day')));
-          $wordreview->next_time = strtotime(date('Y-m-d',strtotime('+4 day')));
+          $wordreview->remember_time = strtotime(date('Y-m-d',strtotime('+1 day'))); //两天后复习
+          $wordreview->next_time = strtotime(date('Y-m-d',strtotime('+2 day')));
           $wordreview->save();
           break;
         case 3:
           $wordreview->status =4;
-          $wordreview->remember_time = strtotime(date('Y-m-d',strtotime('+4 day')));
-          $wordreview->next_time = strtotime(date('Y-m-d',strtotime('+7 day')));
+          $wordreview->remember_time = strtotime(date('Y-m-d',strtotime('+2 day'))); //四天后复习
+          $wordreview->next_time = strtotime(date('Y-m-d',strtotime('+3 day')));
           $wordreview->save();
             break;
         case 4:
           $wordreview->status =5;
-          $wordreview->remember_time = strtotime(date('Y-m-d',strtotime('+7 day')));
-          $wordreview->next_time = strtotime(date('Y-m-d',strtotime('+15 day')));
+          $wordreview->remember_time = strtotime(date('Y-m-d',strtotime('+3 day'))); //七天天后复习
+          $wordreview->next_time = strtotime(date('Y-m-d',strtotime('+8 day')));
           $wordreview->save();
               break;
         case 5:
           $wordreview->status =6;
-          $wordreview->remember_time = strtotime(date('Y-m-d',strtotime('+15 day')));
+          $wordreview->remember_time = strtotime(date('Y-m-d',strtotime('+8 day'))); //十五天后复习
           $wordreview->next_time = strtotime(date('Y-m-d',strtotime('+30 day')));
           $wordreview->save();
               break;
