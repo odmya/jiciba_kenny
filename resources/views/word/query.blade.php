@@ -108,26 +108,26 @@
 
   <div class="row">
 
-            <div class="col-xs-3 sidebar hidden-xs" id="myScrollspy" >
+            <div class="col-xs-3  sidebar hidden-xs" id="myScrollspy" >
 
               <div  bs-affix data-offset-top="200" data-offset-bottom="300" style="width:250px;">
                 <ul class=" nav nav-tabs nav-stacked"  >
                     <li spy="overview" bs-affix> <a  ng-click="scrollTo('overview')">基础</a></li>
-                    <li ng-show="words.tip.data.length" spy="tips"> <a ng-click="scrollTo('tips')">小贴士</a></li>
+                    <li ng-show="{{count($word_obj->tip)}}" spy="tips"> <a ng-click="scrollTo('tips')">小贴士</a></li>
                     <li ng-show="words.root.data.length" spy="cixing"> <a ng-click="scrollTo('cixing')">词根</a></li>
                     <li ng-show="{{count($sentences)}}" spy="sentences" ><a ng-click="scrollTo('sentences')">例句</a></li>
                 </ul>
               </div>
 
           </div>
-          <div class="col-xs-9 main-container" bs-affix-target>
+          <div class="col-xs-9  main-container" bs-affix-target>
 
 
 
 
 
               <div id="overview" class="row">
-                <div class="col-xs-6">
+                <div class="col-sm-6 col-md-6 col-lg-6 col-xs-12">
                   <h1 >{{ $word_obj->word }}</h1>
                 <div id="voice">
 
@@ -150,7 +150,7 @@
                 </ul>
                 </div>
               </div>
-                <div class="col-xs-6">
+                <div class="col-sm-6 col-md-6 col-lg-6 col-xs-12">
 
                   <div class="carousel slide">
 
@@ -173,10 +173,14 @@
                 </div>
               </div>
 
-              <div id="tips" ng-show="words.tip.data.length">
+              <div id="tips" ng-show="{{count($word_obj->tip)}}">
                 <h3>Tips</h3>
 
-                <p ng-init="tippraise =tip.praise" ng-repeat="tip in words.tip.data">@{{tip.tip}}  <img ng-click="like(tip.id)();" src="/uploads/images/like.jpg"> <span >@{{tip.praise}}</span></p>
+                  @foreach ($word_obj->tip as $tip)
+
+                    <p >{{$tip->tip}} </p>
+
+                  @endforeach
               </div>
 
 

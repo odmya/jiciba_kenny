@@ -103,7 +103,7 @@ $scope.mouseleaveEvent = function(){
 		var audio = new Audio($path);
 		audio.play();
 	}
-
+/*
 	var tippraise;
 	$scope.tippraise =tippraise;
 	
@@ -124,6 +124,7 @@ $scope.mouseleaveEvent = function(){
 
 		});  
 	}
+	*/
     $scope.loading = true;
 //request word information
 	var url = $location.url(); 

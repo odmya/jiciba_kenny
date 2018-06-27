@@ -590,21 +590,14 @@ $word_obj = Word::where('word', $query_word)->first();
           $explain_array[][] = $word_explain['explain'];
         }
 
-
-        $sentences =$word_obj->sentences()->orderBy('updated_at','DESC')->paginate(5);
-
-
-
         //dd($liju);
-
       //  echo WordSpeech::find(10)->first()->cixing."<br/>";
         //echo $word_explain->word_speech_id."<br/>";
 
     }
 
+    $sentences =$word_obj->sentences()->orderBy('updated_at','DESC')->paginate(5);
     //$wordimages = $word_obj->word_image;
-
-
 
       return view('word.query', compact('word_obj','explain_array','sentences','voice_array'));
 

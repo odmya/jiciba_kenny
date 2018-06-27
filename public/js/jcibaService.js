@@ -25,7 +25,7 @@ angular.module('querywordService', [])
          // headers: { 'X-CSRF-TOKEN' : CSRF_TOKEN },  //需要传入X-CSRF-TOKEN 才可以post 数据
           data: {  
 				word: QUERY_WORD,
-				include: 'explain, voice,tip,level,root',
+				include: 'voice,root',
 			},
         });
 		
