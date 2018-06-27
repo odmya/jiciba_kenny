@@ -557,7 +557,7 @@ echo $result_array['results'][0]['alternatives'][0]['transcript'];
      //$query_word = $words;
     //  PaChongController::crawl($word);
 
-       $word_obj = Word::where('word', $query_word)->first();  //单词
+       $word_obj = Word::where('word', $query_word)->with('level','tip','word_image')->first();  //单词
 
 if($word_obj ==false){
   $this->crawl($query_word,"jukuu05");
@@ -577,15 +577,15 @@ $word_obj = Word::where('word', $query_word)->first();
 
     }
 
-      $word_explains = WordExplain::where('word_id', $word_obj->id)->get();  //单词
+      $word_explains = WordExplain::where('word_id', $word_obj->id)->with('speech')->get();  //单词
 
       $explain_array = array();
       $tmp_array =array();
       foreach ($word_explains as $word_explain) {
         //$explain_array[WordSpeech::find($word_explain->word_speech_id)->cixing][] = $word_explain->explain;
 
-        if(WordSpeech::find($word_explain['word_speech_id'])){
-          $explain_array[WordSpeech::find($word_explain->word_speech_id)->cixing][] = $word_explain->explain;
+        if($word_explain->speech->cixing){
+          $explain_array[$word_explain->speech->cixing][] = $word_explain->explain;
         }else{
           $explain_array[][] = $word_explain['explain'];
         }
@@ -597,8 +597,9 @@ $word_obj = Word::where('word', $query_word)->first();
     }
 
     $sentences =$word_obj->sentences()->orderBy('updated_at','DESC')->paginate(5);
+    //var_dump($explain_array);
     //$wordimages = $word_obj->word_image;
-
+//die("test");
 
       return view('word.query', compact('word_obj','explain_array','sentences','voice_array'));
 

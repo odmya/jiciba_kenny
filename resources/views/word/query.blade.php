@@ -117,6 +117,9 @@
                     <li ng-show="words.root.data.length" spy="cixing"> <a ng-click="scrollTo('cixing')">词根</a></li>
                     <li ng-show="{{count($sentences)}}" spy="sentences" ><a ng-click="scrollTo('sentences')">例句</a></li>
                 </ul>
+
+                <img src="https://www.jciba.cn/uploads/images/minijciba.jpg"/>
+                <p style="text-align:center;">欢迎使用微信小程序</p>
               </div>
 
           </div>
