@@ -136,7 +136,14 @@
                   </div>
                 </div>
                 <div class="level " >
-                    <div><a href="{{route('querystar',str_replace('star','',$word_obj->level_star))}}" ng-show="words.level_star"><span class="@{{ words.level_star }}" ng-repeat="ls in level_star"><img src="/uploads/images/star.png" /></span> </a> <span ng-repeat="level in words.level.data">@{{level.level_base}}</span></div>
+                    <div><a href="{{route('querystar',str_replace('star','',$word_obj->level_star))}}" ng-show="words.level_star"><span class="@{{ words.level_star }}" ng-repeat="ls in level_star">
+                      <img src="/uploads/images/star.png" /></span> </a>
+                      @foreach ($word_obj->level as $level)
+
+                        <span>{{$level->level_bases}}</span>
+
+                      @endforeach
+                    </div>
 
                 </div>
 

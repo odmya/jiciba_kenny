@@ -103,7 +103,7 @@ $scope.mouseleaveEvent = function(){
 		var audio = new Audio($path);
 		audio.play();
 	}
-/*
+
 	var tippraise;
 	$scope.tippraise =tippraise;
 	
@@ -124,7 +124,6 @@ $scope.mouseleaveEvent = function(){
 
 		});  
 	}
-	*/
     $scope.loading = true;
 //request word information
 	var url = $location.url(); 
@@ -140,7 +139,7 @@ $scope.mouseleaveEvent = function(){
 				tmp_star.push($i);
 			}
 			$scope.level_star = tmp_star;
-			console.info($scope.words.root);  
+			//console.info($scope.words.root);  
 
 		}).catch(function (result) { //捕捉错误处理  
 			console.info(result);  
