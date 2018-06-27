@@ -554,16 +554,26 @@ echo $result_array['results'][0]['alternatives'][0]['transcript'];
       $query_word = trim($word);
       $query_word = strtolower($query_word);
       $sentences =array();
+      $seo_meta =array();
      //$query_word = $words;
     //  PaChongController::crawl($word);
 
-       $word_obj = Word::where('word', $query_word)->with('level','tip','word_image')->first();  //单词
+       $word_obj = Word::where('word', $query_word)->with('level','tip','word_image','explain')->first();  //单词
 
 if($word_obj ==false){
   $this->crawl($query_word,"jukuu05");
 $word_obj = Word::where('word', $query_word)->first();
 }
+
+$seo_meta['title'] = $word_obj->word."词根词缀记忆, 查看".$word_obj->word."中文翻译 例句 发音 音标 词根 词缀! 记词吧在线免费词典！";
+$seo_meta['description'] ="";
+
+foreach($word_obj->voice as $voice){
+  $seo_meta['description'] .=$word_obj->word.": ".$voice->symbol." ";;
+}
+
 //$this->crawl($query_word);
+/*
       $voices =  WordVoice::where('word_id', $word_obj->id)->get();  //单词
 
       $voice_array = array();
@@ -576,8 +586,9 @@ $word_obj = Word::where('word', $query_word)->first();
         $voice_array[]=$tmp_array;
 
     }
+*/
 
-      $word_explains = WordExplain::where('word_id', $word_obj->id)->with('speech')->get();  //单词
+      $word_explains =$word_obj->explain;  //单词
 
       $explain_array = array();
       $tmp_array =array();
@@ -586,6 +597,7 @@ $word_obj = Word::where('word', $query_word)->first();
 
         if($word_explain->speech->cixing){
           $explain_array[$word_explain->speech->cixing][] = $word_explain->explain;
+          $seo_meta['description'] .=$word_explain->speech->cixing." ".$word_explain->explain;
         }else{
           $explain_array[][] = $word_explain['explain'];
         }
@@ -596,12 +608,15 @@ $word_obj = Word::where('word', $query_word)->first();
 
     }
 
-    $sentences =$word_obj->sentences()->orderBy('updated_at','DESC')->paginate(5);
+
+    $sentences =$word_obj->sentences()->orderBy('updated_at','DESC')->take(5)->get();
+
+
     //var_dump($explain_array);
     //$wordimages = $word_obj->word_image;
 //die("test");
 
-      return view('word.query', compact('word_obj','explain_array','sentences','voice_array'));
+      return view('word.query', compact('word_obj','explain_array','sentences','seo_meta'));
 
     }
 

@@ -6,6 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="fragment" content="!">
     <title>@yield('title', '记词吧')</title>
+    <meta name="description" content="@yield('description', '记词吧记词吧')" />
     <link rel="stylesheet" href="/css/app.css">
 
 

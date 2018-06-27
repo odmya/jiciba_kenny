@@ -3,7 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>@yield('title', 'Sample App')</title>
+    <title>@yield('title', '记词吧')</title>
+    <description>@yield('description', '记词吧')</description>
     <link rel="stylesheet" href="{{URL::asset('css/app.css')}}">
 
     <!-- MetisMenu CSS -->
