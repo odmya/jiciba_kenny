@@ -18,7 +18,7 @@
               <div  bs-affix data-offset-top="200" data-offset-bottom="300" style="width:250px;">
                 <ul class=" nav nav-tabs nav-stacked"  >
                     <li spy="overview" bs-affix> <a  ng-click="scrollTo('overview')">基础</a></li>
-                    <li ng-show="{{count($word_obj->tip)}}" spy="tips"> <a ng-click="scrollTo('tips')">小贴士</a></li>
+                    <li ng-show="{{count($word_obj->tip)}}" spy="tips"> <a ng-click="scrollTo('tips')">记忆小窍门</a></li>
                     <li ng-show="words.root.data.length" spy="cixing"> <a ng-click="scrollTo('cixing')">词根</a></li>
                     <li ng-show="{{count($sentences)}}" spy="sentences" ><a ng-click="scrollTo('sentences')">例句</a></li>
                 </ul>
@@ -89,7 +89,7 @@
               </div>
 
               <div id="tips" ng-show="{{count($word_obj->tip)}}">
-                <h3>Tips</h3>
+                <h3>记忆小窍门</h3>
 
                   @foreach ($word_obj->tip as $tip)
 
