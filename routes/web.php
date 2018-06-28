@@ -126,6 +126,8 @@ Route::get('/query/{word}', 'WordController@query')->name('query');
 
 
 Route::get('/star/{star}', 'WordController@star')->name('querystar');
+Route::get('/list/{level_bases}', 'WordController@list')->name('wrodlist');
+
 
 Route::get('/googlespeech', 'WordController@googlespeech')->name('googlespeech');
 Route::get('/baiduspeech', 'WordController@baiduspeech')->name('baiduspeech');

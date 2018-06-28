@@ -33,7 +33,15 @@ input.ng-invalid {
     @include('layouts._header')
 
     <div class="container">
-      <div class="col-md-offset-1 col-md-10 text-center">
+      <div class="col-md-offset-1 col-md-10 ">
+        <p>词汇</p>
+        <ul>
+          @foreach ($level_bases as $levelbase)
+          <li><a href="{{ route('wrodlist',$levelbase->id) }}">{{$levelbase->level_bases}}</a></li>
+          @endforeach
+        </ul>
+
+
 
         @include('layouts._footer')
       </div>

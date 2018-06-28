@@ -48,7 +48,7 @@
                       <img src="/uploads/images/star.png" /></span> </a>
                       @foreach ($word_obj->level as $level)
 
-                        <span>{{$level->level_bases}}</span>
+                        <span><a href="{{route('wrodlist',$level->id)}} ">{{$level->level_bases}}</a></span>
 
                       @endforeach
                     </div>

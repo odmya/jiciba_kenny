@@ -565,7 +565,7 @@ if($word_obj ==false){
 $word_obj = Word::where('word', $query_word)->first();
 }
 
-$seo_meta['title'] = $word_obj->word."词根词缀记忆, 查看".$word_obj->word."中文翻译 例句 发音 音标 词根 词缀! 记词吧在线免费词典！";
+$seo_meta['title'] = $word_obj->word."词根词缀, 查看".$word_obj->word."中文翻译 例句 发音 音标 词根 词缀! 记词吧在线免费词典！";
 $seo_meta['description'] ="";
 
 foreach($word_obj->voice as $voice){
@@ -609,7 +609,7 @@ foreach($word_obj->voice as $voice){
     }
 
 
-    $sentences =$word_obj->sentences()->orderBy('updated_at','DESC')->take(5)->get();
+    $sentences =$word_obj->sentences()->orderBy('updated_at','DESC')->take(10)->get();
 
 
     //var_dump($explain_array);
@@ -621,12 +621,50 @@ foreach($word_obj->voice as $voice){
     }
 
     public function star($star){
+      $seo_meta =array();
       $query_word = "star".$star;
+
+      /*
       $has_star =Word::where('level_star', $query_word)->count();
       if($has_star==false){
         return redirect()->route('home');
       }
       return view('word.starapi', compact('star'));
+      */
+
+      $has_star =Word::where('level_star', $query_word)->count();
+
+
+
+      if($has_star==false){
+        return redirect()->route('home');
+      }else{
+
+        $words = Word::where('level_star', $query_word)->paginate(15);
+        $seo_meta['title'] =$star."星词频";
+        if($words->currentPage()>1){
+          $seo_meta['title'].=" - 第".$words->currentPage()."页";
+        }
+
+      }
+      $seo_meta['description'] = $seo_meta['title'];
+      return view('word.star', compact('words','seo_meta'));
+    }
+
+    public function list(LevelBase $level_bases){
+    $seo_meta =array();
+
+    $words = $level_bases->word()->paginate(15);
+    $seo_meta['title'] =str_replace('/','',$level_bases->level_bases)."词汇";
+    if($words->currentPage()>1){
+      $seo_meta['title'].=" - 第".$words->currentPage()."页";
+    }
+
+    $seo_meta['description'] = $seo_meta['title'];
+
+    return view('word.wordslist', compact('words','seo_meta'));
+
+
     }
 
     public function queryapi(Request $request)
