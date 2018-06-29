@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="fragment" content="!">
     <title>@yield('title', '记词吧')</title>
     <meta name="description" content="@yield('description', '记词吧记词吧')" />
     <link rel="stylesheet" href="/css/app.css">

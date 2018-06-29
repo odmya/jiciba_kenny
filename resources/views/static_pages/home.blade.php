@@ -1,19 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" ng-app="myApp">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>@yield('title', '记词吧')</title>
+    <meta name="description" content="@yield('description', '记词吧记词吧')" />
     <link rel="stylesheet" href="/css/app.css">
-
-    <!-- MetisMenu CSS -->
-    <link href="css/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="css/sb-admin-2.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
     <script src="/js/angular/angular.js"></script>
         <script src="/js/app.js"></script>
