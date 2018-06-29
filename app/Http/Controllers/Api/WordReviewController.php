@@ -97,7 +97,7 @@ class WordReviewController extends Controller
       $user_id = $request->input('user_id');
 
 
-      $wordbundle =WordBundle::where('user_id', $user_id)->first();
+      $wordbundle =WordBundle::where('user_id', $user_id)->orderBy('updated_at','DESC')->first();
 
       if($wordbundle){
         return $this->response->item($wordbundle, new WordBundleTransformer())->setStatusCode(201);
@@ -115,7 +115,7 @@ class WordReviewController extends Controller
 
       $datastuf = strtotime(date('Y-m-d'));
 
-      $wordrisk =WordRisk::where('user_id', $user_id)->where('time',$datastuf)->paginate(30);
+      $wordrisk =WordRisk::where('user_id', $user_id)->paginate(30);
 
 
       return $this->response->paginator($wordrisk, new WordRiskTransformer());
@@ -134,9 +134,9 @@ class WordReviewController extends Controller
 
     public function wordreviewlist(Request $request){
       $user_id = $request->input('user_id');
+      $datastuf = strtotime(date('Y-m-d'));
 
-
-      $wordreview =WordReview::where('user_id', $user_id)->orderBy('updated_at','DESC')->paginate(10);
+      $wordreview =WordReview::where('user_id', $user_id)->where('next_time', $datastuf)->orderBy('updated_at','DESC')->paginate(10);
 
 
       return $this->response->paginator($wordreview, new WordReviewTransformer());
@@ -148,7 +148,7 @@ class WordReviewController extends Controller
       $user_id = $request->input('user_id');
       $word_id = $request->input('word_id');
       $datastuf = strtotime(date('Y-m-d H:i:s'));
-
+      $datastuftoday = strtotime(date('Y-m-d'));
 
       $wordreview =WordReview::where('word_id',$word_id)->where('user_id',$user_id)->where('remember_time','<',$datastuf)->first();
 
@@ -159,31 +159,31 @@ class WordReviewController extends Controller
           //$datastuf = strtotime(date('+1 day'));
           $wordreview->status =2;
           $wordreview->remember_time = strtotime(date('Y-m-d',strtotime('+1 day'))); //一天后复习
-          $wordreview->next_time = strtotime(date('Y-m-d',strtotime('+1 day')));
+          $wordreview->next_time = $datastuftoday;
           $wordreview->save();
           break;
         case 2:
         $wordreview->status =3;
           $wordreview->remember_time = strtotime(date('Y-m-d',strtotime('+1 day'))); //两天后复习
-          $wordreview->next_time = strtotime(date('Y-m-d',strtotime('+2 day')));
+          $wordreview->next_time = $datastuftoday;
           $wordreview->save();
           break;
         case 3:
           $wordreview->status =4;
           $wordreview->remember_time = strtotime(date('Y-m-d',strtotime('+2 day'))); //四天后复习
-          $wordreview->next_time = strtotime(date('Y-m-d',strtotime('+3 day')));
+          $wordreview->next_time = $datastuftoday;
           $wordreview->save();
             break;
         case 4:
           $wordreview->status =5;
           $wordreview->remember_time = strtotime(date('Y-m-d',strtotime('+3 day'))); //七天天后复习
-          $wordreview->next_time = strtotime(date('Y-m-d',strtotime('+8 day')));
+          $wordreview->next_time = $datastuftoday;
           $wordreview->save();
               break;
         case 5:
           $wordreview->status =6;
           $wordreview->remember_time = strtotime(date('Y-m-d',strtotime('+8 day'))); //十五天后复习
-          $wordreview->next_time = strtotime(date('Y-m-d',strtotime('+30 day')));
+          $wordreview->next_time = $datastuftoday;
           $wordreview->save();
               break;
         case 6:
@@ -247,7 +247,7 @@ class WordReviewController extends Controller
               'user_id' => $user_id,
               'status' => 1,
               'remember_time' => strtotime('+1 hour'), //当前时间一小时后
-              'next_time' => strtotime(date('Y-m-d',strtotime('+1 day'))) //一天后的凌晨开始
+              'next_time' => strtotime(date('Y-m-d')) //一天后的凌晨开始
 
             //  'level_star'=>$level_star
         //      'version' => $crawl_version,

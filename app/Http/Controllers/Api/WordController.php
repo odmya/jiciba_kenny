@@ -182,7 +182,7 @@ $words_ids = WordSearch::where('user_id', '=', $user_id)->orderBy('count', 'DESC
 
 
         if(WordRisk::where('user_id', $user_id)->where('time',$datastuf)->count()==false){
-        $wordrisk =WordRisk::where('time',"<",$datastuf)->delete(); //delete old data
+        $wordrisk =WordRisk::where('user_id', $user_id)->where('time',"<",$datastuf)->delete(); //delete old data
           foreach($words_id as $word){
             WordRisk::create([
                 'user_id' => $user_id,
