@@ -126,7 +126,7 @@ class WordReviewController extends Controller
     public function bundlelist(){
 
 
-      $levelbase =LevelBase::get();
+      $levelbase =LevelBase::orderBy('updated_at','DESC')->get();
 
       return $this->response->item($levelbase, new LevelBaseTransformer());
 
