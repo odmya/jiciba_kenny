@@ -50,6 +50,9 @@ $api->version('v1', [
     $api->post('star', 'WordController@star')
           ->name('api.WordController.apistar');
 
+    $api->post('dancizhan', 'WordController@dancizhan')
+          ->name('api.WordController.apidancizhan');
+
     $api->post('wordsearchcache', 'WordController@wordsearchcache')
           ->name('api.WordController.wordsearch');
 

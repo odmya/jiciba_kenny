@@ -56,6 +56,29 @@ class WordController extends Controller
 
     }
 
+    public function dancizhan(Request $request, Word $word){
+
+      $user_id = $request->input('user_id');
+      $word_id = $request->input('word_id');
+
+      $wordremember =WordRemember::where('word_id',$word_id)->where('user_id',$user_id)->first();
+      if($wordremember == false){
+              $wordremember = WordRemember::create([
+                  'word_id' => $word_id,
+                  'user_id' => $user_id
+
+                //  'level_star'=>$level_star
+            //      'version' => $crawl_version,
+              ]);
+
+      }
+      WordReview::where('word_id',$word_id)->where('user_id',$user_id)->delete();
+      WordRisk::where('word_id',$word_id)->where('user_id',$user_id)->delete();
+      return $this->response->noContent()->setStatusCode(200);
+
+
+    }
+
     public function wordsearchcache(Request $request){
 
       $word_id = $request->input('word_id');

@@ -48,6 +48,7 @@ class AuthorizationsController extends Controller
 
             // 未找到对应用户则需要提交用户名密码进行用户绑定
             if (!$user) {
+              /*
                 // 如果未提交用户名密码，403 错误提示
                 if (!$request->username) {
                     return $this->response->errorForbidden('用户不存在');
@@ -70,6 +71,14 @@ class AuthorizationsController extends Controller
                 // 获取对应的用户
                 $user = Auth::guard('api')->getUser();
                 $attributes['weapp_openid'] = $data['openid'];
+                */
+                $user = User::create([
+                    'weapp_openid' => $data['openid']
+                ]);
+
+                //$user = Auth::guard('api')->getUser();
+                //$attributes['weapp_openid'] = $data['openid'];
+
             }
 
             // 更新用户数据
