@@ -40,6 +40,10 @@ class WordReviewController extends Controller
         $level_base_id = $request->input('level_base_id');
 
 
+        $user =User::find($user_id);
+        if (!$user) {
+          return $this->response->error('当前用户不存在', 422);
+        }
 
         $wordbundle = WordBundle::create([
             'level_base_id' => $level_base_id,
@@ -64,6 +68,11 @@ class WordReviewController extends Controller
         $user_id = $request->input('user_id');
         $bundle_id = $request->input('bundle_id');
 
+        $user =User::find($user_id);
+        if (!$user) {
+          return $this->response->error('当前用户不存在', 422);
+        }
+
         $wordbundle =WordBundle::where('user_id', $user_id)->where('id', $bundle_id)->delete();
 
         return $this->response->noContent();
@@ -74,6 +83,12 @@ class WordReviewController extends Controller
         $user_id = $request->input('user_id');
         $bundle_id = $request->input('bundle_id');
         $maxsize = $request->input('maxsize');
+
+        $user =User::find($user_id);
+        if (!$user) {
+          return $this->response->error('当前用户不存在', 422);
+        }
+        
 
         $wordbundle =WordBundle::where('user_id', $user_id)->where('id', $bundle_id)->first();
         if($wordbundle){
