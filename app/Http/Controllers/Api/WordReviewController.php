@@ -133,7 +133,7 @@ class WordReviewController extends Controller
 
       $datastuf = strtotime(date('Y-m-d'));
 
-      $wordrisk =WordRisk::where('user_id', $user_id)->paginate(6);
+      $wordrisk =WordRisk::where('user_id', $user_id)->paginate(11);
 
 
       return $this->response->paginator($wordrisk, new WordRiskListTransformer());
@@ -154,7 +154,7 @@ class WordReviewController extends Controller
       $user_id = $request->input('user_id');
       $datastuf = strtotime(date('Y-m-d'));
 
-      $wordreview =WordReview::where('user_id', $user_id)->where('next_time', $datastuf)->orderBy('updated_at','DESC')->paginate(6);
+      $wordreview =WordReview::where('user_id', $user_id)->where('next_time', $datastuf)->orderBy('updated_at','DESC')->paginate(11);
 
 
       return $this->response->paginator($wordreview, new WordReviewListTransformer());
