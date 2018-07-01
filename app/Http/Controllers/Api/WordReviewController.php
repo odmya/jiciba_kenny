@@ -88,7 +88,7 @@ class WordReviewController extends Controller
         if (!$user) {
           return $this->response->error('当前用户不存在', 422);
         }
-        
+
 
         $wordbundle =WordBundle::where('user_id', $user_id)->where('id', $bundle_id)->first();
         if($wordbundle){
@@ -130,7 +130,7 @@ class WordReviewController extends Controller
 
       $datastuf = strtotime(date('Y-m-d'));
 
-      $wordrisk =WordRisk::where('user_id', $user_id)->paginate(30);
+      $wordrisk =WordRisk::where('user_id', $user_id)->paginate(11);
 
 
       return $this->response->paginator($wordrisk, new WordRiskTransformer());
