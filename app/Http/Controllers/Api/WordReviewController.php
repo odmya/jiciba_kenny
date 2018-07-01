@@ -10,6 +10,9 @@ use App\Models\LevelBase;
 use App\Models\AutoRecord;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Transformers\WordRiskListTransformer;
+use App\Transformers\WordReviewListTransformer;
+
 use App\Transformers\WordReviewTransformer;
 use App\Transformers\WordRiskTransformer;
 use App\Transformers\WordBundleTransformer;
@@ -130,10 +133,10 @@ class WordReviewController extends Controller
 
       $datastuf = strtotime(date('Y-m-d'));
 
-      $wordrisk =WordRisk::where('user_id', $user_id)->paginate(11);
+      $wordrisk =WordRisk::where('user_id', $user_id)->paginate(6);
 
 
-      return $this->response->paginator($wordrisk, new WordRiskTransformer());
+      return $this->response->paginator($wordrisk, new WordRiskListTransformer());
 
     }
 
@@ -151,10 +154,10 @@ class WordReviewController extends Controller
       $user_id = $request->input('user_id');
       $datastuf = strtotime(date('Y-m-d'));
 
-      $wordreview =WordReview::where('user_id', $user_id)->where('next_time', $datastuf)->orderBy('updated_at','DESC')->paginate(10);
+      $wordreview =WordReview::where('user_id', $user_id)->where('next_time', $datastuf)->orderBy('updated_at','DESC')->paginate(6);
 
 
-      return $this->response->paginator($wordreview, new WordReviewTransformer());
+      return $this->response->paginator($wordreview, new WordReviewListTransformer());
 
     }
 
