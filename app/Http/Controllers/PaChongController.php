@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use phpspider\core\phpspider;
 use phpspider\core\requests;
 use phpspider\core\selector;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\DB;
 use App\Models\Word;
 use App\Models\LevelBase;
 use App\Models\LevelBaseWord;
@@ -939,6 +941,7 @@ $word->save();
 
 
     }
+    /*
     public function list(){
 
       $words_ids = LevelBaseWord::distinct('word_id')->pluck('word_id');
@@ -970,6 +973,125 @@ $word->save();
       //return redirect('login');
       //die();
       return view('word.list', compact('word','nextpageurl'));
+
+    }
+    */
+
+    public function crawl5($words="test",$version="iciba02"){
+
+     $query_word = trim($words);
+     $query_word = strtolower($query_word);
+     //dd($query_word);
+    // $query_word = str_replace("'s","",$query_word);
+    //$query_word = $words;
+      $crawl_version = $version;
+
+
+
+      $word = Word::where('word', $query_word)->first();
+
+      $url = "http://dict.cn/".$query_word;
+      $html = requests::get($url);
+
+      // 抽取星级
+
+      $selector = "//div[contains(@class,'basic')]//li/span";
+      $selector2 = "//div[contains(@class,'basic')]//li/strong";
+      // 提取结果
+      $cixing_array= selector::select($html, $selector);
+      $tmp_explate = selector::select($html, $selector2);
+
+      if(is_array($cixing_array)){
+        foreach ($tmp_explate  as $key => $explain) {
+          # code...
+          if(@$cixing_array[$key]==false){
+            $cixingname = "na.";
+          }else{
+            $cixingname = $cixing_array[$key];
+          }
+          $cixing = WordSpeech::where('cixing',$cixingname)->first();
+          if($cixing == false){
+            $cixing = WordSpeech::where('cixing',' na.')->first();
+          }
+
+          $word_explain=WordExplain::where(['word_speech_id'=>$cixing->id,'word_id'=>$word->id])->first();
+          if($word_explain ==false&&$explain){
+             WordExplain::create(['word_speech_id'=>$cixing->id,'word_id'=>$word->id,'explain'=>$explain]);
+
+          }
+
+        }
+
+      }else{
+        if(is_array($tmp_explate)){
+          foreach ($tmp_explate  as $key => $explain) {
+            # code...
+            if($cixing_array ==false){
+              $cixing = WordSpeech::where('cixing','na.')->first();
+            }else{
+              $cixing = WordSpeech::where('cixing',$cixing_array)->first();
+            }
+            //$cixing = WordSpeech::where('cixing','na.')->first();
+            //dd($cixing);
+            if($cixing){
+              $word_explain=WordExplain::where(['word_speech_id'=>$cixing->id,'word_id'=>$word->id])->first();
+              if($word_explain ==false&&$explain){
+                WordExplain::create(['word_speech_id'=>$cixing->id,'word_id'=>$word->id,'explain'=>$explain]);
+
+              }
+            }
+
+
+          }
+        }else{
+          //$cixing = WordSpeech::where('cixing',' na.')->first();
+
+          if($cixing_array ==false){
+            $cixing = WordSpeech::where('cixing','na.')->first();
+          }else{
+            $cixing = WordSpeech::where('cixing',$cixing_array)->first();
+          }
+          if($cixing){
+            $word_explain=WordExplain::where(['word_speech_id'=>$cixing->id,'word_id'=>$word->id])->first();
+            if($word_explain ==false&&$tmp_explate){
+              WordExplain::create(['word_speech_id'=>$cixing->id,'word_id'=>$word->id,'explain'=>$tmp_explate]);
+            }
+          }
+
+        }
+
+
+      }
+
+
+
+
+    }
+    public function list(){
+
+      $words_ids = LevelBaseWord::distinct('word_id')->pluck('word_id');
+
+      $words_ids = $words_ids->toArray();
+
+      $sql="select distinct w.word from words w inner join level_base_word lbw on lbw.word_id = w.id where w.id not in(select word_id from word_explains) limit 10";
+      $words = DB::select($sql);
+
+
+      foreach ($words as $word) {
+
+        //$this->crawl2($perwords->word,'ciping');
+        $this->crawl5($word->word,'dictcn');
+      //die("test");
+      //  sleep(2);//睡眠
+
+      }
+
+    //  $word = Paginator::make(DB::select($sql), 15);
+
+    //$host = APP_URL
+      //return redirect('login');
+      //die();
+      return view('word.list', compact('words'));
 
     }
     public function ciba(){
