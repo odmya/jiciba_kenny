@@ -1073,7 +1073,7 @@ $word->save();
 
       $words_ids = $words_ids->toArray();
 
-      $sql="select distinct w.word from words w inner join level_base_word lbw on lbw.word_id = w.id where w.id not in(select word_id from word_explains) order by rand() limit 10";
+      $sql="select distinct w.word from words w inner join level_base_word lbw on lbw.word_id = w.id where w.id not in(select word_id from word_explains) order by rand() limit 20";
       $words = DB::select($sql);
 
 

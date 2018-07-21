@@ -49,6 +49,7 @@ class WordReviewTransformer extends TransformerAbstract
             'user_id' => $wordreview->user_id,
             'word_id' => $wordreview->word_id,
             'word' => $wordreview->word->word,
+            'image'=>$wordreview->word->word_image()->first(),
             'word_review' => $wordreview->word->word_review,
             'tips' => $wordreview->word->word_tip()->orderBy('updated_at','DESC')->offset(0)->limit(1)->get(),
             'root' => $cixingword_array,

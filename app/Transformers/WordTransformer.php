@@ -16,6 +16,7 @@ class WordTransformer extends TransformerAbstract
             'id' => $word->id,
             'word' => $word->word,
             'explain_china' => $word->word_explain()->first(),
+            'image' => $word->word_image()->first(),
             'level_star' => str_replace("star","",$word->level_star),
             'created_at' => $word->created_at->toDateTimeString(),
             'updated_at' => $word->updated_at->toDateTimeString(),

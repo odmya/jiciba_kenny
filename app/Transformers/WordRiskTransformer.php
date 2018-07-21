@@ -42,6 +42,7 @@ class WordRiskTransformer extends TransformerAbstract
             'user_id' => $wordrisk->user_id,
             'word_id' => $wordrisk->word_id,
             'word' => $wordrisk->word->word,
+            'image' => $wordrisk->word->word_image()->first(),
             'tips' => $wordrisk->word->word_tip()->orderBy('updated_at','DESC')->offset(0)->limit(1)->get(),
             'voice' => $wordrisk->word->word_voice,
             'explain' => $explain_array,
