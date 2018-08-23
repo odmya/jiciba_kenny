@@ -8,9 +8,11 @@ use App\Models\WordRemember;
 use App\Models\WordBundle;
 use App\Models\LevelBase;
 use App\Models\AutoRecord;
+use App\Models\WordFinish;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Transformers\WordRiskListTransformer;
+use App\Transformers\WordRememberListTransformer;
 use App\Transformers\WordReviewListTransformer;
 
 use App\Transformers\WordReviewTransformer;
@@ -18,7 +20,7 @@ use App\Transformers\WordRiskTransformer;
 use App\Transformers\WordBundleTransformer;
 use App\Transformers\LevelBaseTransformer;
 use App\Http\Requests\Api\WordReviewRequest;
-
+use App\Transformers\WordFinishTransformer;
 
 class WordReviewController extends Controller
 {
@@ -48,14 +50,21 @@ class WordReviewController extends Controller
           return $this->response->error('当前用户不存在', 422);
         }
 
-        $wordbundle = WordBundle::create([
-            'level_base_id' => $level_base_id,
-            'user_id' => $user_id,
-            'maxsize' => 10
+        $wordbundle =WordBundle::where('user_id', $user_id)->first();
+        if($wordbundle){
+          $wordbundle->level_base_id = $level_base_id;
+          $wordbundle->save();
+        }else{
+          $wordbundle = WordBundle::create([
+              'level_base_id' => $level_base_id,
+              'user_id' => $user_id,
+              'maxsize' => 5
 
-          //  'level_star'=>$level_star
-      //      'version' => $crawl_version,
-        ]);
+            //  'level_star'=>$level_star
+        //      'version' => $crawl_version,
+          ]);
+        }
+
 
         if($wordbundle){
           return $this->response->item($wordbundle, new WordBundleTransformer())->setStatusCode(201);
@@ -161,12 +170,25 @@ class WordReviewController extends Controller
 
     }
 
+    public function wordrememberlist(Request $request){
+      $user_id = $request->input('user_id');
+
+      $wordremember =WordRemember::where('user_id',$user_id)->orderBy('updated_at','DESC')->paginate(11);
+
+
+      return $this->response->paginator($wordremember, new WordRememberListTransformer());
+
+    }
+
+
 
     public function viewupdate(Request $request){
       $user_id = $request->input('user_id');
       $word_id = $request->input('word_id');
       $datastuf = strtotime(date('Y-m-d H:i:s'));
       $datastuftoday = strtotime(date('Y-m-d'));
+      $datastufymd = date('Y-m-d');
+
 
       $wordreview =WordReview::where('word_id',$word_id)->where('user_id',$user_id)->where('remember_time','<',$datastuf)->first();
 
@@ -222,6 +244,24 @@ class WordReviewController extends Controller
         default:
           break;
         }
+
+        $wordreviewcount =WordReview::where('user_id', $user_id)->where('remember_time','<', $datastuftoday)->count();
+        if($wordreviewcount==0){
+          $wordfinish =WordFinish::where('user_id',$user_id)->where('date',$datastufymd)->first();
+          if($wordfinish){
+            return $this->response->error('已经更新', 422);
+          }else{
+
+            $wordfilish = WordFinish::create([
+                'user_id' => $user_id,
+                'date' => $datastufymd
+            ]);
+
+
+            return $this->response->error('更新成功！', 422);
+          }
+        }
+
         return $this->response->noContent()->setStatusCode(200);
       }else{
         return $this->response->error('不允许操作', 422);
@@ -277,6 +317,43 @@ class WordReviewController extends Controller
       }else{
         return $this->response->error('操作不存在用户单词', 422);
       }
+
+    }
+
+
+    //插入用户完成记录
+    public function wordfinishupdate(Request $request){
+
+          $datastuf = date('Y-m-d');
+
+          $user_id = $request->input('user_id');
+
+          $wordfinish =WordFinish::where('user_id',$user_id)->where('date',$datastuf)->first();
+          if($wordfinish){
+            return $this->response->error('已经更新', 422);
+          }else{
+
+            $wordfilish = WordFinish::create([
+                'user_id' => $user_id,
+                'date' => $datastuf
+            ]);
+
+
+            return $this->response->error('更新成功！', 422);
+          }
+
+
+        }
+
+//获取用户完成记录
+    public function wordfinishlist(Request $request){
+
+      $user_id = $request->input('user_id');
+      $user =User::find($user_id);
+
+      $wordfinish =WordFinish::orderBy('updated_at','DESC')->get();
+
+      return $this->response->item($user, new WordFinishTransformer());
 
     }
 

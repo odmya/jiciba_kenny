@@ -165,6 +165,7 @@ $words_ids = WordSearch::where('user_id', '=', $user_id)->orderBy('count', 'DESC
           $tmparr =array();
           $tmparr['id']= $word->id;
           $tmparr['explain'] =implode("",$explain_array);
+          $tmparr['checked'] = false;
           $answer_list[] =$tmparr;
         }
 

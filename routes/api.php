@@ -77,6 +77,10 @@ $api->version('v1', [
 
     $api->get('wordreviewlist', 'WordReviewController@wordreviewlist')
           ->name('api.WordReviewController.wordreviewlist');
+    $api->get('wordrememberlist', 'WordReviewController@wordrememberlist')
+          ->name('api.WordReviewController.wordrememberlist');
+
+
     $api->get('wordsetting', 'WordReviewController@wordsetting')
           ->name('api.WordReviewController.wordsetting');
 
@@ -85,6 +89,11 @@ $api->version('v1', [
 
     $api->post('newbundle', 'WordReviewController@newbundle')
           ->name('api.WordReviewController.newbundle');
+
+    $api->post('wordfinishlist', 'WordReviewController@wordfinishlist')
+          ->name('api.WordReviewController.wordfinishlist');
+    $api->post('wordfinishupdate', 'WordReviewController@wordfinishupdate')
+          ->name('api.WordReviewController.wordfinishupdate');
 
     $api->post('updatebundle', 'WordReviewController@updatebundle')
           ->name('api.WordReviewController.updatebundle');
