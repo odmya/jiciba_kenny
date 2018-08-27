@@ -223,7 +223,7 @@ $words_ids = WordSearch::where('user_id', '=', $user_id)->orderBy('count', 'DESC
 
         //$wordrisk =WordRisk::where('time',$datastuf)->where('status',0)->pluck('word_id');
 
-        $wordrisk =WordRisk::where('user_id', $user_id)->where('time',$datastuf)->where('status',0)->paginate(10);
+        $wordrisk =WordRisk::where('user_id', $user_id)->where('time',$datastuf)->where('status',0)->paginate(5);
 
 
         return $this->response->paginator($wordrisk, new WordRiskTransformer());
