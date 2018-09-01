@@ -13,6 +13,12 @@ class LevelBase extends Model
         return $this->belongsToMany(Word::class);
     }
 
+    public function words()
+    {
+        return $this->belongsToMany(Word::class);
+    }
+
+
     public function wordbundle()
     {
 

@@ -47,7 +47,7 @@ class WordRiskTransformer extends TransformerAbstract
             'voice' => $wordrisk->word->word_voice,
             'explain' => $explain_array,
             'root' => $cixingword_array,
-            //'sentences' => $wordrisk->word->sentences()->limit(1)->get(),
+            //'sentences' => $wordrisk->word->sentences()->limit(2)->get(),
 
             'review' => $wordrisk->review,
             'time' => $wordrisk->time,

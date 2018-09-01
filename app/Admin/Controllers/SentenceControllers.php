@@ -123,6 +123,7 @@ class SentenceControllers extends Controller
 
             //多对多选择
             $form->multipleSelect('words')->options(function ($ids) {
+              
               if(count($ids)){
                 $word = Word::whereIn('id',$ids);
 

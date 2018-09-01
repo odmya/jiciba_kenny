@@ -6,6 +6,7 @@ use App\Models\LevelBase;
 use Illuminate\Http\Request;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use App\Models\Word;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
 use App\Http\Controllers\Controller;
@@ -91,6 +92,16 @@ class LevelBaseController extends Controller
 
             $form->display('id', 'ID');
             $form->text('level_bases', 'Level Base');
+            //多对多选择
+            $form->multipleSelect('words')->options(function ($ids) {
+              if(count($ids)){
+                $word = Word::whereIn('id',$ids);
+
+               return $word->pluck('word', 'id');
+              }
+
+        })->ajax('/admin/wordqueryapi');
+
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
         });

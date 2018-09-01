@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class WordSentence extends Model
 {
-    protected $table = 'word_sentences';
+    protected $table = 'sentence_word';
 }
