@@ -23,6 +23,7 @@ class WordBundleTransformer extends TransformerAbstract
             'wordcounts' => LevelBaseWord::where('level_base_id',$wordbundle->level_base_id)->count(),
             'rememberwords' => LevelBaseWord::where('level_base_id',$wordbundle->level_base_id)->whereIn('word_id',$words_ids)->count(),
             'maxsize' => $wordbundle->maxsize,
+            'order' => $wordbundle->order,
             'created_at' => $wordbundle->created_at->toDateTimeString(),
             'updated_at' => $wordbundle->updated_at->toDateTimeString(),
         ];

@@ -10,6 +10,7 @@ use App\Models\WordRemember;
 use App\Models\WordRisk;
 use App\Models\User;
 use App\Models\WordReview;
+use App\Models\WordStrange;
 
 use App\Models\Sentence;
 use Illuminate\Http\Request;
@@ -17,6 +18,7 @@ use App\Http\Requests\Api\WordRequest;
 use App\Transformers\WordTransformer;
 use App\Transformers\SentenceTransformer;
 use App\Transformers\WordRiskTransformer;
+use App\Transformers\WordStrangeListTransformer;
 use Illuminate\Support\Facades\DB;
 
 class WordController extends Controller
@@ -28,6 +30,91 @@ class WordController extends Controller
       return $this->response->item($word, new WordTransformer())
           ->setStatusCode(201);
     }
+
+    //查询单词是不是已经在已经背过单词例表中
+
+
+
+    public function wordremember(WordRequest $request, Word $word)
+    {
+      $user_id = $request->input('user_id');
+      $word_id = $request->input('word_id');
+
+
+      $wordremember =WordRemember::where('word_id',$word_id)->where('user_id',$user_id)->first();
+      $wordreview =WordReview::where('word_id',$word_id)->where('user_id',$user_id)->first();
+
+      $wordstrange =WordStrange::where('word_id',$word_id)->where('user_id',$user_id)->first();
+      if($wordremember || $wordstrange ||$wordreview){
+        $return_array =['has_remember'=>true];
+        return $this->response->array($return_array);
+      }else{
+        $return_array =['has_remember'=>false];
+        return $this->response->array($return_array);
+      }
+
+    }
+
+//添加单词到生词本中
+
+public function wordstrange(WordRequest $request, Word $word)
+{
+  $user_id = $request->input('user_id');
+  $word_id = $request->input('word_id');
+
+
+  $wordstrange =WordStrange::where('word_id',$word_id)->where('user_id',$user_id)->first();
+  if($wordstrange){
+    $return_array =['add_word'=>false];
+    return $this->response->array($return_array);
+  }else{
+    $return_array =['add_word'=>true];
+    $wordremember = WordStrange::create([
+        'word_id' => $word_id,
+        'user_id' => $user_id
+
+      //  'level_star'=>$level_star
+  //      'version' => $crawl_version,
+    ]);
+    return $this->response->array($return_array);
+  }
+
+}
+
+
+//从记忆单词表中或者生词本中删除
+
+public function removeremember(WordRequest $request, Word $word)
+{
+  $user_id = $request->input('user_id');
+  $word_id = $request->input('word_id');
+
+
+  $wordstrange =WordStrange::where('word_id',$word_id)->where('user_id',$user_id)->first();
+  WordReview::where('word_id',$word_id)->where('user_id',$user_id)->delete();
+  WordRisk::where('word_id',$word_id)->where('user_id',$user_id)->delete();
+  WordStrange::where('word_id',$word_id)->where('user_id',$user_id)->delete();
+  WordRemember::where('word_id',$word_id)->where('user_id',$user_id)->delete();
+  $return_array =array();
+  $return_array =['remove_word'=>true];
+  return $this->response->array($return_array);
+
+
+}
+
+
+//生词本例表 wordstranglist
+
+public function wordstrangelist(Request $request){
+  $user_id = $request->input('user_id');
+
+  $wordremember =WordStrange::where('user_id',$user_id)->orderBy('updated_at','DESC')->paginate(11);
+
+
+  return $this->response->paginator($wordremember, new WordStrangeListTransformer());
+
+}
+
 
 
     public function wordsearch(Request $request, Word $word)
@@ -72,6 +159,7 @@ class WordController extends Controller
               ]);
 
       }
+      WordStrange::where('word_id',$word_id)->where('user_id',$user_id)->delete();
       WordReview::where('word_id',$word_id)->where('user_id',$user_id)->delete();
       WordRisk::where('word_id',$word_id)->where('user_id',$user_id)->delete();
       return $this->response->noContent()->setStatusCode(200);
@@ -182,35 +270,56 @@ $words_ids = WordSearch::where('user_id', '=', $user_id)->orderBy('count', 'DESC
       $newwords= WordBundle::where('user_id',$user_id)->first();
       if($newwords){
         $maxsize = $newwords->maxsize;
+        $wordorder = $newwords->order;
         if($maxsize>=100){
           $maxsize = 100;
         }
-        $sql="select * from level_base_word where level_base_id='".$newwords->level_base_id."' and word_id NOT IN(select word_id from wordremember where user_id=".$user_id.")";
+        //$sql="select * from level_base_word where level_base_id='".$newwords->level_base_id."' and word_id NOT IN(select word_id from wordremember where user_id=".$user_id.")";
         //$words = DB::select($sql,[1]);
         //dd($words);
+
         $words_ids = WordRemember::where('user_id', '=', $user_id)->pluck('word_id');
 
         $words_reviews = WordReview::where('user_id', '=', $user_id)->pluck('word_id');
+        $words_array_id =array();
+
+        $wordstrange= WordStrange::whereNotIn('word_id',$words_reviews)->pluck('word_id');
+
+        if(count($wordstrange)){
+            foreach($wordstrange as $tmp_word_id){
+              $words_array_id [] = $tmp_word_id;
+            }
+
+        }
+
+
         //$words_array =$words_ids->toArray();
 
       //  dd($words_array);
+        if($wordorder==true){
+          $words_id = LevelBaseWord::where('level_base_id',$newwords->level_base_id)->whereNotIn('word_id',$words_ids)->whereNotIn('word_id',$words_reviews)->orderBy('created_at')->paginate($maxsize, ['word_id'], 'uPage');
 
-        $words_id = LevelBaseWord::where('level_base_id',$newwords->level_base_id)->whereNotIn('word_id',$words_ids)->whereNotIn('word_id',$words_reviews)->orderByRaw('RAND()')->paginate($maxsize, ['word_id'], 'uPage');
-        $words_array_id =array();
+        }else{
+          $words_id = LevelBaseWord::where('level_base_id',$newwords->level_base_id)->whereNotIn('word_id',$words_ids)->whereNotIn('word_id',$words_reviews)->orderByRaw('RAND()')->paginate($maxsize, ['word_id'], 'uPage');
+
+        }
+      //  $words_array_id =array();
         foreach($words_id as $word){
           $words_array_id [] = $word->word_id;
         }
 
-        $words = Word::whereIn('id', $words_array_id)->get();
+        $words_array_id = array_slice($words_array_id,0, $maxsize);
+
+        //$words = Word::whereIn('id', $words_array_id)->get();
         $datastuf = strtotime(date('Y-m-d'));
 
 
         if(WordRisk::where('user_id', $user_id)->where('time',$datastuf)->count()==false){
         $wordrisk =WordRisk::where('user_id', $user_id)->where('time',"<",$datastuf)->delete(); //delete old data
-          foreach($words_id as $word){
+          foreach($words_array_id as $word_id){
             WordRisk::create([
                 'user_id' => $user_id,
-                'word_id' =>$word->word_id,
+                'word_id' =>$word_id,
                 'review' =>0,
                 'status' =>0,
                 'time' =>$datastuf,

@@ -9,6 +9,7 @@ use App\Models\WordBundle;
 use App\Models\LevelBase;
 use App\Models\AutoRecord;
 use App\Models\WordFinish;
+use App\Models\WordStrange;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Transformers\WordRiskListTransformer;
@@ -95,6 +96,7 @@ class WordReviewController extends Controller
         $user_id = $request->input('user_id');
         $bundle_id = $request->input('bundle_id');
         $maxsize = $request->input('maxsize');
+        $order = $request->input('order');
 
         $user =User::find($user_id);
         if (!$user) {
@@ -110,6 +112,7 @@ class WordReviewController extends Controller
             $maxsize =1;
           }
           $wordbundle->maxsize = $maxsize;
+          $wordbundle->order = $order;
           $wordbundle->save();
         }else{
           return $this->response->error('没有找到正确的单词本', 422);
@@ -239,6 +242,7 @@ class WordReviewController extends Controller
 
               }
               $wordreview->delete();
+              WordStrange::where('word_id',$word_id)->where('user_id',$user_id)->delete();
 
               break;
         default:

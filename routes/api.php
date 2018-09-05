@@ -38,6 +38,15 @@ $api->version('v1', [
     $api->post('word', 'WordController@show')
         ->name('api.WordController.show');
 
+    $api->post('wordremember', 'WordController@wordremember')
+            ->name('api.WordController.wordremember');
+
+    $api->post('wordstrange', 'WordController@wordstrange')
+            ->name('api.WordController.wordstrange');
+
+    $api->post('removeremember', 'WordController@removeremember')
+            ->name('api.WordController.removeremember');
+
     $api->post('wordsearch', 'WordController@wordsearch')
           ->name('api.WordController.wordsearch');
 
@@ -79,6 +88,8 @@ $api->version('v1', [
           ->name('api.WordReviewController.wordreviewlist');
     $api->get('wordrememberlist', 'WordReviewController@wordrememberlist')
           ->name('api.WordReviewController.wordrememberlist');
+    $api->get('wordstrangelist', 'WordController@wordstrangelist')
+          ->name('api.WordReviewController.wordstrangelist');
 
 
     $api->get('wordsetting', 'WordReviewController@wordsetting')
