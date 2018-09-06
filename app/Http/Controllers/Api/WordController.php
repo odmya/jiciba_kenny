@@ -283,7 +283,7 @@ $words_ids = WordSearch::where('user_id', '=', $user_id)->orderBy('count', 'DESC
         $words_reviews = WordReview::where('user_id', '=', $user_id)->pluck('word_id');
         $words_array_id =array();
 
-        $wordstrange= WordStrange::whereNotIn('word_id',$words_reviews)->pluck('word_id');
+        $wordstrange= WordStrange::whereNotIn('word_id',$words_reviews)->where('user_id',$user_id)->pluck('word_id');
 
         if(count($wordstrange)){
             foreach($wordstrange as $tmp_word_id){
