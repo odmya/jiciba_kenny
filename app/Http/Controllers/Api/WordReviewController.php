@@ -145,12 +145,37 @@ class WordReviewController extends Controller
 
       $datastuf = strtotime(date('Y-m-d'));
 
-      $wordrisk =WordRisk::where('user_id', $user_id)->paginate(11);
+      $wordrisk =WordRisk::where('user_id', $user_id)->paginate(20);
 
 
       return $this->response->paginator($wordrisk, new WordRiskListTransformer());
 
     }
+
+//学习下一组新单词 learnnext
+
+
+public function learnnext(Request $request){
+
+  $user_id = $request->input('user_id');
+  WordRisk::where('user_id', $user_id)->delete();
+
+  return $this->response->noContent()->setStatusCode(200);
+
+}
+
+// 重新复习一次 reviewagain
+
+public function reviewagain(Request $request)
+{
+  $user_id = $request->input('user_id');
+  $datastuf = strtotime(date('Y-m-d'));
+  $wordreview =WordReview::where('user_id', $user_id)->where('next_time', $datastuf)->orderBy('updated_at','DESC')->paginate(200);
+
+
+  return $this->response->paginator($wordreview, new WordReviewTransformer());
+
+}
 
 
     public function bundlelist(){
@@ -166,7 +191,7 @@ class WordReviewController extends Controller
       $user_id = $request->input('user_id');
       $datastuf = strtotime(date('Y-m-d'));
 
-      $wordreview =WordReview::where('user_id', $user_id)->where('next_time', $datastuf)->orderBy('updated_at','DESC')->paginate(11);
+      $wordreview =WordReview::where('user_id', $user_id)->where('next_time', $datastuf)->orderBy('updated_at','DESC')->paginate(20);
 
 
       return $this->response->paginator($wordreview, new WordReviewListTransformer());
@@ -176,7 +201,7 @@ class WordReviewController extends Controller
     public function wordrememberlist(Request $request){
       $user_id = $request->input('user_id');
 
-      $wordremember =WordRemember::where('user_id',$user_id)->orderBy('updated_at','DESC')->paginate(11);
+      $wordremember =WordRemember::where('user_id',$user_id)->orderBy('updated_at','DESC')->paginate(20);
 
 
       return $this->response->paginator($wordremember, new WordRememberListTransformer());

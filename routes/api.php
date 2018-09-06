@@ -91,6 +91,12 @@ $api->version('v1', [
     $api->get('wordstrangelist', 'WordController@wordstrangelist')
           ->name('api.WordReviewController.wordstrangelist');
 
+//学习一下组新单词
+    $api->get('learnnext', 'WordReviewController@learnnext')
+      ->name('api.WordReviewController.learnnext');
+//重新复习一次reviewagain
+  $api->post('reviewagain', 'WordReviewController@reviewagain')
+    ->name('api.WordReviewController.reviewagain');
 
     $api->get('wordsetting', 'WordReviewController@wordsetting')
           ->name('api.WordReviewController.wordsetting');
