@@ -32,6 +32,9 @@ Route::group([
     $router->resource('novelcontent',NovelContentController::class);
     $router->resource('noveltype',NovelTypeController::class);
 
+    $router->resource('courselist', CourseController::class);
+    $router->resource('chapter', ChapterController::class);
+
 
 $router->any('/rootqueryapi', 'RootcixingController@rootqueryapi')->name('rootqueryapi');
     $router->any('/wordqueryapi', 'RootcixingController@wordqueryapi')->name('wordqueryapi');

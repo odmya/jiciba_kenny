@@ -35,6 +35,10 @@ $api->version('v1', [
     $api->get('news/show/{news}', 'NewsController@show')->name('api.NewsController.show');
     $api->get('news', 'NewsController@list')->name('api.NewsController.list');
 
+    $api->get('course', 'CourseController@list')->name('api.CourseController.list'); //得到课程例表
+    $api->get('course/show/{course}', 'CourseController@show')->name('api.CourseController.show'); //得到课程例表
+    $api->get('chapter/show/{chapter}', 'CourseController@chaptershow')->name('api.CourseController.chaptershow'); 
+
     $api->post('word', 'WordController@show')
         ->name('api.WordController.show');
 
