@@ -33,6 +33,20 @@ class UsersController extends Controller
 
         return $this->response->created();
     }
+
+    //update user nick name
+    public function updateuserinfo(Request $request){
+
+      $user_id = $request->input('user_id');
+      $nickname = $request->input('nickname');
+      $avatarurl = $request->input('avatarurl');
+      $user = User::where('id', $user_id)->first();
+      $user->nickname = $nickname;
+      $user->avatar = $avatarurl;
+      $user->save();
+      return $this->response->noContent()->setStatusCode(200);
+
+    }
     public function weappStore(UserRequest $request)
       {
           // 缓存中是否存在对应的 key

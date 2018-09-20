@@ -37,7 +37,7 @@ $api->version('v1', [
 
     $api->get('course', 'CourseController@list')->name('api.CourseController.list'); //得到课程例表
     $api->get('course/show/{course}', 'CourseController@show')->name('api.CourseController.show'); //得到课程例表
-    $api->get('chapter/show/{chapter}', 'CourseController@chaptershow')->name('api.CourseController.chaptershow'); 
+    $api->get('chapter/show/{chapter}', 'CourseController@chaptershow')->name('api.CourseController.chaptershow');
 
     $api->post('word', 'WordController@show')
         ->name('api.WordController.show');
@@ -94,6 +94,10 @@ $api->version('v1', [
           ->name('api.WordReviewController.wordrememberlist');
     $api->get('wordstrangelist', 'WordController@wordstrangelist')
           ->name('api.WordReviewController.wordstrangelist');
+
+
+$api->post('updateuserinfo', 'UsersController@updateuserinfo')
+      ->name('api.UsersController.updateuserinfo');
 
 //学习一下组新单词
     $api->get('learnnext', 'WordReviewController@learnnext')
