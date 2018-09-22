@@ -48,5 +48,53 @@ class CourseController extends Controller
     }
 
 
+    public function apispeech(Request $request){
+
+      $tmpurl = $request->query('tmpurl');
+
+      $page_content = file_get_contents($tmpurl);
+      $save_path = public_path(). '/tmp/'.md5($tmpurl).".mp3";
+
+      file_put_contents($save_path,$page_content)
+
+
+
+      die("test...");
+      $english_txt = $request->query('english_txt');
+      $stream = $app->media->get($Media_Id); //这里好像不行
+
+      $save_path = public_path(). '/tmp/';
+      $stream->save($save_path,md5($Media_Id).".amr");
+
+      $fileName = public_path(). '/tmp/'.md5($Media_Id).".amr";
+
+      $userfilename = public_path(). '/voice/uservoice/'.md5($Media_Id).".mp3";
+
+      exec('sox '.$fileName.' '.$userfilename);
+    //  $command ='sox '.$fileName.' '.$userfilename;
+
+
+      $APP_ID=env('APP_ID') ;
+      $API_KEY=env('API_KEY') ;
+      $SECRET_KEY=env('SECRET_KEY');
+
+      $client = new AipSpeech($APP_ID , $API_KEY, $SECRET_KEY);
+
+        $test = $client->asr(file_get_contents($fileName), 'amr', 8000, array(
+          'lan' => 'en',
+      ));
+      $tmp_str1 =str_replace(array(" ",".","!","?","'",","),"",strtolower($test['result'][0]));
+
+      $tmp_str2 = str_replace(array(" ",".","!","?","'",","),"",strtolower($english_txt));
+
+      similar_text(trim($tmp_str1), trim($tmp_str2), $percent);
+
+      return $test['result'][0]."本次发音得分: (".round($percent)."分)";
+
+
+    }
+
+
+
 
 }
