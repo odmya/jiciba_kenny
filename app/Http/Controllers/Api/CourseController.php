@@ -10,6 +10,7 @@ use App\Transformers\CourseTransformer;
 use App\Transformers\ChapterListTransformer;
 use App\Transformers\ChapterEntryTransformer;
 use App\Transformers\MachineVoiceTransformer;
+use Storage;
 
 class CourseController extends Controller
 {
@@ -56,16 +57,16 @@ class CourseController extends Controller
       if ($filevoice->isValid()) {
 
                 // 获取文件相关信息
-                $originalName = $file->getClientOriginalName(); // 文件原名
-                $ext = $file->getClientOriginalExtension();     // 扩展名
-                $realPath = $file->getRealPath();   //临时文件的绝对路径
-                $type = $file->getClientMimeType();     // image/jpeg
+                $originalName = $filevoice->getClientOriginalName(); // 文件原名
+                $ext = $filevoice->getClientOriginalExtension();     // 扩展名
+                $realPath = $filevoice->getRealPath();   //临时文件的绝对路径
+                $type = $filevoice->getClientMimeType();     // image/jpeg
 
                 // 上传文件
                 $filename = date('Y-m-d-H-i-s') . '-' . uniqid() . '.' . $ext;
                 // 使用我们新建的uploads本地存储空间（目录）
                 $bool = Storage::disk('minivoice_uploads')->put($filename, file_get_contents($realPath));
-              //  var_dump($bool);
+               var_dump($bool);
 
     }
 
