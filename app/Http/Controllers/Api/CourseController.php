@@ -66,7 +66,7 @@ class CourseController extends Controller
                 $filename = date('Y-m-d-H-i-s') . '-' . uniqid() . '.' . $ext;
                 // 使用我们新建的uploads本地存储空间（目录）
                 $bool = Storage::disk('minivoice_uploads')->put($filename, file_get_contents($realPath));
-               var_dump($bool);
+               return $filename;
 
     }
 
