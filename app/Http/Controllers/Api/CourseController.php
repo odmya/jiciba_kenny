@@ -55,7 +55,7 @@ class CourseController extends Controller
       $page_content = file_get_contents($tmpurl);
       $save_path = public_path(). '/tmp/'.md5($tmpurl).".mp3";
 
-      file_put_contents($save_path,$page_content)
+      file_put_contents($save_path,$page_content);
 
 
 
