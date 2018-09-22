@@ -8,7 +8,7 @@ class ChapterEntry extends Model
 {
     protected $table = 'chapter_entry';
 
-    protected $fillable = ['chapter_id','english','chinese','startTime','endTime','machine_audio'];
+    protected $fillable = ['chapter_id','english','chinese','startTime','endTime','machine_normal','machine_slow','enable_read'];
 
     public function chapter()
     {

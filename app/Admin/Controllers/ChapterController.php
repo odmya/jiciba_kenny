@@ -125,6 +125,9 @@ class ChapterController extends Controller
               $form->text('chinese',"中文");
               $form->text('startTime',"起始时间");
               $form->text('endTime',"结束时间");
+              $form->file('machine_slow', '机器发音慢速')->uniqueName()->move('voice/machine');
+              $form->file('machine_normal', '机器发音正常语速')->uniqueName()->move('voice/machine');
+              $form->select('enable_read', '是否可跟读')->options([0 => '不可以', 1 => '可以']);
             });
 
 

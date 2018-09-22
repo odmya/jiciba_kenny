@@ -39,6 +39,8 @@ $api->version('v1', [
     $api->get('course/show/{course}', 'CourseController@show')->name('api.CourseController.show'); //得到课程例表
     $api->get('chapter/show/{chapter}', 'CourseController@chaptershow')->name('api.CourseController.chaptershow');
 
+    $api->get('chapter/machine/{chapter}', 'CourseController@machinevoice')->name('api.CourseController.machinevoice'); //获取复读机器发音
+
     $api->post('word', 'WordController@show')
         ->name('api.WordController.show');
 

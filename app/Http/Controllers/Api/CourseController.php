@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Transformers\CourseTransformer;
 use App\Transformers\ChapterListTransformer;
 use App\Transformers\ChapterEntryTransformer;
+use App\Transformers\MachineVoiceTransformer;
 
 class CourseController extends Controller
 {
@@ -36,6 +37,16 @@ class CourseController extends Controller
 
       return $this->response->item($chapters, new ChapterEntryTransformer());
     }
+
+    //chaptershow 获取复读机器发音
+    public function machinevoice($chapter){
+    //  dd($chapter);
+      $machinevoices = ChapterEntry::where('chapter_id',$chapter)->where('enable_read',1)->get();
+      return $this->response->item($machinevoices, new MachineVoiceTransformer())->setStatusCode(201);
+
+      //return $this->response->item($chapters, new ChapterEntryTransformer());
+    }
+
 
 
 }
