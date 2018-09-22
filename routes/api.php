@@ -42,6 +42,8 @@ $api->version('v1', [
     $api->get('chapter/machine/{chapter}', 'CourseController@machinevoice')->name('api.CourseController.machinevoice'); //获取复读机器发音
 
     $api->post('apispeech', 'CourseController@apispeech')->name('api.CourseController.apispeech'); //baidu 语音识别
+    $api->post('uploadwechat', 'CourseController@uploadwechat')->name('api.CourseController.uploadwechat'); //baidu 语音识别
+
 
     $api->post('word', 'WordController@show')
         ->name('api.WordController.show');

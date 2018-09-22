@@ -63,6 +63,15 @@ return [
             //'root' => public_path('uploads'),
         ],
 
+        'minivoice_uploads' => [
+            'driver' => 'local',
+            // 文件将上传到storage/app/uploads目录
+            'root' => public_path('voice/minivoice'),
+            // 文件将上传到public/uploads目录 如果需要浏览器直接访问 请设置成这个
+            //'root' => public_path('uploads'),
+        ],
+
+
 
         'word_images' => [
             'driver' => 'local',
