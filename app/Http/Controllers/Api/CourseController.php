@@ -53,7 +53,7 @@ class CourseController extends Controller
     public function uploadwechat(Request $request){
       $filevoice = $request->file('jciba');
 
-      if ($file->isValid()) {
+      if ($filevoice->isValid()) {
 
                 // 获取文件相关信息
                 $originalName = $file->getClientOriginalName(); // 文件原名
