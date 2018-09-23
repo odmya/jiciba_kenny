@@ -128,8 +128,13 @@ class CourseController extends Controller
                         $result = curl_exec($ch);
                         fclose($file);
 
+          $output_content = "";
           $tmp_result = json_decode($result);
-          return $tmp_result->results[0]->alternatives[0]->transcript;
+          foreach($tmp_result->results as $output){
+            $output_content .=$output->alternatives[0]->transcript;
+          }
+
+          return $output_content;
 
                //return $filename;
 
