@@ -54,6 +54,12 @@ class CourseController extends Controller
       //上传MP3文件到服务器中
     public function uploadwechat(Request $request){
       $filevoice = $request->file('jciba');
+      $enkeywords =$request->query('enkeywords');
+
+      $keywords =explode(" ",$enkeywords);
+      $requestString="keywords:[".implode(',',$keywords)."]";
+      //$requestString = "keywords:['this','is','our','new','classroom']";
+
 
       if ($filevoice->isValid()) {
 
@@ -74,7 +80,7 @@ class CourseController extends Controller
 
                 $user_name = env('WATSON_USERNAME');
                 $user_password = env('WATSON_PASSWORD');
-
+                /*
                         $ch = curl_init();
 
                          curl_setopt($ch, CURLOPT_URL, "https://stream.watsonplatform.net/speech-to-text/api/v1/recognize");
@@ -83,10 +89,11 @@ class CourseController extends Controller
                          curl_setopt($ch,CURLOPT_HTTPHEADER, ['Content-Type: audio/mp3']);
                          curl_setopt($ch,CURLOPT_BINARYTRANSFER,TRUE);
                          curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                         curl_setopt($con, CURLOPT_POSTFIELDS, $requestString);
                          curl_setopt($ch, CURLOPT_POST, 1);
                          curl_setopt($ch, CURLOPT_USERPWD, $user_name.":".$user_password);
-                          $headers = array();
-                         $headers[] = "Content-Type: audio/mp3";
+                        //$headers = array();
+                         $headers[] = "keywords: audio/mp3";
                          curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
                          $result = curl_exec($ch);
@@ -94,6 +101,33 @@ class CourseController extends Controller
                                            echo 'Error:' . curl_error($ch);
                                            }
                         curl_close ($ch);
+                        */
+
+                      //  $url = 'https://stream.watsonplatform.net/speech-to-text/api/v1/recognize?keywords_threshold=0.1&keywords='.$requestString;
+                        $url = 'https://stream.watsonplatform.net/speech-to-text/api/v1/recognize';
+                        $file = fopen($source_path, 'r');
+                        $size = filesize($source_path);
+                        $fildata = fread($file,$size);
+
+                        $headers = array(    "Content-Type: audio/mp3",
+                                             "Transfer-Encoding: chunked");
+
+                        $ch = curl_init();
+                        curl_setopt($ch, CURLOPT_URL, $url);
+                        curl_setopt($ch, CURLOPT_USERPWD, "$user_name:$user_password");
+                        curl_setopt($ch, CURLOPT_POST, TRUE);
+                        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                        curl_setopt($ch, CURLOPT_BINARYTRANSFER, TRUE);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, $fildata);
+                        //curl_setopt($ch, CURLOPT_POSTFIELDS, $requestString);
+                        curl_setopt($ch, CURLOPT_INFILE, $file);
+                        curl_setopt($ch, CURLOPT_INFILESIZE, $size);
+                        curl_setopt($ch, CURLOPT_VERBOSE, true);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                        $result = curl_exec($ch);
+                        fclose($file);
+
           $tmp_result = json_decode($result);
           return $tmp_result->results[0]->alternatives[0]->transcript;
 
