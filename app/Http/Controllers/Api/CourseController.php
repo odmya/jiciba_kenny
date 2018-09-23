@@ -94,7 +94,6 @@ class CourseController extends Controller
                                            echo 'Error:' . curl_error($ch);
                                            }
                         curl_close ($ch);
-
           $tmp_result = json_decode($result);
           return $tmp_result->results[0]->alternatives[0]->transcript;
 
