@@ -11,6 +11,7 @@ use App\Transformers\ChapterListTransformer;
 use App\Transformers\ChapterEntryTransformer;
 use App\Transformers\MachineVoiceTransformer;
 use Storage;
+use AipSpeech;
 
 class CourseController extends Controller
 {
@@ -66,7 +67,38 @@ class CourseController extends Controller
                 $filename = date('Y-m-d-H-i-s') . '-' . uniqid() . '.' . $ext;
                 // 使用我们新建的uploads本地存储空间（目录）
                 $bool = Storage::disk('minivoice_uploads')->put($filename, file_get_contents($realPath));
-               return $filename;
+
+
+//语音识别
+                $source_path = public_path(). '/uploads/voice/minivoice/'.$filename;
+
+                $user_name = env('WATSON_USERNAME');
+                $user_password = env('WATSON_PASSWORD');
+
+                        $ch = curl_init();
+
+                         curl_setopt($ch, CURLOPT_URL, "https://stream.watsonplatform.net/speech-to-text/api/v1/recognize");
+                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                         $data = file_get_contents($source_path);
+                         curl_setopt($ch,CURLOPT_HTTPHEADER, ['Content-Type: audio/mp3']);
+                         curl_setopt($ch,CURLOPT_BINARYTRANSFER,TRUE);
+                         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                         curl_setopt($ch, CURLOPT_POST, 1);
+                         curl_setopt($ch, CURLOPT_USERPWD, $user_name.":".$user_password);
+                          $headers = array();
+                         $headers[] = "Content-Type: audio/mp3";
+                         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+                         $result = curl_exec($ch);
+                        if (curl_errno($ch)) {
+                                           echo 'Error:' . curl_error($ch);
+                                           }
+                        curl_close ($ch);
+
+          $tmp_result = json_decode($result);
+          return $tmp_result->results[0]->alternatives[0]->transcript;
+
+               //return $filename;
 
     }
 
@@ -81,26 +113,53 @@ class CourseController extends Controller
     public function apispeech(Request $request){
 
       $tmpurl = $request->query('tmpurl');
+      $file_name= str_replace('.mp3','',$tmpurl);
 
-      $page_content = file_get_contents($tmpurl);
-      $save_path = public_path(). '/tmp/'.md5($tmpurl).".mp3";
+      //$page_content = file_get_contents($tmpurl);
+      $save_path = public_path(). '/uploads/voice/minivoice/'.md5($file_name).".wav";
+      $source_path = public_path(). '/uploads/voice/minivoice/'.$tmpurl;
+      $user_name = env('WATSON_USERNAME');
+      $user_password = env('WATSON_PASSWORD');
 
-      file_put_contents($save_path,$page_content);
+              $ch = curl_init();
+
+               curl_setopt($ch, CURLOPT_URL, "https://stream.watsonplatform.net/speech-to-text/api/v1/recognize");
+               curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+               $data = file_get_contents($source_path);
+               curl_setopt($ch,CURLOPT_HTTPHEADER, ['Content-Type: audio/mp3']);
+               curl_setopt($ch,CURLOPT_BINARYTRANSFER,TRUE);
+               curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+               curl_setopt($ch, CURLOPT_POST, 1);
+               curl_setopt($ch, CURLOPT_USERPWD, $user_name.":".$user_password);
+                $headers = array();
+               $headers[] = "Content-Type: audio/mp3";
+               curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+               $result = curl_exec($ch);
+              if (curl_errno($ch)) {
+                                 echo 'Error:' . curl_error($ch);
+                                 }
+              curl_close ($ch);
+
+$tmp_result = json_decode($result);
+return $tmp_result->results[0]->alternatives[0]->transcript;
+dd();
+    //  file_put_contents($save_path,$page_content);
 
 
 
-      die("test...");
-      $english_txt = $request->query('english_txt');
-      $stream = $app->media->get($Media_Id); //这里好像不行
 
-      $save_path = public_path(). '/tmp/';
-      $stream->save($save_path,md5($Media_Id).".amr");
+      //$english_txt = $request->query('english_txt');
+    //  $stream = $app->media->get($Media_Id); //这里好像不行
 
-      $fileName = public_path(). '/tmp/'.md5($Media_Id).".amr";
+      //$save_path = public_path(). '/tmp/';
+    //  $stream->save($save_path,md5($Media_Id).".amr");
 
-      $userfilename = public_path(). '/voice/uservoice/'.md5($Media_Id).".mp3";
+    //  $fileName = public_path(). '/tmp/'.md5($Media_Id).".amr";
 
-      exec('sox '.$fileName.' '.$userfilename);
+    //  $userfilename = public_path(). '/voice/uservoice/'.md5($Media_Id).".mp3";
+//dd('sox '.$source_path.' '.$save_path);
+      //exec('sox '.$source_path.' '.$save_path);
     //  $command ='sox '.$fileName.' '.$userfilename;
 
 
@@ -110,9 +169,11 @@ class CourseController extends Controller
 
       $client = new AipSpeech($APP_ID , $API_KEY, $SECRET_KEY);
 
-        $test = $client->asr(file_get_contents($fileName), 'amr', 8000, array(
-          'lan' => 'en',
+        $test = $client->asr(file_get_contents($source_path), 'wav', 16000, array(
+          'dev_pid' => 1737,
       ));
+
+      dd($test);
       $tmp_str1 =str_replace(array(" ",".","!","?","'",","),"",strtolower($test['result'][0]));
 
       $tmp_str2 = str_replace(array(" ",".","!","?","'",","),"",strtolower($english_txt));
