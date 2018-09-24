@@ -102,11 +102,11 @@ class CourseController extends Controller
                 ));
 
 
-                $tmp_str1 =str_replace(array(" ",".","!","?","'",","),"",strtolower($test['result'][0]));
+                //$tmp_str1 =str_replace(array(" ",".","!","?","'",","),"",strtolower($test['result'][0]));
 
-                $tmp_str2 = str_replace(array(" ",".","!","?","'",","),"",strtolower($enkeywords));
+                //$tmp_str2 = str_replace(array(" ",".","!","?","'",","),"",strtolower($enkeywords));
 
-                similar_text(trim($tmp_str1), trim($tmp_str2), $percent);
+                //similar_text(trim($tmp_str1), trim($tmp_str2), $percent);
                 $outputtmp="";
 
                 if(isset($test['result'])){
