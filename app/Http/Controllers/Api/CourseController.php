@@ -71,13 +71,48 @@ class CourseController extends Controller
 
                 // 上传文件
                 $filename = date('Y-m-d-H-i-s') . '-' . uniqid() . '.' . $ext;
+                $filename_wav = date('Y-m-d-H-i-s') . '-' . uniqid() . '.wav' ;
+                $filename_pcm = date('Y-m-d-H-i-s') . '-' . uniqid() . '.pcm' ;
                 // 使用我们新建的uploads本地存储空间（目录）
                 $bool = Storage::disk('minivoice_uploads')->put($filename, file_get_contents($realPath));
 
 
-//语音识别
-                $source_path = public_path(). '/uploads/voice/minivoice/'.$filename;
 
+                $source_path = public_path(). '/uploads/voice/minivoice/'.$filename;
+                $final_wav_path = public_path(). '/uploads/voice/minivoice/'.$filename_wav;
+                $final_pcm_path = public_path(). '/uploads/voice/minivoice/'.$filename_pcm;
+
+                //baidu 语音识别
+
+                //$command ='sox '.$source_path.' '.$final_wav_path;
+
+                //exec('sox '.$source_path.' '.$final_wav_path);
+                $command = "ffmpeg -i ".$source_path." -f s16be -ar 16000 -ac 1 -acodec pcm_s16be ".$filename_pcm;
+
+                exec("ffmpeg -y -i ".$source_path." -acodec pcm_s16le -f s16le -ac 1 -ar 16000 ".$final_pcm_path,$output,$return_var);
+
+                $APP_ID=env('APP_ID') ;
+                $API_KEY=env('API_KEY') ;
+                $SECRET_KEY=env('SECRET_KEY');
+
+                $client = new AipSpeech($APP_ID , $API_KEY, $SECRET_KEY);
+                //  echo $final_pcm_path;
+                  $test = $client->asr(file_get_contents($final_pcm_path), 'pcm', 16000, array(
+                    'dev_pid' => 1737,
+                ));
+
+
+                $tmp_str1 =str_replace(array(" ",".","!","?","'",","),"",strtolower($test['result'][0]));
+
+                $tmp_str2 = str_replace(array(" ",".","!","?","'",","),"",strtolower($enkeywords));
+
+                similar_text(trim($tmp_str1), trim($tmp_str2), $percent);
+
+                return $test['result'][0];
+
+
+
+//IBM语音识别
                 $user_name = env('WATSON_USERNAME');
                 $user_password = env('WATSON_PASSWORD');
                 /*
