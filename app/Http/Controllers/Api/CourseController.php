@@ -107,8 +107,16 @@ class CourseController extends Controller
                 $tmp_str2 = str_replace(array(" ",".","!","?","'",","),"",strtolower($enkeywords));
 
                 similar_text(trim($tmp_str1), trim($tmp_str2), $percent);
+                $outputtmp="";
+                if(count($test['result'])){
+                  foreach($test['result'] as $output){
+                    $outputtmp.=$output;
+                  }
+                  return $outputtmp;
+                }else{
+                  return "刚刚出小差了，请您再试一次";
+                }
 
-                return $test['result'][0];
 
 
 
