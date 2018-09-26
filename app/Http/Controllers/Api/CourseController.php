@@ -81,6 +81,45 @@ class CourseController extends Controller
                 $source_path = public_path(). '/uploads/voice/minivoice/'.$filename;
                 $final_wav_path = public_path(). '/uploads/voice/minivoice/'.$filename_wav;
                 $final_pcm_path = public_path(). '/uploads/voice/minivoice/'.$filename_pcm;
+//阿里云语音识别
+
+                $command = "ffmpeg -i ".$source_path." -f s16be -ar 16000 -ac 1 -acodec pcm_s16be ".$filename_pcm;
+
+                exec("ffmpeg -y -i ".$source_path." -acodec pcm_s16le -f s16le -ac 1 -ar 16000 ".$final_pcm_path,$output,$return_var);
+
+                $audio = $final_pcm_path;
+                $accessSecret = env('ACCESS_KEY_SECRET');
+                $accessKey = env('ACCESSKEY_ID');
+
+                $date = gmdate("D, d M Y H:i:s \G\M\T");
+                $contentType = 'audio/pcm;samplerate=16000';
+                $accept = 'application/json';
+                $method = 'POST';
+
+                $headers = array( 'Content-type:'.$contentType, 'Accept:'.$accept, 'Content-Length:'.filesize($audio), 'Date:'.$date, 'method:'.$method );
+
+                $body = file_get_contents($audio);
+                $md5 = base64_encode(md5($body,true));
+                $md52 = base64_encode(md5($md5,true));
+                $stringToSign = $method. "\n" . $accept . "\n" . $md52 . "\n" . $contentType . "\n" . $date;
+                $sign = base64_encode(hash_hmac('sha1',$stringToSign,$accessSecret,true));
+                $headers[] = 'Authorization:Dataplus '.$accessKey.':'.$sign;
+                $ch = curl_init('https://nlsapi.aliyun.com/recognize?model=english&version=2.0');
+                curl_setopt($ch, CURLOPT_TIMEOUT, 60); //设置超时
+                curl_setopt($ch, CURLOPT_POST, TRUE);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                $res = curl_exec($ch);
+                curl_close($ch);
+                //var_dump($res);
+
+                $tmp_result = json_decode($res);
+                return $tmp_result->result;
+
+die();
+
+////阿里云语音识别结束
 
                 //baidu 语音识别
 
