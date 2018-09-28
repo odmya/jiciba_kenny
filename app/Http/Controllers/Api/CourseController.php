@@ -89,8 +89,8 @@ $command = "ffmpeg -i ".$source_path." -f s16be -ar 16000 -ac 1 -acodec pcm_s16b
 exec("ffmpeg -y -i ".$source_path." -acodec pcm_s16le -f s16le -ac 1 -ar 16000 ".$final_pcm_path,$output,$return_var);
 
 exec("/var/www/testvoice/demo/jciba ".$final_pcm_path, $outputarray);
-print_r($outputarray);
-die();                
+return $outputarray[0];
+die();
 //阿里云语音识别
 
                 $command = "ffmpeg -i ".$source_path." -f s16be -ar 16000 -ac 1 -acodec pcm_s16be ".$filename_pcm;
