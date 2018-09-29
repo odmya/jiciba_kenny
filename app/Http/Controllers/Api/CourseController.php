@@ -96,7 +96,7 @@ $tmp_str2 = str_replace(array(" ",".","!","?","'",","),"",strtolower($enkeywords
 
 similar_text(trim($tmp_str1), trim($tmp_str2), $percent);
 
-return $outputarray[0]."本次发音得分: (".round($percent)."分)";
+return $outputarray[0]."本次发音得分: (".$enkeywords."分)";
 
 //return $outputarray[0];
 die();
