@@ -89,7 +89,16 @@ $command = "ffmpeg -i ".$source_path." -f s16be -ar 16000 -ac 1 -acodec pcm_s16b
 exec("ffmpeg -y -i ".$source_path." -acodec pcm_s16le -f s16le -ac 1 -ar 16000 ".$final_pcm_path,$output,$return_var);
 
 exec("/var/www/testvoice/demo/jciba ".$final_pcm_path, $outputarray);
-return $outputarray[0];
+
+$tmp_str1 =str_replace(array(" ",".","!","?","'",","),"",strtolower($outputarray[0]));
+
+$tmp_str2 = str_replace(array(" ",".","!","?","'",","),"",strtolower($enkeywords));
+
+similar_text(trim($tmp_str1), trim($tmp_str2), $percent);
+
+return $outputarray[0]."本次发音得分: (".round($percent)."分)";
+
+//return $outputarray[0];
 die();
 //阿里云语音识别
 
