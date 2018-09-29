@@ -90,13 +90,17 @@ exec("ffmpeg -y -i ".$source_path." -acodec pcm_s16le -f s16le -ac 1 -ar 16000 "
 
 exec("/var/www/testvoice/demo/jciba ".$final_pcm_path, $outputarray);
 
-$tmp_str1 =str_replace(array(" ",".","!","?","'",","),"",strtolower($outputarray[0]));
+//$tmp_str1 =str_replace(array(" ",".","!","?","'",","),"",strtolower($outputarray[0]));
 
-$tmp_str2 = str_replace(array(" ",".","!","?","'",","),"",strtolower($enkeywords));
+//$tmp_str2 = str_replace(array(" ",".","!","?","'",","),"",strtolower($enkeywords));
 
-similar_text(trim($tmp_str1), trim($tmp_str2), $percent);
+//similar_text(trim($tmp_str1), trim($tmp_str2), $percent);
+if(isset($outputarray)){
+  return "根据欧美英语标准识别出的文字内容: ".$outputarray[0];
+}else{
+  return "刚刚出小差了，请您再试一次";
+}
 
-return $outputarray[0]."本次发音得分: (".$enkeywords."分)";
 
 //return $outputarray[0];
 die();
