@@ -120,6 +120,9 @@ class ChapterController extends Controller
             $form->text('name', '章节名');
             $form->file('voice_path',"mp3音频文件")->uniqueName()->move('voice/course');
 
+            $form->textarea('lrc', 'MP3字幕');
+            $form->select('is_explain', '是否讲解')->options([0 => '非讲解', 1 => '讲解']);
+
             $form->hasMany('chapter_entry', function (Form\NestedForm $form) {
               $form->text('english',"英文");
               $form->text('chinese',"中文");
