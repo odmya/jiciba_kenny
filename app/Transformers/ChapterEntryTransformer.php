@@ -89,7 +89,8 @@ class ChapterEntryTransformer extends TransformerAbstract
 
         return [
             'id' => $chapter->id,
-
+            'next_item' =>$next_item,
+            'prev_item' =>$prev_item,
             'name' => $chapter->name,
             'course_name' => $chapter->course->name,
             'course_id' => $chapter->course->id,
@@ -104,7 +105,8 @@ class ChapterEntryTransformer extends TransformerAbstract
       }
         return [
             'id' => $chapter->id,
-
+            'next_item' =>$next_item,
+            'prev_item' =>$prev_item,
             'name' => $chapter->name,
             'course_name' => $chapter->course->name,
             'course_id' => $chapter->course->id,
