@@ -11,6 +11,22 @@ class ChapterEntryTransformer extends TransformerAbstract
 
     public function transform(Chapter $chapter)
     {
+
+      $next_item ="";
+      $prev_item ="";
+      foreach($chapter->course->chapter as $key => $tmp_chapter){
+      echo $tmp_chapter->id.":".$tmp_chapter->name."<br/>";
+      if($tmp_chapter->id == $chapter->id){
+        if(isset($chapter->course->chapter[$key-1])){
+          $prev_item =$chapter->course->chapter[$key-1]->id;
+        }
+        if(isset($chapter->course->chapter[$key+1])){
+          $next_item =$chapter->course->chapter[$key+1]->id;
+        }
+      }
+      }
+
+
       if($chapter->lrc){
         $chapter_entry_array =array();
         $is_explain = $chapter->is_explain;
@@ -73,6 +89,8 @@ class ChapterEntryTransformer extends TransformerAbstract
 
         return [
             'id' => $chapter->id,
+            'next_item' =>$next_item,
+            'prev_item' =>$prev_item,
             'name' => $chapter->name,
             'course_name' => $chapter->course->name,
             'course_id' => $chapter->course->id,
@@ -87,6 +105,8 @@ class ChapterEntryTransformer extends TransformerAbstract
       }
         return [
             'id' => $chapter->id,
+            'next_item' =>$next_item,
+            'prev_item' =>$prev_item,
             'name' => $chapter->name,
             'course_name' => $chapter->course->name,
             'course_id' => $chapter->course->id,
