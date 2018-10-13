@@ -15,7 +15,7 @@ class ChapterEntryTransformer extends TransformerAbstract
       $next_item ="";
       $prev_item ="";
       foreach($chapter->course->chapter as $key => $tmp_chapter){
-      echo $tmp_chapter->id.":".$tmp_chapter->name."<br/>";
+    //  echo $tmp_chapter->id.":".$tmp_chapter->name."<br/>";
       if($tmp_chapter->id == $chapter->id){
         if(isset($chapter->course->chapter[$key-1])){
           $prev_item =$chapter->course->chapter[$key-1]->id;
