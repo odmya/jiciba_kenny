@@ -31,24 +31,32 @@ class ChapterEntryTransformer extends TransformerAbstract
             $tmp_array['english'] ="";
             $tmp_array['chinese'] = $tmp_english;
           }else{
-            for($i=0; $i<strlen($tmp_english); $i++){
-               $value=ord(substr($tmp_english,$i,1));
+            if(strpos($tmp_english,"|")){
+              $tmp_arr = explode("|",$tmp_english);
+              $tmp_array['english'] = $tmp_arr[0];
+              $tmp_array['chinese'] = $tmp_arr[1];
 
-               if($value>127){
-                   $tmpstr_zh .= substr($tmp_english,$i,2);
+            }else{
+              for($i=0; $i<strlen($tmp_english); $i++){
+                 $value=ord(substr($tmp_english,$i,1));
 
-                   $tmp_array['english'] = substr($tmp_english,0,$i);
-                   $tmp_array['chinese'] = substr($tmp_english,$i);
-                   break;
+                 if($value>127){
+                     $tmpstr_zh .= substr($tmp_english,$i,2);
 
-                   $i++;
-               }else{
-                   $tmpstr_en .= substr($tmp_english,$i,1);
-                   $tmp_array['chinese'] ="";
-                   $tmp_array['english'] = substr($tmp_english,0,$i);
+                     $tmp_array['english'] = substr($tmp_english,0,$i);
+                     $tmp_array['chinese'] = substr($tmp_english,$i);
+                     break;
 
+                     $i++;
+                 }else{
+                     $tmpstr_en .= substr($tmp_english,$i,1);
+                     $tmp_array['chinese'] ="";
+                     $tmp_array['english'] = substr($tmp_english,0,$i);
+
+                 }
                }
-             }
+            }
+
            //$tmp_array['english'] = $tmpstr_en;
            //$tmp_array['chinese'] = $tmpstr_zh;
 
