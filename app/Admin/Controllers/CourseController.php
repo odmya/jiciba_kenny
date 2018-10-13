@@ -95,6 +95,7 @@ class CourseController extends Controller
             $form->text('name', '课程名');
             $form->ckeditor('description','描述');
             $form->select('is_enable', '是否可用')->options([0 => '失效', 1 => '有效']);
+            $form->text('order', '排序');
             $form->image('image',"图片")->uniqueName()->move('images/course');
             $form->hasMany('chapter', function (Form\NestedForm $form) {
               $form->text('name',"章节");
