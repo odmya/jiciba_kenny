@@ -11,9 +11,17 @@ class Course extends Model
     public function chapter()
     {
 
+      return $this->hasMany(Chapter::class);
+
+    }
+
+    public function chapterlist()
+    {
+
       return $this->hasMany(Chapter::class)->select(array('id', 'name'));
 
     }
+
     public function scopeRecent($query)
       {
           // 按照创建时间排序
