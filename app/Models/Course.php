@@ -11,7 +11,7 @@ class Course extends Model
     public function chapter()
     {
 
-      return $this->hasMany(Chapter::class);
+      return $this->hasMany(Chapter::class)->select(array('id', 'course_id','name','is_explain','voice_path'));
 
     }
     public function scopeRecent($query)
