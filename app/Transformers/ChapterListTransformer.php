@@ -14,7 +14,7 @@ class ChapterListTransformer extends TransformerAbstract
             'id' => $course->id,
             'name' => $course->name,
             'image' => $course->image,
-            'chapters' => $course->chapter,
+            'chapters' => $course->chapterlist,
             'created_at' => $course->created_at->toDateTimeString(),
             'updated_at' => $course->updated_at->toDateTimeString(),
         ];
