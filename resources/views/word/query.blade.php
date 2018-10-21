@@ -36,7 +36,7 @@
 
               <div id="overview" class="row">
                 <div class="col-sm-6 col-md-6 col-lg-6 col-xs-12">
-                  <h1 >{{ $word_obj->word }}</h1>
+                  <h1 style="font-family: 'Sans Forgetica'; font-weight: normal; font-style: normal;">{{ $word_obj->word }}</h1>
                 <div id="voice">
 
                   <div ng-repeat="voice in words.voice.data">@{{ voice.symbol}}
