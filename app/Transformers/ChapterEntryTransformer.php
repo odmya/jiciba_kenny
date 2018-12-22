@@ -51,7 +51,10 @@ class ChapterEntryTransformer extends TransformerAbstract
               $tmp_arr = explode("|",$tmp_english);
               $tmp_array['english'] = $tmp_arr[0];
               $tmp_array['chinese'] = $tmp_arr[1];
-
+            }elseif(strpos($tmp_english,"^")){
+              $tmp_arr = explode("^",$tmp_english);
+              $tmp_array['english'] = $tmp_arr[0];
+              $tmp_array['chinese'] = $tmp_arr[1];
             }else{
               for($i=0; $i<strlen($tmp_english); $i++){
                  $value=ord(substr($tmp_english,$i,1));
